@@ -33,10 +33,10 @@ Authors
 - Kemal Tezgin (UConn) 
 - David Riser (UConn) 
 - Tiabo Liu (JLab)
+- Wally Melnitchouk (JLab)
 - Alexei Prokudin (PSU) 
 - Daniel Pitonyak (PSU) 
 - Mason Albright (PSU) 
-
 
 .. image:: ./logos/jam.jpg
 .. image:: ./logos/jlab.png
