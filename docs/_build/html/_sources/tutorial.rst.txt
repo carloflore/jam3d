@@ -14,7 +14,7 @@ Dependencies
 Installation
 ------------
 
-From the commandline ::
+From the command line ::
 
   cd external  ./install
 
@@ -34,8 +34,8 @@ anywhere in your system. In other words, there is no need to work within
 the same code folder. As a good practice, create dedicated folders for a
 given analysis. 
 
-Workflow
---------
+Basic workflow
+--------------
 
 1) Prepare an input file (e.g.  input.py)   
 
@@ -43,81 +43,6 @@ Workflow
    for more info
 
 3) Use a jupyer notebook to study the results
-
-.. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-.. \begin{frame}
-.. \frametitle{\textbf{Workflow}}
-.. %------------------------------------------------------------
-.. \begin{textblock}{110}(5,12) 
-.. 
-.. \begin{itemize}
-.. \item \textbf{Using Jupyer notebooks}
-..       \begin{itemize}
-..       \item[+] The core libraries can also be loaded from jupyer notebooks
-..       \item[+] The notebooks are more useful for visualization task
-..                such as plotting data or TMDs. 
-..       \item[+] This is ideal to share the software via \texttt{jupter-hub}
-..                servers. 
-..       \end{itemize}
-.. 
-.. \item \textbf{Terminal or jupyter }
-..       \begin{itemize}
-..       \item[+] In principle all the workflow can be set inside a
-..                jupyter notebook without ever need to run programs 
-..                from the commandline. 
-..       \item[+] However at the beginning of any analysis where one
-..                needs to know if a particular implementation of the
-..                theory works by fitting the data, it is simpler to check  
-..                from commandline if the setup works
-..       \item[+] Moreover, for more complex problem where many parameters 
-..                are involved in the analysis or a MC sampling is
-..                desired, is best to proceed via terminal (specially for
-..                very long runs)and use  jupyter-notebooks to post-process the results
-..       \end{itemize}
-.. \end{itemize}
-.. 
-.. \end{textblock}
-.. %------------------------------------------------------------
-.. \end{frame}
-.. 
-.. 
-.. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-.. \begin{frame}
-.. \frametitle{\textbf{Tutorial 1: fits of unpolarized TMDs}}
-.. %------------------------------------------------------------
-.. \begin{textblock}{110}(5,12) 
-.. 
-.. \begin{itemize}
-.. \item 
-.. \end{itemize}
-.. 
-.. \end{textblock}
-.. %------------------------------------------------------------
-.. \end{frame}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -6,6 +6,10 @@
 Welcome to JAM3D's documentation!
 =================================
 
+JAM3D codes provides a framework to study transverse momentum distributions TMD. 
+It provides the tools to extract TMDs from experimental reactions electron-proton, 
+electron-positron or proton-proton scattering. 
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -28,12 +32,16 @@ Authors
 - Nobuo Sato (UConn) 
 - Kemal Tezgin (UConn) 
 - David Riser (UConn) 
+- Tiabo Liu (JLab)
 - Alexei Prokudin (PSU) 
 - Daniel Pitonyak (PSU) 
 - Mason Albright (PSU) 
 
 
-
+.. image:: ./logos/jam.jpg
+.. image:: ./logos/jlab.png
+.. image:: ./logos/uconn.png
+.. image:: ./logos/psu.png
 
 
 
