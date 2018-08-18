@@ -14,6 +14,9 @@ Dependencies
 Installation
 ------------
 
+Clone the codes from https://github.com/JeffersonLab/jam3d
+
+
 From the command line ::
 
   cd external  ./install
