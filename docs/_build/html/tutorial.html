@@ -84,7 +84,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow">Workflow</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="physics.html">Physics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
@@ -153,7 +158,46 @@
             
   <div class="section" id="tutorial">
 <h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
-<p>under construction</p>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Only Linux and OSX is supported</li>
+<li>We recommend to install anacoda (python2) which
+comes will all the necessary libraries</li>
+<li>A fortran compiler (gfortran)</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>From the commandline</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">external</span>  <span class="o">./</span><span class="n">install</span>
+</pre></div>
+</div>
+<p>Enviroment variables needs to be set in your terminal session.
+For bash they are</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export FITPACK=path2fitpack
+PYTHONPATH=$FITPACK:$PYTHONPATH
+export PATH=$FITPACK/bin:$PATH
+</pre></div>
+</div>
+<p>Alternatively you can source the setup files</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span>  <span class="n">setup</span><span class="o">.</span><span class="n">bash</span>
+</pre></div>
+</div>
+<p>Once the enviroment variables are set the scripts can be called from
+anywhere in your system. In other words, there is no need to work within
+the same code folder. As a good practice, create dedicated folders for a
+given analysis.</p>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Prepare an input file (e.g.  input.py)</li>
+<li>Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
+for more info</li>
+<li>Use a jupyer notebook to study the results</li>
+</ol>
+</div>
 </div>
 
 

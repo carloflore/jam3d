@@ -15,13 +15,11 @@ Welcome to JAM3D's documentation!
    api 
     
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. Indices and tables
+   ==================
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`
 
 
 Authors
@@ -33,3 +31,9 @@ Authors
 - Alexei Prokudin (PSU) 
 - Daniel Pitonyak (PSU) 
 - Mason Albright (PSU) 
+
+
+
+
+
+
