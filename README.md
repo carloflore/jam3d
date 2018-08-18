@@ -2,7 +2,15 @@
 
 The  documentation can be found at https://jeffersonlab.github.io/jam3d 
 
+
 ## Authors
 
-- N. Sato 
+- Nobuo Sato (UConn) 
+- Kemal Tezgin (UConn) 
+- David Riser (UConn) 
+- Alexei Prokudin (PSU) 
+- Daniel Pitonyak (PSU) 
+- Mason Albright (PSU) 
+
+
 
