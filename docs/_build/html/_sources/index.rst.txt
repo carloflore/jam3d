@@ -10,6 +10,10 @@ Welcome to JAM3D's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   tutorial
+   physics 
+   api 
+    
 
 
 Indices and tables
