@@ -1,5 +1,5 @@
 .. JAM3D documentation master file, created by
-   sphinx-quickstart on Fri Aug 17 22:13:36 2018.
+   sphinx-quickstart on Fri Aug 17 22:38:47 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 

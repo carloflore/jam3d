@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # JAM3D documentation build configuration file, created by
-# sphinx-quickstart on Fri Aug 17 22:13:36 2018.
+# sphinx-quickstart on Fri Aug 17 22:38:47 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
