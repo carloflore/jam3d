@@ -18,3 +18,14 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+Authors
+==================
+
+- Nobuo Sato (UConn) 
+- Kemal Tezgin (UConn) 
+- David Riser (UConn) 
+- Alexei Prokudin (PSU) 
+- Daniel Pitonyak (PSU) 
+- Mason Albright (PSU) 
