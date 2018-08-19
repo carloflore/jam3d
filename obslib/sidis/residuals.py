@@ -2,27 +2,7 @@
 import sys
 import os
 import numpy as np
-from mpmath import fp, mp
-from scipy.integrate import quad
-import pandas as pd
-import time
 from tools.residuals import _RESIDUALS
-from external.CJLIB.CJ import CJ
-from external.DSSLIB.DSS import DSS
-from external.LSSLIB.LSS import LSS
-from reader import READER
-from stfuncs import STFUNCS
-from qcdlib.tmdlib import PDF, PPDF, FF
-from qcdlib.tmdlib import TRANSVERSITY
-from qcdlib.tmdlib import BOERMULDERS
-from qcdlib.tmdlib import SIVERS
-from qcdlib.tmdlib import PRETZELOSITY
-from qcdlib.tmdlib import COLLINS
-from qcdlib.tmdlib import WORMGEARG
-from qcdlib.tmdlib import WORMGEARH
-from qcdlib.aux import AUX
-from qcdlib.alphaS import ALPHAS
-from obslib.dis.stfuncs import STFUNCS as DIS_STFUNCS
 from tools.config import conf
 
 
@@ -431,3 +411,91 @@ class RESIDUALS(_RESIDUALS):
             for l in L:
                 print l
             return L
+
+
+if __name__ == '__main__':
+
+    from qcdlib.interpolator import INTERPOLATOR
+    from stfuncs import STFUNCS
+    from qcdlib.tmdlib import PDF, PPDF, FF
+    from qcdlib.tmdlib import TRANSVERSITY
+    from qcdlib.tmdlib import BOERMULDERS
+    from qcdlib.tmdlib import SIVERS
+    from qcdlib.tmdlib import PRETZELOSITY
+    from qcdlib.tmdlib import COLLINS
+    from qcdlib.tmdlib import WORMGEARG
+    from qcdlib.tmdlib import WORMGEARH
+    from qcdlib.aux import AUX
+    from qcdlib.alphaS import ALPHAS
+    from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
+    from reader import READER
+
+    conf['aux']    = AUX()
+    conf['alphaSmode'] = 'backward'
+    conf['order'] = 'NLO'
+    conf['Q20'] = 1
+    conf['alphaS'] = ALPHAS()
+
+    conf['cpdf']   = INTERPOLATOR('CJ15nlo_0000')
+    conf['cppdf']  = INTERPOLATOR('CJ15nlo_0000')
+    conf['cpipff'] = INTERPOLATOR('dsspipNLO_0000')
+    conf['cpimff'] = INTERPOLATOR('dsspimNLO_0000')
+    conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
+    conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
+
+    conf['lam2'] = 0.4 
+    conf['Q02']  = 1.0
+    conf['pdf']          = PDF()
+    conf['ppdf']         = PPDF()
+    conf['ff']           = FF()
+    conf['transversity'] = TRANSVERSITY()
+    conf['sivers']       = SIVERS()
+    conf['boermulders']  = BOERMULDERS()
+    conf['pretzelosity'] = PRETZELOSITY()
+    conf['wormgearg']    = WORMGEARG()
+    conf['wormgearh']    = WORMGEARH()
+    conf['collins']      = COLLINS()
+
+
+    conf['sidis stfuncs'] = STFUNCS()
+    conf['dis stfuncs']   = DIS_STFUNCS()
+
+
+    conf['datasets']={}
+    conf['datasets']['sidis']={}
+    
+    conf['datasets']['sidis']['xlsx']={}
+    conf['datasets']['sidis']['xlsx'][1000]='sidis/expdata/1000.xlsx'  # |  proton   | pi+   | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1001]='sidis/expdata/1001.xlsx'  # |  proton   | pi-   | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1004]='sidis/expdata/1004.xlsx'  # |  deuteron | pi+   | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1005]='sidis/expdata/1005.xlsx'  # |  deuteron | pi-   | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1002]='sidis/expdata/1002.xlsx'  # |  proton   | k+    | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1003]='sidis/expdata/1003.xlsx'  # |  proton   | k-    | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1006]='sidis/expdata/1006.xlsx'  # |  deuteron | k+    | M_Hermes | hermes 
+    conf['datasets']['sidis']['xlsx'][1007]='sidis/expdata/1007.xlsx'  # |  deuteron | k-    | M_Hermes | hermes 
+    conf['datasets']['sidis']['norm']={}
+    for k in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['norm'][k]={'value':1,'fixed':True,'min':0,'max':1} 
+    conf['datasets']['sidis']['filters']={}
+    conf['datasets']['sidis']['filters'][1000]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1001]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1004]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1005]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1002]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1003]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1006]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+    conf['datasets']['sidis']['filters'][1007]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
+
+    conf['sidis tabs'] = READER().load_data_sets('sidis')
+    conf['residuals']= RESIDUALS()
+    conf['residuals'].get_residuals()
+    conf['residuals'].gen_report(verb=1, level=1)
+
+
+
+
+
+
+
+
+
+

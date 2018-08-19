@@ -2,11 +2,7 @@
 import sys
 import os
 import numpy as np
-import math
 from tools.tools import load_config
-from external.CJLIB.CJ import CJ
-from external.LSSLIB.LSS import LSS
-from external.DSSLIB.DSS import DSS
 from qcdlib.tmdlib import PDF, PPDF, FF
 from qcdlib.tmdlib import TRANSVERSITY
 from qcdlib.tmdlib import BOERMULDERS
@@ -17,7 +13,6 @@ from qcdlib.tmdlib import WORMGEARG
 from qcdlib.tmdlib import WORMGEARH
 from qcdlib.aux import AUX
 from tools.config import conf
-
 
 class STFUNCS:
 
@@ -143,7 +138,7 @@ class STFUNCS:
             out *= K
             return out
 
-    def get_FX(self, i, x, z, Q2, pT, target, hadron, obs):
+    def get_FX(self, i, x, z, Q2, pT, target, hadron, obs=None):
         k1 = self.D[i]['k1']
         k2 = self.D[i]['k2']
         if k1 == None or k2 == None:
@@ -215,7 +210,7 @@ class STFUNCS:
         #beta[13] =Sperp * le * np.sqrt(2*eps*(1-eps)) * np.cos(2*phi_h-phi_S)
         #beta[14] =Spar  * np.sqrt(2*eps*(1+eps))*np.sin(phi_h)
         #beta[15] =le    * np.sqrt(2*eps*(1-eps))*np.sin(phi_h)
-        #beta[16] = np.sqrt(2*eps*(1+eps))*np.cos(phi_h)
+        #beta[16] =np.sqrt(2*eps*(1+eps))*np.cos(phi_h)
         #beta[17] =Sperp * np.sqrt(2*eps*(1+eps))*np.sin(phi_S)
         #beta[18] =Sperp * np.sqrt(2*eps*(1+eps))*np.sin(2*phi_h-phi_S)
 
@@ -241,33 +236,33 @@ class STFUNCS:
 
         return xsec
 
-
 if __name__ == '__main__':
 
-    conf = {}
-    conf['path2CJ'] = '../../external/CJLIB'
-    conf['path2LSS'] = '../../external/LSSLIB'
-    conf['path2DSS'] = '../../external/DSSLIB'
+    from qcdlib.interpolator import INTERPOLATOR
 
-    conf['order'] = 'LO'
-    conf['shape'] = 0
-    conf['aux'] = AUX()
-    conf['_pdf'] = CJ(conf)
-    conf['_ppdf'] = LSS(conf)
-    conf['_ff'] = DSS(conf)
+    conf['aux']    = AUX()
+    conf['cpdf']   = INTERPOLATOR('CJ15nlo_0000')
+    conf['cppdf']  = INTERPOLATOR('CJ15nlo_0000')
+    conf['cpipff'] = INTERPOLATOR('dsspipNLO_0000')
+    conf['cpimff'] = INTERPOLATOR('dsspimNLO_0000')
+    conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
+    conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
 
-    conf['pdf'] = PDF(conf)
-    conf['ppdf'] = PPDF(conf)
-    conf['ff'] = FF(conf)
-    conf['transversity'] = TRANSVERSITY(conf)
-    conf['sivers'] = SIVERS(conf)
-    conf['boermulders'] = BOERMULDERS(conf)
-    conf['pretzelosity'] = PRETZELOSITY(conf)
-    conf['wormgearg'] = WORMGEARG(conf)
-    conf['wormgearh'] = WORMGEARH(conf)
-    conf['collins'] = COLLINS(conf)
+    conf['lam2'] = 0.4 
+    conf['Q02']  = 1.0
+    conf['pdf']          = PDF()
+    conf['ppdf']         = PPDF()
+    conf['ff']           = FF()
+    conf['transversity'] = TRANSVERSITY()
+    conf['sivers']       = SIVERS()
+    conf['boermulders']  = BOERMULDERS()
+    conf['pretzelosity'] = PRETZELOSITY()
+    conf['wormgearg']    = WORMGEARG()
+    conf['wormgearh']    = WORMGEARH()
+    conf['collins']      = COLLINS()
 
-    stfuncs = STFUNCS(conf)
+
+    stfuncs = STFUNCS()
     x = 0.25
     z = 0.5
     Q2 = 2.4
@@ -276,22 +271,10 @@ if __name__ == '__main__':
     m = 0.938
     pT = 0.3
     y = Q2 / (2 * m * E * x)
-    sangle = math.pi * 0.0
-    hangle = math.pi / 2
+    sangle = np.pi * 0.0
+    hangle = np.pi / 2
     target = 'p'
     hadron = 'pi+'
     for i in range(1, 22):
         print i, stfuncs.get_FX(i, x, z, Q2, pT, target, hadron)
-    print stfuncs.dcs(x, Q2, y, z, pT, sangle, hangle, target, hadron)
-    print stfuncs.unpolarizedCS(
-        x, Q2, y, z, pT, sangle, hangle, target, hadron)
-#  for j in range(1,36): plt.plot([j*math.pi/18] , [stfuncs.unpolarizedCS(x,Q2,mu2,y,z,pT,sangle,j*math.pi/18,target,hadron)], 'ro')
-    for j in range(1, 36):
-        plt.plot([j * math.pi / 18], [stfuncs.dcs(x, Q2, y, z, pT,
-                                              sangle, j * math.pi / 18, target, hadron)], 'ro')
 
-    plt.xlabel('Hadronic Angle (rad)')
-    plt.ylabel('Full Cross Section')
-    plt.title('WW-type Approximation for $Q^2=3.6$')
-
-    plt.show()
