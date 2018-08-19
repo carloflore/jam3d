@@ -2,13 +2,7 @@
 import sys
 import os
 import numpy as np
-from tools.tools import load_config
-from external.DSSLIB.DSS import DSS
-from qcdlib.tmdlib import FF
-from qcdlib.tmdlib import COLLINS
-from qcdlib.aux import AUX
 from tools.config import conf
-
 
 class STFUNCS:
 
@@ -96,14 +90,22 @@ class STFUNCS:
         #      +self.e2[5]*D1[5]*D2[6]*K[5]*gauss[5]\
         #      +self.e2[6]*D1[6]*D2[5]*K[6]*gauss[6]
 
-
 if __name__ == '__main__':
 
-    conf['aux'] = AUX()
+    from qcdlib.interpolator import INTERPOLATOR
+    from qcdlib.tmdlib import FF
+    from qcdlib.tmdlib import COLLINS
+    from qcdlib.aux import AUX
 
-    conf['path2DSS'] = '../../external/DSSLIB'
-    conf['_ff'] = DSS()
-    conf['ff'] = FF()
+    conf['aux']    = AUX()
+    conf['cpipff'] = INTERPOLATOR('dsspipNLO_0000')
+    conf['cpimff'] = INTERPOLATOR('dsspimNLO_0000')
+    conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
+    conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
+
+    conf['lam2'] = 0.4 
+    conf['Q02']  = 1.0
+    conf['ff']      = FF()
     conf['collins'] = COLLINS()
 
     stfuncs = STFUNCS()

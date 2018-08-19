@@ -3,15 +3,10 @@ import sys
 import os
 import numpy as np
 from scipy.integrate import quad
-from external.DSSLIB.DSS import DSS
-from qcdlib.tmdlib import FF
-from qcdlib.tmdlib import COLLINS
-from qcdlib.aux import AUX
 from tools.residuals import _RESIDUALS
 from reader import READER
 from stfuncs import STFUNCS
 from tools.config import conf
-
 
 class RESIDUALS(_RESIDUALS):
 
@@ -169,40 +164,49 @@ class RESIDUALS(_RESIDUALS):
             for l in L:
                 print l
 
-
 if __name__ == '__main__':
 
-    conf['aux'] = AUX()
-    conf['path2DSS'] = '../../external/DSSLIB'
-    conf['_ff'] = DSS()
-    conf['ff'] = FF()
+    from qcdlib.interpolator import INTERPOLATOR
+    from qcdlib.tmdlib import FF
+    from qcdlib.tmdlib import COLLINS
+    from qcdlib.aux import AUX
+
+    conf['aux']    = AUX()
+    conf['cpipff'] = INTERPOLATOR('dsspipNLO_0000')
+    conf['cpimff'] = INTERPOLATOR('dsspimNLO_0000')
+    conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
+    conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
+
+    conf['lam2'] = 0.4 
+    conf['Q02']  = 1.0
+    conf['ff']      = FF()
     conf['collins'] = COLLINS()
     conf['sia stfuncs'] = STFUNCS()
 
     conf['datasets'] = {}
     conf['datasets']['sia'] = {}
     conf['datasets']['sia']['xlsx'] = {}
-    # babar      | pi,pi | AUL-0     | 9      | z1,z2,pT0  |
-    conf['datasets']['sia']['xlsx'][1000] = '../../database/sia/expdata/1000.xlsx'
-    # babar      | pi,pi | AUC-0     | 9      | z1,z2,pT0  |
-    conf['datasets']['sia']['xlsx'][1001] = '../../database/sia/expdata/1001.xlsx'
-    # conf['datasets']['sia']['xlsx'][1002]='../database/sia/expdata/1002.xlsx'  #   babar      | pi,pi | AUC-0     | 36     | z1,z2      |
-    # conf['datasets']['sia']['xlsx'][1003]='../database/sia/expdata/1003.xlsx'  #   babar      | pi,pi | AUL-0     | 36     | z1,z2      |
-    # conf['datasets']['sia']['xlsx'][1004]='../database/sia/expdata/1004.xlsx'  #   belle      | pi,pi | AUT-0-CCP | 16     | z1,z2,qT   |
-    # conf['datasets']['sia']['xlsx'][1005]='../database/sia/expdata/1005.xlsx'  #   belle      | pi,pi | AUT-0     | 16     | z1,z2,qT   |
+    conf['datasets']['sia']['xlsx'][1000]='sia/expdata/1000.xlsx' # babar      | pi,pi | AUL-0     | 9      | z1,z2,pT0  |
+    conf['datasets']['sia']['xlsx'][1001]='sia/expdata/1001.xlsx' # babar      | pi,pi | AUC-0     | 9      | z1,z2,pT0  |
+    conf['datasets']['sia']['xlsx'][1002]='sia/expdata/1002.xlsx' # babar      | pi,pi | AUC-0     | 36     | z1,z2      |
+    conf['datasets']['sia']['xlsx'][1003]='sia/expdata/1003.xlsx' # babar      | pi,pi | AUL-0     | 36     | z1,z2      |
+    conf['datasets']['sia']['xlsx'][1004]='sia/expdata/1004.xlsx' # belle      | pi,pi | AUT-0-CCP | 16     | z1,z2,qT   |
+    conf['datasets']['sia']['xlsx'][1005]='sia/expdata/1005.xlsx' # belle      | pi,pi | AUT-0     | 16     | z1,z2,qT   |
     conf['datasets']['sia']['norm'] = {}
-    conf['datasets']['sia']['norm'][1000] = {'value': 1, 'fixed': False}
-    conf['datasets']['sia']['norm'][1001] = {'value': 1, 'fixed': False}
-    # conf['datasets']['sia']['norm'][1002]={'value':1,'fixed':False}
-    # conf['datasets']['sia']['norm'][1003]={'value':1,'fixed':False}
-    # conf['datasets']['sia']['norm'][1004]={'value':1,'fixed':False}
-    # conf['datasets']['sia']['norm'][1005]={'value':1,'fixed':False}
+    conf['datasets']['sia']['norm'][1000]={'value':1,'fixed': False}
+    conf['datasets']['sia']['norm'][1001]={'value':1,'fixed': False}
+    conf['datasets']['sia']['norm'][1002]={'value':1,'fixed':False}
+    conf['datasets']['sia']['norm'][1003]={'value':1,'fixed':False}
+    conf['datasets']['sia']['norm'][1004]={'value':1,'fixed':False}
+    conf['datasets']['sia']['norm'][1005]={'value':1,'fixed':False}
 
-    # conf['datasets']['sia']['filters']=[]
-    # conf['datasets']['sia']['filters'].append("z<0.6")
-    # conf['datasets']['sia']['filters'].append("Q2>1.69")
-    #conf['datasets']['sia']['filters'].append("pT>0.2 and pT<0.8")
     conf['sia tabs'] = READER().load_data_sets('sia')
-    conf['residuals'] = RESIDUALS()
+    conf['residuals']= RESIDUALS()
     conf['residuals'].get_residuals()
     conf['residuals'].gen_report(verb=1, level=1)
+
+
+
+
+
+
