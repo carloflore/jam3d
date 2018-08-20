@@ -109,13 +109,12 @@ class PARMAN:
 
     def set_pdf_params(self):
         self.set_constraits('pdf')
-        if conf['basis'] == 'default':
-            conf['pdf'].widths0['valence'] = conf['params']['pdf']['widths0 valence']['value']
-            conf['pdf'].widths0['sea'] = conf['params']['pdf']['widths0 sea']['value']
-        elif conf['basis'] == 'valence':
-            conf['pdf'].widths0['uv'] = conf['params']['pdf']['widths0 uv']['value']
-            conf['pdf'].widths0['dv'] = conf['params']['pdf']['widths0 dv']['value']
-            conf['pdf'].widths0['sea'] = conf['params']['pdf']['widths0 sea']['value']
+        conf['pdf']._widths1['uv']  = conf['params']['pdf']['widths1 uv']['value']
+        conf['pdf']._widths1['dv']  = conf['params']['pdf']['widths1 dv']['value']
+        conf['pdf']._widths1['sea'] = conf['params']['pdf']['widths1 sea']['value']
+        conf['pdf']._widths2['uv']  = conf['params']['pdf']['widths2 uv']['value']
+        conf['pdf']._widths2['dv']  = conf['params']['pdf']['widths2 dv']['value']
+        conf['pdf']._widths2['sea'] = conf['params']['pdf']['widths2 sea']['value']
         conf['pdf'].setup()
 
     def set_ppdf_params(self):
@@ -126,12 +125,21 @@ class PARMAN:
 
     def set_ff_params(self):
         self.set_constraits('ff')
-        if 'widths0 pi+ fav' in conf['params']['ff']:
-            conf['ff'].widths0['pi+ fav'] = conf['params']['ff']['widths0 pi+ fav']['value']
-            conf['ff'].widths0['pi+ unfav'] = conf['params']['ff']['widths0 pi+ unfav']['value']
-        if 'widths0 k+ fav' in conf['params']['ff']:
-            conf['ff'].widths0['k+ fav'] = conf['params']['ff']['widths0 k+ fav']['value']
-            conf['ff'].widths0['k+ unfav'] = conf['params']['ff']['widths0 k+ unfav']['value']
+        if 'widths1 pi+ fav' in conf['params']['ff']:
+            conf['ff']._widths1['pi+ fav']   = conf['params']['ff']['widths1 pi+ fav']['value']
+            conf['ff']._widths1['pi+ unfav'] = conf['params']['ff']['widths1 pi+ unfav']['value']
+            conf['ff']._widths2['pi+ fav']   = conf['params']['ff']['widths2 pi+ fav']['value']
+            conf['ff']._widths2['pi+ unfav'] = conf['params']['ff']['widths2 pi+ unfav']['value']
+        if 'widths1 k+ fav' in conf['params']['ff']:
+            conf['ff']._widths1['k+ fav']   = conf['params']['ff']['widths1 k+ fav']['value']
+            conf['ff']._widths1['k+ unfav'] = conf['params']['ff']['widths1 k+ unfav']['value']
+            conf['ff']._widths2['k+ fav']   = conf['params']['ff']['widths2 k+ fav']['value']
+            conf['ff']._widths2['k+ unfav'] = conf['params']['ff']['widths2 k+ unfav']['value']
+        if 'widths1 h+ fav' in conf['params']['ff']:
+            conf['ff']._widths1['h+ fav']   = conf['params']['ff']['widths1 h+ fav']['value']
+            conf['ff']._widths1['h+ unfav'] = conf['params']['ff']['widths1 h+ unfav']['value']
+            conf['ff']._widths2['h+ fav']   = conf['params']['ff']['widths2 h+ fav']['value']
+            conf['ff']._widths2['h+ unfav'] = conf['params']['ff']['widths2 h+ unfav']['value']
         conf['ff'].setup()
 
     def set_sivers_params(self):

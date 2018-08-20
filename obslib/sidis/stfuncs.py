@@ -116,8 +116,9 @@ class STFUNCS:
         elif i == 23:
             return -2.0 * (x / z) * self.Mh[hadron] / np.sqrt(Q2)
 
-    def get_wq(self, z, k1, k2, target, hadron):
-        return z**2 * np.abs(conf[k1].widths[target]) + np.abs(conf[k2].widths[hadron])
+    def get_wq(self, z, k1, k2, Q2,target, hadron):
+        return z**2 * np.abs(conf[k1].get_widths(Q2,target))\
+                    + np.abs(conf[k2].get_widths(Q2,hadron))
 
     def get_gauss(self, z, pT, wq):
         return np.exp(-pT**2 / wq) / (np.pi * wq)
@@ -147,7 +148,7 @@ class STFUNCS:
         F = conf[k1].get_C(x, mu2, target)
         D = conf[k2].get_C(z, mu2, hadron)
         F[0],D[0]=0,0
-        wq = self.get_wq(z, k1, k2, target, hadron)
+        wq = self.get_wq(z, k1, k2, Q2, target, hadron)
         if obs == 'AUTsinphiS':
             gauss = 1  # AUTsinphiS is collinear
         else:

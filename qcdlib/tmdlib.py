@@ -54,7 +54,6 @@ class CORE:
     def get_shape(self,x,Q2,p1,p2):
         s=self.get_s(Q2)
         shape=self._get_shape(x,p1,s)
-        #print p2
         if p2[0]!=0: shape+=self._get_shape(x,p2,s)
         return shape
 
@@ -83,60 +82,58 @@ class CORE:
         for i in range(11): N[i] = self.get_dshape(x,self.shape1[hadron][i],self.shape2[hadron][i],Q2)
         return N
 
+    def get_widths(self,Q2,hadron):
+        s=self.get_s(Q2)
+        return self.widths1[hadron]+s*self.widths2[hadron]
+
     def get_gauss(self, kT2, hadron):
-        return np.exp(-kT2 / self.widths[hadron]) / np.pi / self.widths[hadron]
+        w=self.get_width(Q2,hadron)
+        return np.exp(-kT2 / s) / np.pi / s
 
     def get_tmd(self, x, Q2, kT2, hadron):
         C = self.get_C(x, Q2, hadron)
-        gauss = self.get_gauss(kT2, hadron)
+        gauss = self.get_gauss(kT2,Q2, hadron)
         return self.K[hadron] * C * gauss
-
-# distributions in the nucleon
 
 class PDF(CORE):
 
     def __init__(self):
-        if 'basis' not in conf:
-            conf['basis'] = 'default'
         self.aux = conf['aux']
         self.set_default_params()
         self.setup()
 
     def set_default_params(self):
 
-        self.widths0 = {}
-        if conf['basis'] == 'default':
-            self.widths0['valence'] = 0.3
-            self.widths0['sea'] = 0.3
-        if conf['basis'] == 'valence':
-            self.widths0['uv'] = 0.3
-            self.widths0['dv'] = 0.3
-            self.widths0['sea'] = 0.3
+        self._widths1 = {}
+        self._widths1['uv']  = 0.3
+        self._widths1['dv']  = 0.3
+        self._widths1['sea'] = 0.3
 
-        self.widths = {}
-        self.widths['p'] = np.ones(11)
+        self._widths2 = {}
+        self._widths2['uv']  = 0
+        self._widths2['dv']  = 0
+        self._widths2['sea'] = 0
+
+        self.widths1 = {}
+        self.widths1['p'] = np.ones(11)
+        self.widths2 = {}
+        self.widths2['p'] = np.ones(11)
 
         self.K = {}
         self.K['p'] = np.ones(11)
         self.K['n'] = np.ones(11)
 
     def setup(self):
-        if conf['basis'] == 'default':
-            for i in range(11):
-                if i == 1 or i == 3:
-                    self.widths['p'][i] = self.widths0['valence']
-                else:
-                    self.widths['p'][i] = self.widths0['sea']
-            self.widths['n'] = self.p2n(self.widths['p'])
-        elif conf['basis'] == 'valence':
-            for i in range(11):
-                if i == 1:
-                    self.widths['p'][i] = self.widths0['uv']
-                elif i == 3:
-                    self.widths['p'][i] = self.widths0['dv']
-                else:
-                    self.widths['p'][i] = self.widths0['sea']
-            self.widths['n'] = self.p2n(self.widths['p'])
+        for i in range(11):
+            if   i == 1: self.widths1['p'][i] = self._widths1['uv']
+            elif i == 3: self.widths1['p'][i] = self._widths1['dv']
+            else:        self.widths1['p'][i] = self._widths1['sea']
+        for i in range(11):
+            if   i == 1: self.widths2['p'][i] = self._widths2['uv']
+            elif i == 3: self.widths2['p'][i] = self._widths2['dv']
+            else:        self.widths2['p'][i] = self._widths2['sea']
+        self.widths1['n'] = self.p2n(self.widths1['p'])
+        self.widths2['n'] = self.p2n(self.widths2['p'])
 
     def get_C(self, x, Q2, target='p'):
         C = conf['cpdf'].get_f(x,Q2)
@@ -144,10 +141,114 @@ class PDF(CORE):
         return C
 
     def get_state(self):
-        return self.widths
+        return self.widths1,self,widths2
 
     def set_state(self, state):
-        self.widths = state
+        self.widths1 = state[0]
+        self.widths2 = state[1]
+
+class FF(CORE):
+
+    def __init__(self):
+        self.aux = conf['aux']
+        self.set_default_params()
+        self.setup()
+
+    def set_default_params(self):
+
+        self._widths1 = {}
+        self._widths1['pi+ fav']   = 0.12
+        self._widths1['pi+ unfav'] = 0.12
+        self._widths1['h+ fav']    = 0.12
+        self._widths1['h+ unfav']  = 0.12
+        self._widths1['k+ fav']    = 0.12
+        self._widths1['k+ unfav']  = 0.12
+
+        self._widths2 = {}
+        self._widths2['pi+ fav']   = 0
+        self._widths2['pi+ unfav'] = 0
+        self._widths2['h+ fav']    = 0
+        self._widths2['h+ unfav']  = 0
+        self._widths2['k+ fav']    = 0
+        self._widths2['k+ unfav']  = 0
+
+        self.widths1 = {}
+        self.widths1['pi+'] = np.ones(11)
+        self.widths1['h+']  = np.ones(11)
+        self.widths1['k+']  = np.ones(11)
+
+        self.widths2 = {}
+        self.widths2['pi+'] = np.ones(11)
+        self.widths2['h+']  = np.ones(11)
+        self.widths2['k+']  = np.ones(11)
+
+        self.K = {}
+        self.K['pi+'] = np.ones(11)
+        self.K['pi-'] = np.ones(11)
+        self.K['h+']  = np.ones(11)
+        self.K['h-']  = np.ones(11)
+        self.K['k+']  = np.ones(11)
+        self.K['k-']  = np.ones(11)
+
+    def get_K(self, z, hadron):
+        return 1.0
+
+    def setup(self):
+
+        for i in range(1, 11):
+            if   i == 1: self.widths1['pi+'][i] = self._widths1['pi+ fav']
+            elif i == 4: self.widths1['pi+'][i] = self._widths1['pi+ fav']
+            else:        self.widths1['pi+'][i] = self._widths1['pi+ unfav']
+
+        for i in range(1, 11):
+            if   i == 1: self.widths1['h+'][i] = self._widths1['h+ fav']
+            elif i == 4: self.widths1['h+'][i] = self._widths1['h+ fav']
+            else:        self.widths1['h+'][i] = self._widths1['h+ unfav']
+
+        for i in range(1, 11):
+            if   i == 1: self.widths1['k+'][i] = self._widths1['k+ fav']
+            elif i == 6: self.widths1['k+'][i] = self._widths1['k+ fav']
+            else:        self.widths1['k+'][i] = self._widths1['k+ unfav']
+
+        for i in range(1, 11):
+            if   i == 1: self.widths2['pi+'][i] = self._widths2['pi+ fav']
+            elif i == 4: self.widths2['pi+'][i] = self._widths2['pi+ fav']
+            else:        self.widths2['pi+'][i] = self._widths2['pi+ unfav']
+
+        for i in range(1, 11):
+            if   i == 1: self.widths2['h+'][i] = self._widths2['h+ fav']
+            elif i == 4: self.widths2['h+'][i] = self._widths2['h+ fav']
+            else:        self.widths2['h+'][i] = self._widths2['h+ unfav']
+
+        for i in range(1, 11):
+            if   i == 1: self.widths2['k+'][i] = self._widths2['k+ fav']
+            elif i == 6: self.widths2['k+'][i] = self._widths2['k+ fav']
+            else:        self.widths2['k+'][i] = self._widths2['k+ unfav']
+
+
+        self.widths1['pi-'] = self.charge_conj(self.widths1['pi+'])
+        self.widths1['h-']  = self.charge_conj(self.widths1['h+'])
+        self.widths1['k-']  = self.charge_conj(self.widths1['k+'])
+
+        self.widths2['pi-'] = self.charge_conj(self.widths2['pi+'])
+        self.widths2['h-']  = self.charge_conj(self.widths2['h+'])
+        self.widths2['k-']  = self.charge_conj(self.widths2['k+'])
+
+    def get_C(self, x, Q2, hadron='pi+'):
+        if   hadron=='pi+':  C = conf['cpipff'].get_f(x, Q2)
+        elif hadron=='pi-':  C = conf['cpimff'].get_f(x, Q2)
+        elif hadron=='k+':   C = conf['cKpff'].get_f(x, Q2)
+        elif hadron=='k-':   C = conf['cKmff'].get_f(x, Q2)
+        elif hadron=='h+':   C = conf['chpff'].get_f(x, Q2)
+        elif hadron=='h-':   C = conf['chmff'].get_f(x, Q2)
+        return C
+
+    def get_state(self):
+        return self.widths1,self.widths2
+
+    def set_state(self, state):
+        self.widths1 = state[0]
+        self.widths2 = state[0]
 
 class PPDF(CORE):
 
@@ -448,76 +549,6 @@ class WORMGEARH(CORE):
         if target == 'n': C = self.p2n(C)
         return C
 
-# fragmentation functions
-
-class FF(CORE):
-
-    def __init__(self):
-        self.aux = conf['aux']
-        self.set_default_params()
-        self.setup()
-
-    def set_default_params(self):
-
-        self.widths0 = {}
-        self.widths0['pi+ fav'] = 0.12
-        self.widths0['pi+ unfav'] = 0.12
-        self.widths0['h+ fav'] = 0.12
-        self.widths0['h+ unfav'] = 0.12
-        self.widths0['k+ fav'] = 0.12
-        self.widths0['k+ unfav'] = 0.12
-
-        self.widths = {}
-        self.widths['pi+'] = np.ones(11)
-        self.widths['h+'] = np.ones(11)
-        self.widths['k+'] = np.ones(11)
-
-        self.K = {}
-        self.K['pi+'] = np.ones(11)
-        self.K['h+'] = np.ones(11)
-        self.K['k+'] = np.ones(11)
-        self.K['pi-'] = np.ones(11)
-        self.K['h-'] = np.ones(11)
-        self.K['k-'] = np.ones(11)
-
-    def get_K(self, z, hadron):
-        return 1.0
-
-    def setup(self):
-
-        for i in range(1, 11):
-            if i == 1 or i == 4: self.widths['pi+'][i] = np.copy(self.widths0['pi+ fav'])
-            else:                self.widths['pi+'][i] = np.copy(self.widths0['pi+ unfav'])
-
-        for i in range(1, 11):
-            if i == 1 or i == 4: self.widths['h+'][i] = np.copy(self.widths0['h+ fav'])
-            else:                self.widths['h+'][i] = np.copy(self.widths0['h+ unfav'])
-
-        for i in range(1, 11):
-            if i == 1 or i == 6: self.widths['k+'][i] = np.copy(self.widths0['k+ fav'])
-            else:                self.widths['k+'][i] = np.copy(self.widths0['k+ unfav'])
-
-        self.widths['pi-'] = self.charge_conj(self.widths['pi+'])
-        self.widths['h-']  = self.charge_conj(self.widths['h+'])
-        self.widths['k-']  = self.charge_conj(self.widths['k+'])
-
-    def get_C(self, x, Q2, hadron='pi+'):
-        if   hadron=='pi+':  C = conf['cpipff'].get_f(x, Q2)
-        elif hadron=='pi-':  C = conf['cpimff'].get_f(x, Q2)
-        elif hadron=='k+':   C = conf['cKpff'].get_f(x, Q2)
-        elif hadron=='k-':   C = conf['cKmff'].get_f(x, Q2)
-        elif hadron=='h+':   C = conf['chpff'].get_f(x, Q2)
-        elif hadron=='h-':   C = conf['chmff'].get_f(x, Q2)
-        elif hadron=='pi0':  C = 0.5*(conf['cpipff'].get_f(x, Q2)+conf['cpipff'].get_f(x, Q2))
-        elif hadron=='k0':   C = 0.5*(conf['cKpff'].get_f(x, Q2) +conf['cKpff'].get_f(x, Q2))
-        return C
-
-    def get_state(self):
-        return self.widths
-
-    def set_state(self, state):
-        self.widths = state
-
 class COLLINS(CORE):
 
     def __init__(self):
@@ -623,8 +654,6 @@ class COLLINS(CORE):
         self.widths = state[0]
         self.shape1 = state[1]
         self.shape2 = state[2]
-
-# ???
 
 class HTILDE(CORE):  # Htilde has same form as Collins
 
@@ -757,24 +786,24 @@ if __name__ == '__main__':
     conf['wormgearh']    = WORMGEARH()
     conf['collins']      = COLLINS()
     #conf['dcollinsdz']   = DCOLLINSDZ()
-    conf['Htilde']       = HTILDE()
+    #conf['Htilde']       = HTILDE()
 
 
     x = 0.15
     Q2 = 2.4
     dist = []
     dist.append('pdf')
-    dist.append('ppdf')
     dist.append('ff')
-    dist.append('transversity')
-    dist.append('sivers')
-    dist.append('boermulders')
-    dist.append('pretzelosity')
-    dist.append('wormgearg')
-    dist.append('wormgearh')
-    dist.append('collins')
+    #dist.append('ppdf')
+    #dist.append('transversity')
+    #dist.append('sivers')
+    #dist.append('boermulders')
+    #dist.append('pretzelosity')
+    #dist.append('wormgearg')
+    #dist.append('wormgearh')
+    #dist.append('collins')
     #dist.append('dcollinsdz')
-    dist.append('Htilde')
+    #dist.append('Htilde')
 
     
     for k in dist:
