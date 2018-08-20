@@ -159,14 +159,23 @@ At this point one can study the results to make plots etc. However the uncertain
 MC sampling 
 :::::::::::
 
+The MC sampling is performed via a technique known as Nested Sampling (NS).  
+The setups for NS are in code-block of  :code:`input.py` 
 
+.. code-block:: python
+  
+  conf['nruns']=1
+  conf['factor']=4.0
+  conf['kappa']=1.5
+  conf['tol']=1e-10
+  conf['itmax']=int(1e7)
+  conf['block size']=10
+  conf['nll shift']=0
 
+:code:`conf['factor']`  and :code:`conf['kappa']`  are the most relevant parameters in NS. 
+:code:`conf['factor']` controls the number of active points in NS:
 
+.. math::
+  {\rm active~points} = {\rm factor} \times {\rm number~of~parameters}
 
-
-
-
-
-
-
-
+The sampling is more dense with increasing values of :code:`factor`

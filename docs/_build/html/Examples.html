@@ -88,7 +88,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example00">example00</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#input-py">input.py</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#single-fit">single fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#single-fit">Single fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mc-sampling">MC sampling</a></li>
 </ul>
 </li>
@@ -252,7 +252,7 @@ parameter at <code class="code docutils literal notranslate"><span class="pre">c
 <p>Finally filters can be applied at <code class="code docutils literal notranslate"><span class="pre">conf['datasets']['sidis']['filters']</span></code> as shown above.</p>
 </div>
 <div class="section" id="single-fit">
-<h3>single fit<a class="headerlink" href="#single-fit" title="Permalink to this headline">¶</a></h3>
+<h3>Single fit<a class="headerlink" href="#single-fit" title="Permalink to this headline">¶</a></h3>
 <p>We next proceed to perform a single fit</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jam3d</span> <span class="o">-</span><span class="n">t</span> <span class="mi">1</span> <span class="nb">input</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -290,6 +290,22 @@ At this point one can study the results to make plots etc. However the uncertain
 </div>
 <div class="section" id="mc-sampling">
 <h3>MC sampling<a class="headerlink" href="#mc-sampling" title="Permalink to this headline">¶</a></h3>
+<p>The MC sampling is performed via a technique known as Nested Sampling (NS).
+The setups for NS are in code-block of  <code class="code docutils literal notranslate"><span class="pre">input.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;nruns&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;factor&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">4.0</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">1.5</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;tol&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">1e-10</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;itmax&#39;</span><span class="p">]</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e7</span><span class="p">)</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;block size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;nll shift&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">conf['factor']</span></code>  and <code class="code docutils literal notranslate"><span class="pre">conf['kappa']</span></code>  are the most relevant parameters in NS.
+<code class="code docutils literal notranslate"><span class="pre">conf['factor']</span></code> controls the number of active points in NS:</p>
+<div class="math notranslate nohighlight">
+\[{\rm active~points} = {\rm factor} \times {\rm number~of~parameters}\]</div>
+<p>The sampling is more dense with increasing values of <code class="code docutils literal notranslate"><span class="pre">factor</span></code></p>
 </div>
 </div>
 </div>
