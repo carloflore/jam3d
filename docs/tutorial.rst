@@ -6,27 +6,20 @@ Dependencies
 
 - Only Linux and OSX is supported
 
-- We recommend to install anacoda (python2) which 
+- We recommend to install anaconda (python2) which 
   comes will all the necessary libraries
-
-- A fortran compiler (gfortran) 
 
 Installation
 ------------
 
 Clone the codes from https://github.com/JeffersonLab/jam3d
 
-
-From the command line ::
-
-  cd external  ./install
-
-Enviroment variables needs to be set in your terminal session. 
+Certain enviroment variables needs to be set in your terminal session. 
 For bash they are ::
 
-  export FITPACK=path2fitpack
-  PYTHONPATH=$FITPACK:$PYTHONPATH
-  export PATH=$FITPACK/bin:$PATH
+  export JAM3D=path2fitpack
+  PYTHONPATH=$JAM3D:$PYTHONPATH
+  export PATH=$JAM3D/bin:$PATH
 
 Alternatively you can source the setup files ::
 
@@ -47,7 +40,7 @@ Basic workflow
 
 3) Use a jupyer notebook to study the results
 
-
+Note: for MC runs, there are additional scripts to help to understand intermediate results
 
 
 

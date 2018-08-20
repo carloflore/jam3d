@@ -162,27 +162,22 @@
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Only Linux and OSX is supported</li>
-<li>We recommend to install anacoda (python2) which
+<li>We recommend to install anaconda (python2) which
 comes will all the necessary libraries</li>
-<li>A fortran compiler (gfortran)</li>
 </ul>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Clone the codes from <a class="reference external" href="https://github.com/JeffersonLab/jam3d">https://github.com/JeffersonLab/jam3d</a></p>
-<p>From the command line</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">external</span>  <span class="o">./</span><span class="n">install</span>
-</pre></div>
-</div>
-<p>Enviroment variables needs to be set in your terminal session.
+<p>Certain enviroment variables needs to be set in your terminal session.
 For bash they are</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>export FITPACK=path2fitpack
-PYTHONPATH=$FITPACK:$PYTHONPATH
-export PATH=$FITPACK/bin:$PATH
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export JAM3D=path2fitpack
+PYTHONPATH=$JAM3D:$PYTHONPATH
+export PATH=$JAM3D/bin:$PATH
 </pre></div>
 </div>
 <p>Alternatively you can source the setup files</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span>  <span class="n">setup</span><span class="o">.</span><span class="n">bash</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span>  <span class="n">setup</span><span class="o">.</span><span class="n">bash</span>
 </pre></div>
 </div>
 <p>Once the enviroment variables are set the scripts can be called from
@@ -198,6 +193,7 @@ given analysis.</p>
 for more info</li>
 <li>Use a jupyer notebook to study the results</li>
 </ol>
+<p>Note: for MC runs, there are additional scripts to help to understand intermediate results</p>
 </div>
 </div>
 
@@ -254,7 +250,7 @@ for more info</li>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
