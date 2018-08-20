@@ -7,7 +7,6 @@ from scipy.optimize import minimize,leastsq
 import json
 from tools.bar import BAR
 import itertools as it
-from hess import HESS
 import pandas as pd
 from IPython.display import clear_output
 from tools.inputmod import INPUTMOD
@@ -53,19 +52,6 @@ class ML:
     status.append('chi2tot = %f'%(chi2tot))
     status.append('dchi2(iter)  = %f'%self.dchi2)
     status.append('dchi2(local) = %f'%dchi2)
-    if 'pdf'  in conf['params']:
-      status.append('proton uvsr = %f'%conf['pdf'].sr['uvsr'])
-      status.append('proton dvsr = %f'%conf['pdf'].sr['dvsr'])
-      status.append('proton msr  = %f'%conf['pdf'].sr['msr'])
-      if 'svsr' in conf['pdf'].sr: status.append('proton svsr = %f'%conf['pdf'].sr['svsr'])
-    if 'pdf-pion'  in conf['params']:
-      status.append('pion ubvsr= %f'%conf['pdf-pion'].sr['ubvsr'])
-      status.append('pion dvsr = %f'%conf['pdf-pion'].sr['dvsr'])
-      status.append('pion msr  = %f'%conf['pdf-pion'].sr['msr'])
-      status.append('pion msr g= %f'%conf['pdf-pion'].sr['msr-g'])
-      status.append('pion msr u= %f'%conf['pdf-pion'].sr['msr-u'])
-      status.append('pion msr d= %f'%conf['pdf-pion'].sr['msr-d'])
-      status.append('pion msr s= %f'%conf['pdf-pion'].sr['msr-s'])
     status.append('')
     status.extend(conf['resman'].gen_report())
     parstatus = conf['parman'].gen_report()
