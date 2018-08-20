@@ -14,10 +14,10 @@ electron-positron or proton-proton scattering.
    :maxdepth: 2
    :caption: Contents:
 
-   tutorial
-   examples
-   physics 
-   api 
+   Tutorial
+   Examples
+   Physics 
+   API 
     
 
 .. Indices and tables
