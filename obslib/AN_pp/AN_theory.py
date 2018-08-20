@@ -7,9 +7,6 @@ import pandas as pd
 import math
 import time
 from tools.tools import load_config
-from external.CJLIB.CJ import CJ
-from external.LSSLIB.LSS import LSS
-from external.DSSLIB.DSS import DSS
 from qcdlib.tmdlib import PDF, PPDF, FF
 from qcdlib.tmdlib import TRANSVERSITY
 from qcdlib.tmdlib import COLLINS

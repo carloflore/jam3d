@@ -15,9 +15,7 @@ class _READER:
     def apply_cuts(self, tab, k):
         if 'filters' in conf['datasets'][self.reaction]:
             filters = conf['datasets'][self.reaction]['filters']
-            for i in filters:
-                if k in filters[i]['idx']:
-                    tab = tab.query(filters[i]['filter'])
+            if k in filters: tab = tab.query(filters[k])
         return tab
 
     def load_data_sets(self, reaction):
@@ -35,7 +33,7 @@ class _READER:
                 tab = pd.read_excel(fname)
             else:
                 tab = pd.read_excel('%s/database/%s' %
-                                    (os.environ['FITPACK'], fname))
+                                    (os.environ['JAM3D'], fname))
             tab = self.modify_table(tab, k)
             if len(tab.index)==0: continue
             TAB[k] = tab.to_dict(orient='list')

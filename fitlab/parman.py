@@ -4,25 +4,6 @@ import numpy as np
 from numpy.random import choice, randn, uniform
 from tools.config import conf, load_config
 import pandas as pd
-from external.CJLIB.CJ import CJ
-from external.DSSLIB.DSS import DSS
-from external.LSSLIB.LSS import LSS
-from qcdlib.tmdlib import PDF, PPDF, FF
-from qcdlib.tmdlib import TRANSVERSITY
-from qcdlib.tmdlib import BOERMULDERS
-from qcdlib.tmdlib import SIVERS
-from qcdlib.tmdlib import PRETZELOSITY
-from qcdlib.tmdlib import COLLINS
-from qcdlib.tmdlib import WORMGEARG
-from qcdlib.tmdlib import WORMGEARH
-from qcdlib.tmdlib import HTILDE
-from qcdlib.aux import AUX
-from qcdlib.alphaS import ALPHAS
-from obslib.dis.stfuncs import STFUNCS as DIS_STFUNCS
-from obslib.sidis.reader import READER as SIDIS_READER
-from obslib.sidis.stfuncs import STFUNCS as SIDIS_STFUNCS
-from obslib.sidis.residuals import RESIDUALS as SIDIS_RESIDUALS
-
 
 class PARMAN:
 

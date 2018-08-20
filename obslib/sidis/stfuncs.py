@@ -146,6 +146,7 @@ class STFUNCS:
         mu2 = Q2
         F = conf[k1].get_C(x, mu2, target)
         D = conf[k2].get_C(z, mu2, hadron)
+        F[0],D[0]=0,0
         wq = self.get_wq(z, k1, k2, target, hadron)
         if obs == 'AUTsinphiS':
             gauss = 1  # AUTsinphiS is collinear

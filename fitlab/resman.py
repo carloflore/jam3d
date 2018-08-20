@@ -1,19 +1,14 @@
 import os
-import argparse
 import sys
 import time
 import logging
 import fitlab.parallel as parallel
-
 import numpy as np
-import external.CJLIB.CJ
-import external.DSSLIB.DSS
-import external.LSSLIB.LSS
-import external.PDF.CT10  # Alexei 4/20/2018
 import qcdlib.tmdlib
 import qcdlib.aux
 import qcdlib.alphaS
-import obslib.dis.stfuncs
+import qcdlib.interpolator
+import obslib.idis.stfuncs
 import obslib.sidis.stfuncs
 import obslib.sidis.residuals
 import obslib.sidis.reader
@@ -27,8 +22,6 @@ import obslib.AN_pp.AN_theory
 import obslib.AN_pp.residuals
 import obslib.AN_pp.reader
 from parman import PARMAN
-from mcsamp import MCSAMP
-from maxlike import ML
 from tools.config import load_config, conf
 
 
@@ -36,14 +29,11 @@ class RESMAN:
 
     def __init__(self, mode='solo', ip=None, nworkers=None):
 
+        # initial setup for parallelization
         self.mode = mode
         self.master = None
         self.slave = None
         self.broker = None
-
-        conf['aux'] = qcdlib.aux.AUX()
-        self.setup_tmds()
-        conf['parman'] = PARMAN()
 
         if self.mode == 'parallel':
             self.master = parallel.Server(ip=ip)
@@ -54,56 +44,75 @@ class RESMAN:
         elif self.mode == 'slave':
             self.slave = parallel.Worker(ip=ip)
 
+        # theory setups
+        conf['aux'] = qcdlib.aux.AUX()
+        self.load_collinear_distributions()
+        self.set_alphaS()
+        self.setup_tmds()
+        conf['parman'] = PARMAN()
         conf['moments'] = obslib.moments.moments.MOMENTS()
 
         if 'datasets' in conf:
+
             if 'sidis' in conf['datasets']:
-                self.setup_dis()
+                self.setup_idis()
                 self.setup_sidis()
+
             if 'sia' in conf['datasets']:
                 self.setup_sia()
+
             if 'moments' in conf['datasets']:
                 self.setup_moments()
+
             if 'AN' in conf['datasets']:
                 self.setup_AN()
 
+        # final setups for paralleization
         if self.mode == 'parallel':
             self.broker.run_subprocess()
             self.slave.run_subprocess()
 
-    def setup_dis(self):
+    def set_alphaS(self):
+
         conf['alphaSmode'] = 'backward'
         conf['Q20'] = 1
-        # conf['order']='NLO'
-        conf['order'] = 'LO'
+        conf['order'] = 'NLO'
         conf['alphaS'] = qcdlib.alphaS.ALPHAS()
-        conf['pdf-NLO'] = external.CJLIB.CJ.CJ()
-        conf['dis stfuncs'] = obslib.dis.stfuncs.STFUNCS()
+
+    def load_collinear_distributions(self):
+
+        defaults={}
+        defaults['cpdf']   = 'CJ15lo_0000'
+        defaults['cppdf']  = 'CJ15lo_0000'
+        defaults['cpipff'] = 'dsspipLO_0000'
+        defaults['cpimff'] = 'dsspimLO_0000'
+        defaults['cKpff']  = 'dssKpNLO_0000'
+        defaults['cKmff']  = 'dssKmNLO_0000'
+
+        for k in defaults:
+            if k in conf:  conf[k] = qcdlib.interpolator.INTERPOLATOR(conf[k])
+            else:          conf[k] = qcdlib.interpolator.INTERPOLATOR(defaults[k])
+
+    def setup_idis(self):
+        conf['dis stfuncs']  = obslib.idis.stfuncs.STFUNCS()
 
     def setup_tmds(self):
-        conf['order'] = 'LO'
-        conf['path2CT10'] = '%s/external/PDF' % os.environ['FITPACK']
-        conf['path2CJ'] = '%s/external/CJLIB' % os.environ['FITPACK']
-        conf['path2LSS'] = '%s/external/LSSLIB' % os.environ['FITPACK']
-        conf['path2DSS'] = '%s/external/DSSLIB' % os.environ['FITPACK']
-        conf['_pdf'] = external.CJLIB.CJ.CJ()
-        #conf['_pdf'] =external.PDF.CT10.CT10()
-        conf['_ppdf'] = external.LSSLIB.LSS.LSS()
-        conf['_ff'] = external.DSSLIB.DSS.DSS()
-        conf['pdf'] = qcdlib.tmdlib.PDF()
-        conf['ppdf'] = qcdlib.tmdlib.PPDF()
-        conf['ff'] = qcdlib.tmdlib.FF()
+        conf['lam2'] = 0.4 
+        conf['Q02']  = 1.0
+        conf['pdf']          = qcdlib.tmdlib.PDF()
+        conf['ppdf']         = qcdlib.tmdlib.PPDF()
+        conf['ff']           = qcdlib.tmdlib.FF()
         conf['transversity'] = qcdlib.tmdlib.TRANSVERSITY()
-        conf['sivers'] = qcdlib.tmdlib.SIVERS()
-        conf['boermulders'] = qcdlib.tmdlib.BOERMULDERS()
+        conf['sivers']       = qcdlib.tmdlib.SIVERS()
+        conf['boermulders']  = qcdlib.tmdlib.BOERMULDERS()
         conf['pretzelosity'] = qcdlib.tmdlib.PRETZELOSITY()
-        conf['wormgearg'] = qcdlib.tmdlib.WORMGEARG()
-        conf['wormgearh'] = qcdlib.tmdlib.WORMGEARH()
-        conf['collins'] = qcdlib.tmdlib.COLLINS()
-        conf['Htilde'] = qcdlib.tmdlib.HTILDE()
+        conf['wormgearg']    = qcdlib.tmdlib.WORMGEARG()
+        conf['wormgearh']    = qcdlib.tmdlib.WORMGEARH()
+        conf['collins']      = qcdlib.tmdlib.COLLINS()
+        conf['Htilde']       = qcdlib.tmdlib.HTILDE()
 
     def setup_sidis(self):
-        conf['sidis tabs'] = obslib.sidis.reader.READER().load_data_sets('sidis')
+        conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')
         conf['sidis stfuncs'] = obslib.sidis.stfuncs.STFUNCS()
         self.sidisres = obslib.sidis.residuals.RESIDUALS()
 
@@ -114,7 +123,7 @@ class RESMAN:
                 'sidis', self.sidisres.mproc)
 
     def setup_sia(self):
-        conf['sia tabs'] = obslib.sia.reader.READER().load_data_sets('sia')
+        conf['sia tabs']    = obslib.sia.reader.READER().load_data_sets('sia')
         conf['sia stfuncs'] = obslib.sia.stfuncs.STFUNCS()
         self.siares = obslib.sia.residuals.RESIDUALS()
 
@@ -125,9 +134,8 @@ class RESMAN:
                 'sia', self.siares.mproc)
 
     def setup_moments(self):
-        conf['moments tabs'] = obslib.moments.reader.READER(
-        ).load_data_sets('moments')
-        conf['moments'] = obslib.moments.moments.MOMENTS()
+        conf['moments tabs'] = obslib.moments.reader.READER().load_data_sets('moments')
+        conf['moments']      = obslib.moments.moments.MOMENTS()
         self.momres = obslib.moments.residuals.RESIDUALS()
 
         if (self.slave):
@@ -137,7 +145,7 @@ class RESMAN:
                 'moments', self.momres.mproc)
 
     def setup_AN(self):
-        conf['AN tabs'] = obslib.AN_pp.reader.READER().load_data_sets('AN')
+        conf['AN tabs']   = obslib.AN_pp.reader.READER().load_data_sets('AN')
         conf['AN theory'] = obslib.AN_pp.AN_theory.ANTHEORY()
         self.ANres = obslib.AN_pp.residuals.RESIDUALS()
 

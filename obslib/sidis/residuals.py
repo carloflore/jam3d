@@ -5,7 +5,6 @@ import numpy as np
 from tools.residuals import _RESIDUALS
 from tools.config import conf
 
-
 class RESIDUALS(_RESIDUALS):
 
     def __init__(self):
@@ -412,7 +411,6 @@ class RESIDUALS(_RESIDUALS):
                 print l
             return L
 
-
 if __name__ == '__main__':
 
     from qcdlib.interpolator import INTERPOLATOR
@@ -436,12 +434,12 @@ if __name__ == '__main__':
     conf['Q20'] = 1
     conf['alphaS'] = ALPHAS()
 
-    conf['cpdf']   = INTERPOLATOR('CJ15nlo_0000')
-    conf['cppdf']  = INTERPOLATOR('CJ15nlo_0000')
-    conf['cpipff'] = INTERPOLATOR('dsspipNLO_0000')
-    conf['cpimff'] = INTERPOLATOR('dsspimNLO_0000')
-    conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
-    conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
+    conf['cpdf']   = INTERPOLATOR('CJ15lo_0000')
+    conf['cppdf']  = INTERPOLATOR('CJ15lo_0000')
+    conf['cpipff'] = INTERPOLATOR('dsspipLO_0000')
+    conf['cpimff'] = INTERPOLATOR('dsspimLO_0000')
+    conf['cKpff']  = INTERPOLATOR('dssKpLO_0000')
+    conf['cKmff']  = INTERPOLATOR('dssKmLO_0000')
 
     conf['lam2'] = 0.4 
     conf['Q02']  = 1.0

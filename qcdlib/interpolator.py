@@ -29,7 +29,7 @@ class INTERPOLATOR:
                 for iQ in range(nQ):
                     cnt+=1
                     table[ix,iQ]=data[i][cnt]
-            self.T[iflav[i]]=RectBivariateSpline(x,Q,table)
+            self.T[iflav[i]]=RectBivariateSpline(x,Q,table,kx=3, ky=4)
 
         self.IFLAV=[21,2,-2,1,-1,3,-3,4,-4,5,-5]
 
