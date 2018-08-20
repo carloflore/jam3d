@@ -40,15 +40,4 @@ basic workflow
 
 3) Use a jupyer notebook to study the results
 
-Note: for MC runs, there are additional scripts to help to understand intermediate results
-
-
-
-
-
-
-
-
-
-
-
+Note: for MC runs, there are additional scripts to help to understand intermediate results.
