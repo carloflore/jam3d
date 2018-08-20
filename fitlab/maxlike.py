@@ -1,230 +1,487 @@
-import sys
-import os
-import time
-import copy
+import sys,os
 import numpy as np
-from tools.tools import load, save, checkdir, load_config
-from scipy.optimize import leastsq, minimize
-from tools.config import conf
-
+from tools.tools import checkdir,save,load
+from tools.config import load_config, conf
+import time
+from scipy.optimize import minimize,leastsq
+import json
+from tools.bar import BAR
+import itertools as it
+from hess import HESS
+import pandas as pd
+from IPython.display import clear_output
+from tools.inputmod import INPUTMOD
 
 class ML:
 
-    def __init__(self):
-        self.cum_shifts = 0
-        self.iteration = 0
-        self.CHI2T = []
-        self.CHI2V = []
-        self.PARAMS = []
-        self.TOT = []
+  def __init__(self):
+    if 'args' in conf:
+      self.inputfile=inputfile=conf['args'].config
+    self.cum_shifts=0
+    self.iteration=0
+    self.CHI2T=[]
+    self.CHI2V=[]
+    self.PARAMS=[]
+    self.TOT=[]
 
-        if 'screen mode' not in conf:
-            conf['screen mode'] = 'plain'
+  def get_stats(self,res,rres,nres,delay):
 
-    def get_stats(self, res, rres, nres, delay):
+    shifts=conf['parman'].shifts
+    etime = (time.time()-self.t0)/60
 
-        shifts = conf['parman'].shifts
-        etime = (time.time() - self.t0) / 60
+    npts=res.size
+    chi2=np.sum(res**2)
+    rchi2=np.sum(rres**2)
+    nchi2=np.sum(nres**2)
+    chi2tot=chi2+rchi2+nchi2
+    dchi2=chi2tot-self.chi2tot
+    if shifts>2: 
+      if chi2tot<self.chi2tot:
+        self.dchi2=self.chi2tot-chi2tot
+        self.chi2tot=chi2tot
 
-        npts = res.size
-        chi2 = np.sum(res**2)
-        rchi2 = np.sum(rres**2)
-        nchi2 = np.sum(nres**2)
-        chi2tot = chi2 + rchi2 + nchi2
-        dchi2 = chi2tot - self.chi2tot
-        if shifts > 2:
-            if chi2tot < self.chi2tot:
-                self.dchi2 = self.chi2tot - chi2tot
-                self.chi2tot = chi2tot
 
-        self.status = []
-        self.status.append('JAM FITTER')
-        self.status.append('count = %d' % self.cnt)
-        self.status.append('elapsed time(mins)=%f' % etime)
-        self.status.append('shifts  = %d' % shifts)
-        self.status.append('npts    = %d' % npts)
-        self.status.append('chi2    = %f' % chi2)
-        self.status.append('rchi2   = %f' % rchi2)
-        self.status.append('nchi2   = %f' % nchi2)
-        self.status.append('chi2tot = %f' % (chi2tot))
-        self.status.append('dchi2(iter)  = %f' % self.dchi2)
-        self.status.append('dchi2(local) = %f' % dchi2)
+    status=[]
+    status.append('JAM FITTER')
+    status.append('count = %d'%self.cnt)
+    status.append('elapsed time(mins)=%f'%etime)
+    status.append('shifts  = %d'%shifts)
+    status.append('npts    = %d'%npts)
+    status.append('chi2    = %f'%chi2)
+    status.append('rchi2   = %f'%rchi2)
+    status.append('nchi2   = %f'%nchi2)
+    status.append('chi2tot = %f'%(chi2tot))
+    status.append('dchi2(iter)  = %f'%self.dchi2)
+    status.append('dchi2(local) = %f'%dchi2)
+    if 'pdf'  in conf['params']:
+      status.append('proton uvsr = %f'%conf['pdf'].sr['uvsr'])
+      status.append('proton dvsr = %f'%conf['pdf'].sr['dvsr'])
+      status.append('proton msr  = %f'%conf['pdf'].sr['msr'])
+      if 'svsr' in conf['pdf'].sr: status.append('proton svsr = %f'%conf['pdf'].sr['svsr'])
+    if 'pdf-pion'  in conf['params']:
+      status.append('pion ubvsr= %f'%conf['pdf-pion'].sr['ubvsr'])
+      status.append('pion dvsr = %f'%conf['pdf-pion'].sr['dvsr'])
+      status.append('pion msr  = %f'%conf['pdf-pion'].sr['msr'])
+      status.append('pion msr g= %f'%conf['pdf-pion'].sr['msr-g'])
+      status.append('pion msr u= %f'%conf['pdf-pion'].sr['msr-u'])
+      status.append('pion msr d= %f'%conf['pdf-pion'].sr['msr-d'])
+      status.append('pion msr s= %f'%conf['pdf-pion'].sr['msr-s'])
+    status.append('')
+    status.extend(conf['resman'].gen_report())
+    parstatus = conf['parman'].gen_report()
 
-        self.status.append('')
-        self.status.extend(conf['resman'].gen_report())
+    nstatus=len(status)
+    nparstatus=len(parstatus)
 
-        parstatus = conf['parman'].gen_report()
+    os.system('clear') 
+    for i in range(max([nstatus,nparstatus])):
+      data=[]
+      if i<nstatus: data.append(status[i])
+      else: data.append('')
+      if i<nparstatus: data.append(parstatus[i])
+      else: data.append('')
+      print '%-120s  | %s'%tuple(data)
+      
+    
+    if delay==True: 
+      if 'args' in conf: self.gen_output()
+      self.gen_output()
+      #sys.exit()
 
-        if conf['screen mode'] == 'curses':
+    #clear_output(wait=True)
+    #if conf['screen mode']=='curses':
 
-            self.status.append('')
-            if delay == False:
-                self.status.append('')
-            else:
-                self.status.append('Its over!!!')
-            self.status.append('')
-            self.status.append('press q to exit')
+    #  self.status.append('')
+    #  if    delay==False: self.status.append('')
+    #  else: self.status.append('Its over!!!')
+    #  self.status.append('')
+    #  self.status.append('press q to exit')
 
-            conf['screen'].clear()
-            conf['screen'].border(0)
-            if delay == False:
-                conf['screen'].nodelay(1)
-            else:
-                conf['screen'].nodelay(0)
+    #  conf['screen'].clear()
+    #  conf['screen'].border(0)
+    #  if delay==False: conf['screen'].nodelay(1)
+    #  else: conf['screen'].nodelay(0)
 
-            for i in range(len(self.status)):
-                conf['screen'].addstr(i + 2, 2, self.status[i])
+    #  for i in range(len(self.status)):
+    #    conf['screen'].addstr(i+2,2,self.status[i])
 
-            for i in range(len(parstatus)):
-                conf['screen'].addstr(i + 2, 80, parstatus[i])
+    #  for i in range(len(parstatus)):
+    #    conf['screen'].addstr(i+2,80,parstatus[i])
 
-            conf['screen'].refresh()
-            if conf['screen'].getch() == ord('q'):
-                curses.endwin()
-                self.gen_output()
-                sys.exit()
 
-        elif conf['screen mode'] == 'plain':
-            for i in range(len(self.status)):
-                print self.status[i]
-            for i in range(len(parstatus)):
-                print parstatus[i]
-            if delay == True:
-                self.gen_output()
-                sys.exit()
+    #  conf['screen'].refresh()
+    #  if conf['screen'].getch()==ord('q'):
+    #    curses.endwin()
+    #    self.gen_output()
+    #    sys.exit()
 
-    def get_residuals(self, par, delay=False):
-        self.cnt += 1
-        res, rres, nres = conf['resman'].get_residuals(par)
-        self.get_stats(res, rres, nres, delay)
-        if len(rres) != 0:
-            res = np.append(res, rres)
-        if len(nres) != 0:
-            res = np.append(res, nres)
-        return res
+    #elif conf['screen mode']=='plain':
 
-    def gen_output(self):
+  def get_residuals(self,par,delay=False,status=True):
+    res,rres,nres=conf['resman'].get_residuals(par)
+    if status: 
+      self.cnt+=1
+      self.get_stats(res,rres,nres,delay)
+    if len(rres)!=0: res=np.append(res,rres)
+    if len(nres)!=0: res=np.append(res,nres)
+    return res
 
-        inputfile = conf['args'].config
-        with open(inputfile) as f:
-            L = f.readlines()
-        for i in range(len(L)):
+  def gen_output(self):
 
-            if L[i].startswith('#'):
-                continue
+    inputmod=INPUTMOD(conf['args'].config)
 
-            if 'params' in L[i] and '<<' in L[i]:
-                l = L[i].split('=')[0].replace('conf', '').replace("'", '')
-                k, kk = l.replace('][', '@').replace(
-                    '[', '').replace(']', '').split('@')[1:]
-                left = L[i].split('<<')[0]
-                right = L[i].split('>>')[1]
-                L[i] = left + '<<%30.20e>>' % conf['params'][k.strip()][kk.strip()
-                                                                      ]['value'] + right
+    for kind in conf['params']: 
+      for par in conf['params'][kind]:
+        value=conf['params'][kind][par]['value']
+        inputmod.mod_par(kind,par,'value',value) 
 
-            if 'norm' in L[i] and '<<' in L[i]:
-                l = L[i].split('=')[0].replace('conf', '').replace("'", '')
-                dum1, k, dum2, kk = l.replace('][', '@').replace(
-                    '[', '').replace(']', '').split('@')
-                left = L[i].split('<<')[0]
-                right = L[i].split('>>')[1]
+    for reaction in conf['datasets']:
+      for idx in conf['datasets'][reaction]['norm']:
+        value=conf['datasets'][reaction]['norm'][idx]['value']
+        inputmod.mod_norm(reaction,idx,'value',value) 
 
-                value = conf['datasets'][k.strip()]['norm'][int(kk)]['value']
-                L[i] = left + '<<%30.20e>>' % value + right
+    inputmod.gen_input()
 
-        # name=inputfile.split('/')[-1].replace('.py','')
-        # outputdir='runs/%s'%name
-        # checkdir(outputdir)
-        # outputfile='%s/%s.py'%(outputdir,name)
+  def get_chi2(self,par,status=True):
+    return np.sum(self.get_residuals(par,status=status)**2)
 
-        with open(inputfile, 'w') as f:
-            f.writelines(L)
+  def run_minimize(self):
 
-    def get_chi2(self, par):
-        return np.sum(self.get_residuals(par)**2)
+    guess=conf['parman'].par
+    order=conf['parman'].order
+    conf['screen mode']='plain'
 
-    def run_minimize(self):
+    bounds=[]
+    for entry in order:
+      i,k,kk=entry
+      if i==1:
+        bounds.append([conf['params'][k][kk]['min'],conf['params'][k][kk]['max']])
+      elif i==2:
+        bounds.append([None,None])
 
-        guess = conf['parman'].par
-        order = conf['parman'].order
+    if conf['screen mode']=='curses':
+      conf['screen']=curses.initscr()
 
-        bounds = []
-        for entry in order:
-            i, k, kk = entry
-            if i == 1:
-                bounds.append([conf['params'][k][kk]['min'],
-                               conf['params'][k][kk]['max']])
-            elif i == 2:
-                bounds.append([None, None])
+    self.chi2tot=1e1000
+    self.dchi2=0
+    self.t0 = time.time()
+    self.cnt=0
 
-        if conf['screen mode'] == 'curses':
-            conf['screen'] = curses.initscr()
+    #self.get_residuals(guess)
+    #sys.exit()
 
-        self.chi2tot = 1e1000
-        self.dchi2 = 0
-        self.t0 = time.time()
-        self.cnt = 0
+    res = minimize(self.get_chi2,guess, bounds=bounds,method='TNC')
+    res=self.get_residuals(res.x,delay=True)
 
-        # self.get_residuals(guess)
-        # sys.exit()
+  def run_leastsq(self):
 
-        res = minimize(self.get_chi2, guess, bounds=bounds, method='TNC')
-        res = self.get_residuals(res.x, delay=True)
+    guess=conf['parman'].par
+    order=conf['parman'].order
+    conf['screen mode']='plain'
 
-    def run_leastsq(self, gen_output=True):
 
-        guess = conf['parman'].par
-        order = conf['parman'].order
+    bounds=[]
+    for entry in order:
+      i,k,kk=entry
+      if i==1:
+        bounds.append([conf['params'][k][kk]['min'],conf['params'][k][kk]['max']])
+      elif i==2:
+        bounds.append([None,None])
 
-        bounds = []
-        for entry in order:
-            i, k, kk = entry
-            if i == 1:
-                bounds.append([conf['params'][k][kk]['min'],
-                               conf['params'][k][kk]['max']])
-            elif i == 2:
-                bounds.append([None, None])
+    if conf['screen mode']=='curses':
+      conf['screen']=curses.initscr()
 
-        if conf['screen mode'] == 'curses':
-            conf['screen'] = curses.initscr()
+    self.chi2tot=1e1000
+    self.dchi2=0
+    self.t0 = time.time()
+    self.cnt=0
 
-        self.chi2tot = 1e1000
-        self.dchi2 = 0
-        self.t0 = time.time()
-        self.cnt = 0
-        # ,ftol=1e-2)#,factor=0.1)#,ftol=1e-2)
-        fit = leastsq(self.get_residuals, guess, full_output=1, ftol=1e-6)
-        res = self.get_residuals(fit[0])  # ,delay=True)
-        if gen_output:
-            self.gen_output()
-        return fit[0]
+    #self.get_residuals(guess)
+    #self.gen_output()
+    #sys.exit()
 
-    def analysis(self):
-        self.gen_report()
+    #print conf['lmdiff tol']
+    #sys.exit()
 
-    def gen_report(self):
-        inputfile = conf['args'].config
-        outdir = 'outputs/' + inputfile.split('/')[-1].replace('.py', '')
-        checkdir(outdir)
-        par = conf['parman'].par
-        self.t0 = time.time()
-        self.cnt = 0
-        self.chi2tot = 1e1000
-        self.dchi2 = 0
-        self.t0 = time.time()
-        self.cnt = 0
-        self.get_residuals(par)
-        report = conf['resman'].gen_report(verb=1, level=1)
-        # save(report,'%s/report-ML'%outdir)
+    if 'lmdiff tol' in conf:
+      fit=leastsq(self.get_residuals,guess,full_output = 1,ftol=conf['lmdiff tol'])
+    else:
+      fit=leastsq(self.get_residuals,guess,full_output = 1)
+    res=self.get_residuals(fit[0],delay=True)
 
-    def rap_fits(self):
-        checkdir('maxlike')
-        dy = [1.5, 2.0, 2.5, 3.0, 3.5]
-        PAR = {}
-        for _dy in dy:
-            print '#' * 10
-            conf['datasets']['sidis']['filters'][0]['filter'] = "z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9 and dy>%f" % _dy
-            conf['resman'].setup()
-            par = self.run_leastsq(gen_output=False)
-            PAR[_dy] = par
-        save(PAR, 'maxlike/rap_fits.dat')
+  def run_test(self):
+
+    guess=conf['parman'].par
+    order=conf['parman'].order
+    conf['screen mode']='plain'
+
+    bounds=[]
+    for entry in order:
+      i,k,kk=entry
+      if i==1:
+        bounds.append([conf['params'][k][kk]['min'],conf['params'][k][kk]['max']])
+      elif i==2:
+        bounds.append([None,None])
+
+    if conf['screen mode']=='curses':
+      conf['screen']=curses.initscr()
+
+    self.chi2tot=1e1000
+    self.dchi2=0
+    self.t0 = time.time()
+    self.cnt=0
+    self.get_residuals(guess)
+
+    for l in conf['resman'].gen_report(verb=0,level=1):
+      print l
+
+  def analysis(self):
+    self.gen_report()
+
+  def gen_report(self):
+    inputfile=conf['args'].config
+    outdir='outputs/'+inputfile.split('/')[-1].replace('.py','')
+    checkdir(outdir)
+    par=conf['parman'].par
+    self.t0 = time.time()
+    self.cnt=0
+    self.get_residuals(par,status=False)
+    print conf['pdf'].sr
+    report=conf['resman'].gen_report(verb=1,level=1)
+    save(report,'%s/report-ML'%outdir)
+
+  def simulation(self):
+    par=conf['parman'].par
+    self.get_residuals(par,delay=False,status=False)
+    for obs in conf['datasets']:
+      for idx in conf['datasets'][obs]['xlsx']:
+        if idx<0: 
+          fname=conf['datasets'][obs]['xlsx'][idx]
+          tab=pd.read_excel(fname)
+          tab.value=conf['%s tabs'%obs][idx]['thy']
+          tab['stat_u']=tab.value*tab['stat(%)']
+          writer = pd.ExcelWriter(fname)
+          tab.to_excel(writer,'Sheet1',index=False)
+          writer.save()
+
+  def simulation_json(self):
+    resman=conf['resman']
+    parman=conf['parman']
+    inputfile=conf['args'].config
+    
+    par=parman.par
+    parman.set_new_params(par)
+
+
+    M2=conf['aux'].M2
+    M=np.sqrt(M2)
+
+    data={}
+    data['author']="N. Sato"
+    data['generator']="JAM"
+    data['reaction']="DIS"
+    data['target']="p"
+    data['Elab']="10.6"
+    data['lepton']="e-"
+    data['variables']=["x,y,Q2,F2,FL,FL,dsig/dxdy"]
+
+    Elab=float(data['Elab'])
+    xmin=1/(2*M*Elab)
+    ymin=1/(2*M*Elab)
+
+    data['axis']=[]
+    data['axis'].append({ "name": "a", "bins":  200, "min":  xmin, "max":   0.999, "scale":"arb" ,"description":"Bjorken x"})
+    data['axis'].append({ "name": "b", "bins":  200, "min":  ymin, "max":   0.999, "scale":"arb", "description":"y"},)
+
+    Tab=json.dumps(data,sort_keys=True,indent=4, separators=(',', ': '))
+    Tab=[Tab]
+    Tab.append('%10s %10s %10s %10s %10s %10s %10s %10s %10s'%('ix','iy','x','y','Q2','F2','FL','F3','dsig/dxdy'))
+
+    #Tab=["#!"+Tab]
+
+    bin_center = lambda xmin,xmax,n: np.array([xmin + (2*i+1)*(xmax-xmin)/(2*n) for i in range(n)])
+
+    xs =bin_center(data['axis'][0]['min'],data['axis'][0]['max'],data['axis'][0]['bins'])
+    ys =bin_center(data['axis'][1]['min'],data['axis'][1]['max'],data['axis'][1]['bins'])
+
+    I=range(xs.size)
+    print 
+    bar=BAR('generating json file',xs.size**2)
+    for item in it.product(I,I):
+      ix,iy=item
+
+      x=xs[ix]
+      y=ys[iy]
+      Q2=x*y*(2*M*Elab)
+      if Q2<1: continue
+
+      F2=conf['stfuncs'].get_FXN(x,Q2,'F2',nucleon='proton',twist=2,tmc=False,evolve=True)
+      FL=conf['stfuncs'].get_FXN(x,Q2,'FL',nucleon='proton',twist=2,tmc=False,evolve=True)
+      F3=conf['stfuncs'].get_FXN(x,Q2,'F3',nucleon='proton',twist=2,tmc=False,evolve=True)
+
+      if np.isnan(F2): continue
+      if np.isnan(FL): continue
+      if np.isnan(F3): continue
+      
+      s=M2+2*Elab*M2**0.5
+      y=(Q2/2/x)/((s-M2)/2)
+
+      if y<0 or y>1: 
+        bar.next()
+        continue 
+        
+      YP=1+(1-y)**2
+      YM=1-(1-y)**2
+      if   data['lepton']=="e-": sign=1
+      elif data['lepton']=="e+": sign=-1
+
+      xsec=2*np.pi*conf['aux'].alfa**2/x/y/Q2
+      xsec*=(YP+2*x**2*y**2*M2/Q2)*F2-y**2*FL+sign*YM*x*F3
+
+      if xsec<0: continue
+
+      row='%10d %10d %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e'
+      row=row%(ix,iy,x,y,Q2,F2,FL,F3,xsec)
+      Tab.append(row)
+      bar.next()
+    bar.finish()
+    print '\nsaving...'
+    Tab=[row+'\n' for row in Tab]
+    f = open("dis-jam.json",'w')
+    f.writelines(Tab)
+    f.close()
+
+  def simulation_json2(self):
+    resman=conf['resman']
+    parman=conf['parman']
+    inputfile=conf['args'].config
+    
+    par=parman.par
+    parman.set_new_params(par)
+
+
+    M2=conf['aux'].M2
+    M=np.sqrt(M2)
+
+    data={}
+    data['author']="N. Sato"
+    data['generator']="JAM"
+    data['reaction']="DIS"
+    data['target']="p"
+    data['Elab']="10.6"
+    data['lepton']="e-"
+    data['variables']=["Counts","Err.Counts","xav","yav","q2av"]
+
+    Elab=float(data['Elab'])
+    xmin=1/(2*M*Elab)
+    ymin=1/(2*M*Elab)
+
+    data['axis']=[]
+    data['axis'].append({ "name": "a", "bins":  100, "min":  xmin, "max":   0.999, "scale":"arb" ,"description":"Bjorken x"})
+    data['axis'].append({ "name": "b", "bins":  50, "min":  ymin, "max":   0.999, "scale":"arb", "description":"y"},)
+
+    Tab=json.dumps(data,sort_keys=True,indent=4, separators=(',', ': '))
+    Tab=[Tab]
+
+    #Tab=["#!"+Tab]
+
+    bin_center = lambda xmin,xmax,n: np.array([xmin + (2*i+1)*(xmax-xmin)/(2*n) for i in range(n)])
+
+    xs =bin_center(data['axis'][0]['min'],data['axis'][0]['max'],data['axis'][0]['bins'])
+    ys =bin_center(data['axis'][1]['min'],data['axis'][1]['max'],data['axis'][1]['bins'])
+
+    IX=range(xs.size)
+    IY=range(ys.size)
+    print 
+    bar=BAR('generating json file',xs.size**2)
+    for item in it.product(IX,IY):
+      ix,iy=item
+
+      x=xs[ix]
+      y=ys[iy]
+      Q2=x*y*(2*M*Elab)
+      if Q2<1: continue
+
+      F2=conf['stfuncs'].get_FXN(x,Q2,'F2',nucleon='proton',twist=2,tmc=False,evolve=True)
+      FL=conf['stfuncs'].get_FXN(x,Q2,'FL',nucleon='proton',twist=2,tmc=False,evolve=True)
+      F3=conf['stfuncs'].get_FXN(x,Q2,'F3',nucleon='proton',twist=2,tmc=False,evolve=True)
+
+      if np.isnan(F2): continue
+      if np.isnan(FL): continue
+      if np.isnan(F3): continue
+      
+      s=M2+2*Elab*M2**0.5
+      y=(Q2/2/x)/((s-M2)/2)
+
+      if y<0 or y>1: 
+        bar.next()
+        continue 
+        
+      YP=1+(1-y)**2
+      YM=1-(1-y)**2
+      if   data['lepton']=="e-": sign=1
+      elif data['lepton']=="e+": sign=-1
+
+      xsec=2*np.pi*conf['aux'].alfa**2/x/y/Q2
+      xsec*=(YP+2*x**2*y**2*M2/Q2)*F2-y**2*FL+sign*YM*x*F3
+
+      xsec*=1e8
+
+      if xsec<0: continue
+
+      row='%10d %10d %10.4e %10.4e %10.4e %10.4e %10.4e '
+      row=row%(ix,iy,xsec,xsec*0.05,x,y,Q2)
+      Tab.append(row)
+      bar.next()
+    bar.finish()
+    print '\nsaving...'
+    Tab=[row+'\n' for row in Tab]
+    f = open("jam.dat",'w')
+    f.writelines(Tab)
+    f.close()
+
+  def bootstrap(self):
+
+    if 'args' in conf:
+      outputdir='%s/mcdata'%conf['args'].config.split('/')[-1].replace('.py','')
+    checkdir(outputdir)
+
+    guess=conf['parman'].par
+    order=conf['parman'].order
+    conf['screen mode']=None
+    npar=len(guess)
+    nruns=conf['num replicas']
+    bar=BAR('running bootstrap run',nruns)
+    for i in range(nruns):
+      conf['parman'].get_ordered_free_params()
+      conf['resman'].resample()
+      self.chi2tot=1e1000
+      self.dchi2=0
+      self.t0 = time.time()
+      self.cnt=0
+      if 'lmdiff tol' in conf:
+        fit=leastsq(lambda p: self.get_residuals(p,False,True),guess,full_output = 1,ftol=conf['lmdiff tol'])
+      else:
+        fit=leastsq(lambda p: self.get_residuals(p,False,True),guess,full_output = 1)
+      save(fit[0],'%s/rep%d.dat'%(outputdir,i))
+      bar.next()
+    bar.finish()
+
+  def hessian(self):
+    p0=conf['parman'].par
+    npar=len(conf['parman'].par)
+    #idel=[i for i in range(npar) if conf['parman'].order[i][0]==2]
+    #H=np.delete(H,idel,axis=0)
+    #H=np.delete(H,idel,axis=1)
+    hess=HESS(p0,lambda p: self.get_chi2(p,status=False)).data
+    if 'args' in conf:
+      outputdir='%s/hess'%conf['args'].outdir
+      checkdir(outputdir)
+      fname=conf['args'].config.split('/')[-1].replace('.py','')
+      save(hess,'%s/%s.par'%(outputdir,fname))
+    else:
+      return hess
+     
+
+
+
