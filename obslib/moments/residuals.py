@@ -7,9 +7,6 @@ from scipy.integrate import quad
 import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
-from external.CJLIB.CJ import CJ
-from external.DSSLIB.DSS import DSS
-from external.LSSLIB.LSS import LSS
 from reader import READER
 from moments import MOMENTS
 from qcdlib.tmdlib import PDF, PPDF, FF
@@ -22,7 +19,7 @@ from qcdlib.tmdlib import WORMGEARG
 from qcdlib.tmdlib import WORMGEARH
 from qcdlib.aux import AUX
 from qcdlib.alphaS import ALPHAS
-from obslib.dis.stfuncs import STFUNCS as DIS_STFUNCS
+from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
 from tools.config import conf
 
 

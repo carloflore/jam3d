@@ -35,13 +35,14 @@ Authors
 - Tiabo Liu (JLab)
 - Wally Melnitchouk (JLab)
 - Alexei Prokudin (PSU) 
-- Daniel Pitonyak (PSU) 
+- Daniel Pitonyak (LVC)
 - Mason Albright (PSU) 
 
 .. image:: ./logos/jam.jpg
 .. image:: ./logos/jlab.png
 .. image:: ./logos/uconn.png
 .. image:: ./logos/psu.png
+.. image:: ./logos/lvc.jpg
 
 
 

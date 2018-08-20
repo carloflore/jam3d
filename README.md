@@ -11,7 +11,7 @@ The  documentation can be found at https://jeffersonlab.github.io/jam3d
 - Tiabo Liu (JLab)
 - Wally Melnitchouk (JLab)
 - Alexei Prokudin (PSU) 
-- Daniel Pitonyak (PSU) 
+- Daniel Pitonyak (LVC) 
 - Mason Albright (PSU) 
 
 

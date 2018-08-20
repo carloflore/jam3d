@@ -4,9 +4,6 @@ import os
 import numpy as np
 import math
 from tools.tools import load_config
-from external.CJLIB.CJ import CJ
-from external.LSSLIB.LSS import LSS
-from external.DSSLIB.DSS import DSS
 from qcdlib.tmdlib import PDF, PPDF, FF
 from qcdlib.tmdlib import TRANSVERSITY
 from qcdlib.tmdlib import BOERMULDERS
@@ -60,7 +57,6 @@ class MOMENTS:
         mom_u = self.get_flav('u')
         mom_d = self.get_flav('d')
         return mom_u - mom_d
-
 
 if __name__ == '__main__':
 

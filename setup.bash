@@ -1,4 +1,4 @@
 #!/bin/bash
-export FITPACK=$PWD   
-export PYTHONPATH=$FITPACK:$PYTHONPATH
-export PATH=$FITPACK/bin:$PATH
+export JAM3D=$PWD   
+export PYTHONPATH=$JAM3D:$PYTHONPATH
+export PATH=$JAM3D/bin:$PATH

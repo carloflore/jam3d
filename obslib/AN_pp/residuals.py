@@ -7,9 +7,6 @@ from scipy.integrate import quad
 import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
-from external.CJLIB.CJ import CJ
-from external.DSSLIB.DSS import DSS
-from external.LSSLIB.LSS import LSS
 from reader import READER
 from AN_theory import ANTHEORY
 from qcdlib.tmdlib import PDF, PPDF, FF
