@@ -19,7 +19,6 @@ electron-positron or proton-proton scattering.
    Physics 
    Publications
    API 
-    
 
 .. Indices and tables
    ==================
