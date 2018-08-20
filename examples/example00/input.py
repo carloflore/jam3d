@@ -2,14 +2,13 @@ conf={}
 
 ############################################################################
 #mcsamp
-conf['ncpu']=2
+conf['ncpu']=10
 conf['nruns']=1
 conf['factor']=4.0
 conf['kappa']=1.5
 conf['tol']=1e-10
 conf['itmax']=int(1e7)
 conf['block size']=10
-conf['nll shift']=0
 
 ############################################################################
 # params
