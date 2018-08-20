@@ -16,23 +16,23 @@ conf['block size']=10
 conf['params']={}
 
 conf['params']['pdf']={}
-conf['params']['pdf']['widths1 uv']  ={'value':    3.90812e-01,'min':0,'max':1,'fixed':False}
-conf['params']['pdf']['widths1 dv']  ={'value':    3.90812e-01,'min':0,'max':1,'fixed':'widths1 uv'}
-conf['params']['pdf']['widths1 sea'] ={'value':    8.14534e-01,'min':0,'max':1,'fixed':False}
-conf['params']['pdf']['widths2 uv']  ={'value':    1.72798e-01,'min':0,'max':1,'fixed':False}
-conf['params']['pdf']['widths2 dv']  ={'value':    3.90812e-01,'min':0,'max':1,'fixed':'widths1 uv'}
-conf['params']['pdf']['widths2 sea'] ={'value':   -3.44763e-01,'min':0,'max':1,'fixed':False}
+conf['params']['pdf']['widths1 uv']  ={'value':    3.87639e-01,'min':0,'max':1,'fixed':False}
+conf['params']['pdf']['widths1 dv']  ={'value':    3.87639e-01,'min':0,'max':1,'fixed':'widths1 uv'}
+conf['params']['pdf']['widths1 sea'] ={'value':    7.54262e-01,'min':0,'max':1,'fixed':False}
+conf['params']['pdf']['widths2 uv']  ={'value':    1.80589e-01,'min':-1,'max':1,'fixed':False}
+conf['params']['pdf']['widths2 dv']  ={'value':    3.87639e-01,'min':-1,'max':1,'fixed':'widths1 uv'}
+conf['params']['pdf']['widths2 sea'] ={'value':   -2.62630e-01,'min':-1,'max':1,'fixed':False}
 
 
 conf['params']['ff']={}
-conf['params']['ff']['widths1 pi+ fav']   ={'value':    1.50893e-01,'min':0,'max':1,'fixed':False}
-conf['params']['ff']['widths1 pi+ unfav'] ={'value':    1.22787e-01,'min':0,'max':1,'fixed':False}
-conf['params']['ff']['widths2 pi+ fav']   ={'value':   -3.99747e-02,'min':0,'max':1,'fixed':False}
-conf['params']['ff']['widths2 pi+ unfav'] ={'value':    1.42020e-02,'min':0,'max':1,'fixed':False}
-conf['params']['ff']['widths1 k+ fav']    ={'value':    1.34063e-01,'min':0,'max':1,'fixed':True}
-conf['params']['ff']['widths1 k+ unfav']  ={'value':    1.87915e-01,'min':0,'max':1,'fixed':True}
-conf['params']['ff']['widths2 k+ fav']    ={'value':    0.00000e+00,'min':0,'max':1,'fixed':True}
-conf['params']['ff']['widths2 k+ unfav']  ={'value':    0.00000e+00,'min':0,'max':1,'fixed':True}
+conf['params']['ff']['widths1 pi+fav']   ={'value':    1.51632e-01,'min':0,'max':1,'fixed':False}
+conf['params']['ff']['widths1 pi+unfav'] ={'value':    1.23832e-01,'min':0,'max':1,'fixed':False}
+conf['params']['ff']['widths2 pi+fav']   ={'value':   -4.10924e-02,'min':0,'max':1,'fixed':False}
+conf['params']['ff']['widths2 pi+unfav'] ={'value':    1.29717e-02,'min':0,'max':1,'fixed':False}
+conf['params']['ff']['widths1 k+fav']    ={'value':    1.58596e-01,'min':0,'max':1,'fixed':False}
+conf['params']['ff']['widths1 k+unfav']  ={'value':    1.68915e-01,'min':-1,'max':1,'fixed':False}
+conf['params']['ff']['widths2 k+fav']    ={'value':   -3.27346e-02,'min':-1,'max':1,'fixed':False}
+conf['params']['ff']['widths2 k+unfav']  ={'value':    2.06972e-02,'min':-1,'max':1,'fixed':False}
 
 ############################################################################
 # set data sets

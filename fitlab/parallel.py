@@ -22,18 +22,14 @@ ZMQ_ROUTER = zmq.ROUTER  # @UndefinedVariable
 ZMQ_POLLIN = zmq.POLLIN  # @UndefinedVariable
 ZMQ_ROUTER_MANDATORY = zmq.ROUTER_MANDATORY  # @UndefinedVariable
 
-
 def Server(ip):
     return ZmqServer(ip)
-
 
 def Worker(ip):
     return ZmqWorker(ip)
 
-
 def Broker(partition=None):
     return ZmqBroker(partition)
-
 
 class ZmqBroker(object):
 
@@ -87,8 +83,6 @@ class ZmqBroker(object):
                 if len(request) > 3:
                     _, sn, result = request[3:]
                     results[client].append(result)
-                    logging.debug('backend %s serial %d results[%s] %d', workers[worker], int(
-                        sn), client, len(results[client]))
 
                     # If all workers have generated results, we can pass them to the client
                     if len(results[client]) == self.partition:
@@ -97,13 +91,11 @@ class ZmqBroker(object):
                         frontend.send_multipart(msg)
 
                 else:
-                    logging.debug('worker %s joins (%s)', client, worker)
                     workers[worker] = client
 
             # Incoming from master
             if frontend in sockets:
                 client, _, request = frontend.recv_multipart()
-                logging.debug('frontend %s', client)
                 results[client] = []
                 pending_work.append([client, request, 0])
 
@@ -116,10 +108,7 @@ class ZmqBroker(object):
                     backend.send_multipart([worker, '', client, '', repr(serial), repr(
                         offset), repr(self.partition), request], copy=True)
                 except zmq.ZMQError as e:
-                    logging.warn('Failed send to %s: %s', workers[worker], e)
                     continue
-                logging.debug('send %s serial %d offset %d',
-                              workers[worker], serial, offset)
                 offset += 1
                 if offset < self.partition:
                     pending_work[0][2] = offset
@@ -128,20 +117,6 @@ class ZmqBroker(object):
 
     def run_subprocess(self):
         def run_runner():
-            logfile = '%s/broker.log' % conf['outputdir']
-            logging.info('Redirecting broker log to %s', logfile)
-            for handler in logging.root.handlers:
-                logging.root.removeHandler(handler)
-            logging.basicConfig(filename=logfile, filemode='w',
-                                format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-            console = logging.StreamHandler()
-            console.setLevel(logging.WARN)
-            formatter = logging.Formatter(
-                '%(asctime)s - broker - %(levelname)s - %(message)s')
-            console.setFormatter(formatter)
-            logging.root.addHandler(console)
-            # os.dup2(log.fileno(),1)
-            # os.dup2(log.fileno(),2)
             self.run()
         self.process = Process(target=run_runner, name='broker')
         self.process.start()
@@ -150,7 +125,6 @@ class ZmqBroker(object):
         if self.process:
             self.process.terminate()
             self.process.join(3)
-
 
 class ZmqServer(object):
 
@@ -173,7 +147,6 @@ class ZmqServer(object):
             self.worksock.connect('tcp://' + self.broker_ip + ':55550')
 
         t = timer()
-        logging.debug('Assign work')
         state_tuples = []
         for x in ['pdf', 'ff', 'transversity', 'collins', 'Htilde', 'sivers']:
             if x in conf:
@@ -192,7 +165,6 @@ class ZmqServer(object):
             a = timer()
             if not self.received:
                 t = timer()
-                logging.debug('Await result')
                 data = self.worksock.recv_multipart()
                 self.recv_times.append(timer() - t)
                 t = timer()
@@ -207,7 +179,6 @@ class ZmqServer(object):
                     self.theory[offset::stride] = a[2:]
                 self.received = True
                 self.load_times.append(timer() - t)
-                logging.debug('Finish mproc')
             t = timer()
             tuples = [(mproc.data[i][0], mproc.data[i][1], self.theory[first + i])
                       for i in range(len(mproc.data))]
@@ -226,12 +197,7 @@ class ZmqServer(object):
         return Wrapper(run_mproc)
 
     def finis(self):
-        logging.info('Time propagating params: %d', sum(self.param_times))
-        #print 'Time gathering theory results : ',sum(self.mproc_times)
-        logging.info('Time receiving data: %d', sum(self.recv_times))
-        logging.info('Time loading theory pickles: %d', sum(self.load_times))
-        logging.info('Time storing theory tuples: %d', sum(self.store_times))
-
+        pass
 
 class ZmqWorker(object):
 
@@ -248,7 +214,6 @@ class ZmqWorker(object):
 
     def toil(self):
         mkl.set_num_threads(1)
-        logging.debug('%s start', current_process().name)
         ctx = zmq.Context()
         worksock = ctx.socket(ZMQ_REQ)
         worksock.connect('tcp://' + self.ip + ':55551')
@@ -258,7 +223,6 @@ class ZmqWorker(object):
         while True:
             address, _, serial, offset, stride, blob = worksock.recv_multipart()
             serial = int(serial)
-            logging.debug('%s recv %d', current_process().name, serial)
             if stride == None:
                 break
             offset, stride = int(offset), int(stride)
@@ -272,11 +236,8 @@ class ZmqWorker(object):
             results.extend([row.func(row.entry)[2]
                             for row in self.bigtable[offset::stride]])
             r = np.array(results, dtype=np.float64)
-            logging.debug('%s send %d', current_process().name, serial)
             worksock.send_multipart([address, '', repr(serial), r])
-            logging.debug('%s sent %d', current_process().name, serial)
 
-        logging.debug('%s done', current_process().name)
 
     def run(self):
 
@@ -285,7 +246,6 @@ class ZmqWorker(object):
         else:
             nprocs = psutil.cpu_count(logical=True)
 
-        logging.info('bigtable=%d', len(self.bigtable))
         for i in range(nprocs):
             worker = Process(target=self.toil, name='w' + str(i))
             worker.start()
@@ -295,27 +255,11 @@ class ZmqWorker(object):
         while len(self.workers):
             for w in list(self.workers):
                 if not w.is_alive():
-                    logging.info('%s terminated with code %d',
-                                 w.name, w.exitcode)
                     self.workers.remove(w)
             time.sleep(5)
 
     def run_subprocess(self):
         def run_runner():
-            logfile = '%s/slave.log' % conf['outputdir']
-            logging.info('Redirecting slave log to %s', logfile)
-            for handler in logging.root.handlers:
-                logging.root.removeHandler(handler)
-            logging.basicConfig(filename=logfile, filemode='w',
-                                format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-            console = logging.StreamHandler()
-            console.setLevel(logging.WARN)
-            formatter = logging.Formatter(
-                '%(asctime)s - slave - %(levelname)s - %(message)s')
-            console.setFormatter(formatter)
-            logging.root.addHandler(console)
-            # os.dup2(log.fileno(),1)
-            # os.dup2(log.fileno(),2)
             self.run()
         self.process = Process(target=run_runner, name='worker')
         self.process.start()

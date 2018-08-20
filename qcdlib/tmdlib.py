@@ -141,7 +141,7 @@ class PDF(CORE):
         return C
 
     def get_state(self):
-        return self.widths1,self,widths2
+        return self.widths1,self.widths2
 
     def set_state(self, state):
         self.widths1 = state[0]
