@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; JAM3D 1.0.0 documentation</title>
+  <title>Getting started &mdash; JAM3D 1.0.0 documentation</title>
   
 
   
@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -82,8 +82,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="physics.html">Physics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
@@ -131,12 +129,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Search</li>
+      <li>Getting started</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -148,19 +148,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search
-      functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Only Linux and OSX is supported</li>
+<li>We recommend to install anaconda (python2) which
+comes will all the necessary libraries</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Clone the codes from <a class="reference external" href="https://github.com/JeffersonLab/jam3d">https://github.com/JeffersonLab/jam3d</a></p>
+<p>Certain enviroment variables needs to be set in your terminal session.
+For bash they are</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export JAM3D=path2fitpack
+PYTHONPATH=$JAM3D:$PYTHONPATH
+export PATH=$JAM3D/bin:$PATH
+</pre></div>
+</div>
+<p>Alternatively you can source the setup files</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span>  <span class="n">setup</span><span class="o">.</span><span class="n">bash</span>
+</pre></div>
+</div>
+<p>Once the enviroment variables are set the scripts can be called from
+anywhere in your system. In other words, there is no need to work within
+the same code folder. As a good practice, create dedicated folders for a
+given analysis.</p>
+</div>
+<div class="section" id="basic-workflow">
+<h2>Basic workflow<a class="headerlink" href="#basic-workflow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Prepare an input file (e.g.  input.py)</li>
+<li>Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
+for more info</li>
+<li>Use a jupyer notebook to study the results</li>
+</ol>
+<p>Note: for MC runs, there are additional scripts to help to understand intermediate results</p>
+</div>
+<div class="section" id="detailed-example">
+<h2>Detailed example<a class="headerlink" href="#detailed-example" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
 
-  
-  <div id="search-results">
-  
-  </div>
 
            </div>
            
@@ -206,7 +237,6 @@
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-      <script type="text/javascript" src="_static/searchtools.js"></script>
 
   
 
@@ -216,14 +246,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
-   
-
+  </script> 
 
 </body>
 </html>

@@ -1,7 +1,7 @@
-Tutorial
+tutorial
 ========
 
-Dependencies
+dependencies
 ------------
 
 - Only Linux and OSX is supported
@@ -9,7 +9,7 @@ Dependencies
 - We recommend to install anaconda (python2) which 
   comes will all the necessary libraries
 
-Installation
+installation
 ------------
 
 Clone the codes from https://github.com/JeffersonLab/jam3d
@@ -30,7 +30,7 @@ anywhere in your system. In other words, there is no need to work within
 the same code folder. As a good practice, create dedicated folders for a
 given analysis. 
 
-Basic workflow
+basic workflow
 --------------
 
 1) Prepare an input file (e.g.  input.py)   
@@ -41,6 +41,13 @@ Basic workflow
 3) Use a jupyer notebook to study the results
 
 Note: for MC runs, there are additional scripts to help to understand intermediate results
+
+
+
+
+
+
+
 
 
 
