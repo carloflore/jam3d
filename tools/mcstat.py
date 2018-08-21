@@ -5,11 +5,9 @@ import time
 import numpy as np
 import pylab as py
 import pandas as pd
-from tools.tools import load, save
-from tools.config import load_config,conf
-from tools.inputmod import INPUTMOD
-from fitlab.parman import PARMAN
-import argparse
+from .tools import load, save
+from .config import load_config,conf
+from .inputmod import INPUTMOD
 
 def chi2hist(runs):
 
@@ -27,7 +25,7 @@ def chi2hist(runs):
 
 class parhist:
 
-    def __init__(self,runs,inputmod):
+    def __init__(self,runs,inputmod=None):
 
         self.inputmod=inputmod 
         self.order=self.get_ordered_free_params()
@@ -38,10 +36,6 @@ class parhist:
 
         for _ in conf['params']:   self.kind1.append(_)
         for _ in conf['datasets']: self.kind2.append(_)    
-    
-        self.hist_widths()
-        self.hist_shape()
-        self.hist_norm()
 
     def get_ordered_free_params(self):
         order=[]
@@ -112,18 +106,18 @@ class parhist:
                     weights=tabs['all']['weights'],histtype='step',label='all')
 
             ax.plot(tabs_a['all'][entries[i]],np.zeros(tabs_a['all'][entries[i]].size),'ro')
-            ax.axvline(E0)
-
-            # update input.py            
-            E=np.einsum('i,i',tabs['all']['weights'],tabs['all'][entries[i]])
-            for _ in kind1: 
-              if kind==_: self.inputmod.mod_par(_,par,'value',E)
-            for _ in kind2: 
-              if kind==_: self.inputmod.mod_norm(_,par,'value',E)
-
+            #ax.axvline(E0)
             ax.set_title('%s:%s'%(kind,par))
 
-    def hist_widths(self):
+            if self.inputmod!=None:
+              # update input.py            
+              E=np.einsum('i,i',tabs['all']['weights'],tabs['all'][entries[i]])
+              for _ in kind1: 
+                if kind==_: self.inputmod.mod_par(_,par,'value',E)
+              for _ in kind2: 
+                if kind==_: self.inputmod.mod_norm(_,par,'value',E)
+
+    def hist_widths(self,isave=False):
 
         entries=[]
         for kind in self.kind1:
@@ -140,10 +134,11 @@ class parhist:
         self.cnt=0
         self.plot(self.tabs,self.tabs_a,entries,self.kind1,self.kind2,iRange=0)
         py.tight_layout()
-        py.savefig('hist_widths.pdf')
-        py.close()
+        if isave:
+            py.savefig('hist_widths.pdf')
+            py.close()
 
-    def hist_shape(self):
+    def hist_shape(self,isave=False):
 
         entries=[]
         for kind in self.kind1:
@@ -164,10 +159,11 @@ class parhist:
         self.cnt=0
         self.plot(self.tabs,self.tabs_a,entries,self.kind1,self.kind2,iRange=0)
         py.tight_layout()
-        py.savefig('hist_shape.pdf')
-        py.close()
+        if isave:
+            py.savefig('hist_shape.pdf')
+            py.close()
 
-    def hist_norm(self):
+    def hist_norm(self,isave=False):
 
         entries=[]
         for kind in self.kind2:
@@ -183,21 +179,24 @@ class parhist:
         self.cnt=0
         self.plot(self.tabs,self.tabs_a,entries,self.kind1,self.kind2,iRange=0)
         py.tight_layout()
-        py.savefig('hist_norm.pdf')
-        py.close()
+        if isave:
+            py.savefig('hist_norm.pdf')
+            py.close()
 
-if __name__=="__main__":
 
-    ap = argparse.ArgumentParser()
-    ap.add_argument('path', help='path to *.mc file')
-    args = ap.parse_args()
 
-    runs=load('%s/summary.mcp'%args.path)
-    load_config('%s/input.py'%args.path)
-    inputmod=INPUTMOD('%s/input.py'%args.path)
-    chi2hist(runs)
-    parhist(runs,inputmod)
-    #inputmod.gen_input()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
