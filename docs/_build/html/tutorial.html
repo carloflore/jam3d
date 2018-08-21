@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Physics &mdash; JAM3D 1.0.0 documentation</title>
+  <title>Tutorial &mdash; JAM3D 1.0.0 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Publications" href="Publications.html" />
-    <link rel="prev" title="Examples" href="Examples.html" /> 
+    <link rel="next" title="Examples" href="examples/examples.html" />
+    <link rel="prev" title="Welcome to JAM3D’s documentation!" href="index.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,11 +84,16 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Physics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Publications.html">Publications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="API.html">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-workflow">basic workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
             
@@ -134,13 +139,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Physics</li>
+      <li>Tutorial</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/Physics.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -153,9 +158,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="physics">
-<h1>Physics<a class="headerlink" href="#physics" title="Permalink to this headline">¶</a></h1>
-<p>Under construction</p>
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dependencies">
+<h2>dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Only Linux and OSX is supported</li>
+<li>We recommend to install anaconda (python2) which
+comes will all the necessary libraries</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Clone the codes from <a class="reference external" href="https://github.com/JeffersonLab/jam3d">https://github.com/JeffersonLab/jam3d</a></p>
+<p>Certain enviroment variables needs to be set in your terminal session.
+For bash they are</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export JAM3D=path2fitpack
+PYTHONPATH=$JAM3D:$PYTHONPATH
+export PATH=$JAM3D/bin:$PATH
+</pre></div>
+</div>
+<p>Alternatively you can source the setup files</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span>  <span class="n">setup</span><span class="o">.</span><span class="n">bash</span>
+</pre></div>
+</div>
+<p>Once the enviroment variables are set the scripts can be called from
+anywhere in your system. In other words, there is no need to work within
+the same code folder. As a good practice, create dedicated folders for a
+given analysis.</p>
+</div>
+<div class="section" id="basic-workflow">
+<h2>basic workflow<a class="headerlink" href="#basic-workflow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Prepare an input file (e.g.  input.py)</li>
+<li>Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
+for more info</li>
+<li>Use a jupyer notebook to study the results</li>
+</ol>
+<p>Note: for MC runs, there are additional scripts to help to understand intermediate results.</p>
+</div>
 </div>
 
 
@@ -166,10 +207,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Publications.html" class="btn btn-neutral float-right" title="Publications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="examples/examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Examples.html" class="btn btn-neutral" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="Welcome to JAM3D’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
