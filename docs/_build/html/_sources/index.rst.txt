@@ -14,11 +14,11 @@ electron-positron or proton-proton scattering.
    :maxdepth: 2
    :caption: Contents:
 
-   Tutorial
-   Examples
-   Physics 
-   Publications
-   API 
+   tutorial
+   examples/examples
+   physics
+   publications
+   api
 
 .. Indices and tables
    ==================
@@ -33,7 +33,7 @@ Authors
 - Nobuo Sato (UConn) 
 - Kemal Tezgin (UConn) 
 - David Riser (UConn) 
-- Tiabo Liu (JLab)
+- Tianbo Liu (JLab)
 - Wally Melnitchouk (JLab)
 - Alexei Prokudin (PSU) 
 - Daniel Pitonyak (LVC)
