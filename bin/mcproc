@@ -5,131 +5,145 @@ import time
 import argparse
 from tools.tools import load, save
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
 
+def get_runs(path2mc,veto=[]):
 
-def get_runs(path2mc, veto=[]):
+  # list mc file names
+  F=os.listdir(path2mc)
+  F=[f for f in F if f.endswith('mc') if '-' in f]
+  if len(F)==0:
+    raise ValueError('*.mc files not found')
 
-    # list mc file names
-    F = os.listdir(path2mc)
-    F = [f for f in F if f.endswith('mc') if '-' in f]
-    if len(F) == 0:
-        raise ValueError('*.mc files not found')
+  # split mc files by runs
+  names=list(set([f.split('-')[0] for f in F]))
 
-    # split mc files by runs
-    names = list(set([f.split('-')[0] for f in F]))
+  # combine blocks for each run
+  runs={}
+  cnt=0
+  for name in names:
+    run_files=[f for f in F if name in f]
+    run_data=[load('%s/%s'%(path2mc,f)) for f in run_files]
+    nap=run_data[0]['num active points']
+    samples=[] 
+    nll=[]
+    for _ in run_data: 
+      for p in _['samples']: samples.append(p)
+      nll.extend(_['nll'])
+    nll=np.array(nll)
+    samples=np.array(samples)
+    runs[cnt]={'samples':samples,'nll':nll,'num active points':nap,'name':name}
+    cnt+=1
 
-    # combine blocks for each run
-    runs = {}
-    cnt = 0
-    for name in names:
-        run_files = [f for f in F if name in f]
-        run_data = [load('%s/%s' % (path2mc, f)) for f in run_files]
-        nap = run_data[0]['num active points']
-        samples = []
-        nll = []
-        for _ in run_data:
-            for p in _['samples']:
-                samples.append(p)
-            nll.extend(_['nll'])
-        nll = np.array(nll)
-        samples = np.array(samples)
-        runs[cnt] = {'samples': samples, 'nll': nll, 'num active points': nap}
-        cnt += 1
+  # remove veto runs
+  if veto!=[]:
+    for _ in veto:
+      del runs[_]
 
-    # remove veto runs
-    if veto != []:
-        for _ in veto:
-            del runs[_]
+  # combine samples
+  nap=0
+  samples=[] 
+  nll=[]
+  for k in runs:
+    for p in runs[k]['samples']: samples.append(p)
+    nll.extend(runs[k]['nll'])
+    nap+=runs[k]['num active points'] 
+  nll=np.array(nll)
+  samples=np.array(samples)
+  runs['all']={'samples':samples,'nll':nll,'num active points':nap,'name':'all'}
+  print 'original samples size =',len(samples)
+  return runs
 
-    # combine samples
-    nap = 0
-    samples = []
-    nll = []
-    for k in runs:
-        for p in runs[k]['samples']:
-            samples.append(p)
-        nll.extend(runs[k]['nll'])
-        nap += runs[k]['num active points']
-    nll = np.array(nll)
-    samples = np.array(samples)
-    runs['all'] = {'samples': samples, 'nll': nll, 'num active points': nap}
-    return runs
+def get_ordered_samples(nap,nll,samples):
+  nllc=np.copy(nll)
+  I=np.argsort(nll)
+  nll=nll[I]
+  # regularize
+  min_nll=np.amin(nll)
+  samples=samples[I]
+  likelihood=np.exp(-(nll-min_nll)) 
+  x=np.array([((nap-1.)/nap)**i for i in range(likelihood.size+1)])[::-1]
+  dx=(0.5*(x[1:]-x[:-1]))
+  weights=likelihood*dx
+  weights/=np.sum(weights)
+  samples=np.array([samples[i] for i in range(weights.size) if weights[i]>0])
+  nll=np.array([nll[i] for i in range(weights.size) if weights[i]>0])
+  weights=np.array([weights[i] for i in range(weights.size) if weights[i]>0])
+  weights/=np.sum(weights)
+  return nll,weights,samples
 
+def impose_cdf_cut(mcdata,cdfcut):
+  weights=np.copy(mcdata['weights'])
+  samples=np.copy(mcdata['samples'])
+  I=np.argsort(weights)
+  weights=weights[I]
+  samples=samples[I]
 
-def get_ordered_samples(nap, nll, samples):
-    nllc = np.copy(nll)
-    I = np.argsort(nll)
-    nll = nll[I]
-    # regularize
-    min_nll = np.amin(nll)
-    samples = samples[I]
-    likelihood = np.exp(-(nll - min_nll))
-    x = np.array([((nap - 1.) / nap)**i for i in range(likelihood.size + 1)])[::-1]
-    dx = (0.5 * (x[1:] - x[:-1]))
-    weights = likelihood * dx
-    weights /= np.sum(weights)
-    samples = np.array([samples[i]
-                        for i in range(weights.size) if weights[i] > 0])
-    weights = np.array([weights[i]
-                        for i in range(weights.size) if weights[i] > 0])
-    nll = np.array([nll[i] for i in range(weights.size) if weights[i] > 0])
-    return nll, weights, samples
+  cdf=[]
+  for i in range(weights.size):
+    cdf.append(np.sum(weights[:i+1]))
+  II=[i  for i in range(weights.size)  if cdf[i]>cdfcut]
+  weights=weights[II]
+  weights/=np.sum(weights)
+  samples=samples[II]
 
+  return weights,samples
 
-def impose_cdf_cut(mcdata, cdfcut):
+if __name__=="__main__":
 
-    weights = np.copy(mcdata['weights'])
-    samples = np.copy(mcdata['samples'])
-    I = np.argsort(weights)
-    weights = weights[I]
-    samples = samples[I]
+  ap = argparse.ArgumentParser()
+  ap.add_argument('path2mc', help='path to *.mc files')
+  ap.add_argument('-v','--veto', help='idx of vetoed runs. e.g 3,4,5',type=str,default='')
+  ap.add_argument('-c','--cdfcut', help='cdf cut ',default=None)
+  args = ap.parse_args()
 
-    cdf = []
-    for i in range(weights.size):
-        cdf.append(np.sum(weights[:i + 1]))
-    II = [i for i in range(weights.size) if cdf[i] > cdfcut]
-    weights = weights[II]
-    weights /= np.sum(weights)
-    samples = samples[II]
-    return weights, samples
+  if args.veto!='': 
+    veto=[int(_) for _ in args.veto.split(',')]
+  else:
+    veto=[]
 
+  runs=get_runs(args.path2mc,veto)
+  for k in runs:
+    nap=runs[k]['num active points']
+    samples=runs[k]['samples']
+    name=runs[k]['name']
+    nll=runs[k]['nll']
+    nll,weights,samples = get_ordered_samples(nap,nll,samples)
 
-if __name__ == "__main__":
+    runs[k]={'nap':nap,'nll':nll,'samples':samples,'weights':weights}
+    chi2s=2*np.sort(runs[k]['nll'])[:5]
+    try: 
+      msg ='run = %2d '%k
+    except: 
+      msg = 'run = %2s '%k
+    msg+='%5s '%name
+    msg+='size = %5d '%float(len(runs[k]['nll']))
+    msg+='chi2 ='
+    for _ in chi2s: msg+='%5.2e,'%_
+    msg+='...'
+    print msg
 
-    ap = argparse.ArgumentParser()
-    ap.add_argument('path2mc', help='path to *.mc files')
-    ap.add_argument(
-        '-v', '--veto', help='idx of vetoed runs. e.g 3,4,5', type=str, default='')
-    ap.add_argument('-c', '--cdfcut', help='cdf cut ', default=None)
-    args = ap.parse_args()
-
-    if args.veto != '':
-        veto = [int(_) for _ in args.veto.split(',')]
+  if args.cdfcut==None:
+    if veto==[]:
+      print 'final size ',len(runs['all']['weights'])
+      fname='summary.mcp'
+      print 'creating %s'%fname
+      save(runs,fname)
     else:
-        veto = []
+      fname='summary-veto-%s.mcp'%(args.veto)
+      print 'creating %s'%fname
+      save(runs,fname)
+  elif args.cdfcut!=None:
+      weights,samples= impose_cdf_cut(runs['all'],float(args.cdfcut))
+      print 'final size ',len(weights)
+      fname='final.mcp'
+      print 'creating %s'%fname
+      save({'weights':weights,'samples':samples},fname)
 
-    runs = get_runs(args.path2mc, veto)
 
-    for k in runs:
-        print k
-        nap = runs[k]['num active points']
-        nll = runs[k]['nll']
-        samples = runs[k]['samples']
-        nll, weights, samples = get_ordered_samples(nap, nll, samples)
-        runs[k] = {'nap': nap, 'nll': nll,
-                   'samples': samples, 'weights': weights}
 
-    if args.cdfcut == None:
-        if veto == []:
-            fname = '%s/summary.mcp' % args.path2mc
-            print 'creating %s' % fname
-            save(runs, fname)
-        else:
-            fname = '%s/summary-veto-%s.mcp' % (args.path2mc, args.veto)
-            print 'creating %s' % fname
-            save(runs, fname)
-    elif args.cdfcut != None:
-        weights, samples = impose_cdf_cut(runs['all'], float(args.cdfcut))
-        fname = '%s/final.mcp' % (args.path2mc)
-        print 'creating %s' % fname
-        save({'weights': weights, 'samples': samples}, fname)
+
+
+
+

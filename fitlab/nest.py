@@ -14,39 +14,32 @@ warnings.filterwarnings('ignore')
 from timeit import default_timer as timer
 from numpy import linalg as la
 from tools.config import conf
-from tools.tools import load, save
+from tools.tools import load, save,checkdir
 import copy
-# aux funcs
-
 
 def lprint(msg):
     sys.stdout.write('\r')
     sys.stdout.write(msg)
     sys.stdout.flush()
 
-
 def checkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
-
 
 def save(data, name):
     compressed = zlib.compress(cPickle.dumps(data))
     with open(name, "wb") as f:
         f.writelines(compressed)
 
-
 def load(name):
     with open(name, "rb") as compressed:
         data = cPickle.loads(zlib.decompress(compressed.read()))
     return data
 
-
 def load_snapshot(name):
     with open(name, "rb") as f:
         data = pickle.loads(f.read())
     self.__dict__.update(data.__dict__)
-
 
 class ELLIPSE:
 
@@ -195,7 +188,6 @@ class ELLIPSE:
     def get_sample(self):
         return self.Y.pop()
 
-
 class NEST:
 
     def __init__(self, verb=True):
@@ -213,32 +205,6 @@ class NEST:
         self.V0 = np.prod(self.dp)
         self.Vk = self.V0
         self.msg = ''
-
-        ##########################################################
-        #if 'nestout' not in conf:  conf['nestout']=None
-
-        # if conf['nestout']==None:
-        #  self.samples_p=[]
-        #  self.samples_x=[1]
-        #  self.samples_l=[0]
-        #  self.samples_nll=[]
-        #  self.logz=[]
-        #  self.cnt=0 # counter
-        #  self.attempts1=None
-        #  self.attempts2=None
-        #  self.set_active_sets(self.N)
-        # else:
-        #  self.active_p=conf['nestout']['active p']
-        #  self.active_nll=conf['nestout']['active nll']
-        #  self.samples_p=conf['nestout']['samples'][::-1]
-        #  self.samples_x=conf['nestout']['x'][::-1]
-        #  self.samples_l=conf['nestout']['l'][::-1]
-        #  self.samples_nll=[-np.log(l) for l in self.samples_l]
-        #  self.logz=conf['nestout']['logz']
-        #  self.cnt=len(self.samples_l) # counter
-        #  conf['itmax']+=self.cnt
-        #  self.attempts1=None
-        #  self.attempts2=None
 
         ##########################################################
         self.samples_p = []
@@ -457,24 +423,7 @@ class NEST:
             self.status = 'flush'
 
     def results(self, fname, cmd=None):
-
-        ##########################################
-        # dx=0.5*(np.array(self.samples_x[:-1])-np.array(self.samples_x[1:]))
-        # log_l=np.log(self.samples_l[1:])
-        # log_w=np.log(dx*self.jac)+log_l
-        # weights=np.exp(log_w)
-        # weights/=np.sum(weights)
-        # data={}
-        # data['samples']=self.samples_p[::-1]
-        # data['x']=self.samples_x[1:][::-1]
-        # data['l']=self.samples_l[1:][::-1]
-        # data['nll']=self.samples_nll[::-1]
-        # data['logz']=self.logz
-        # data['weights']=weights[::-1]
-        #data['active p']=self.active_p
-        #data['active nll']=self.active_nll
-        # return data
-        ##########################################
+        checkdir('mcdata')
         data = {}
         data['nll'] = copy.copy(self.samples_nll)
         data['samples'] = copy.copy(self.samples_p)
@@ -482,16 +431,13 @@ class NEST:
 
         self.samples_nll = []
         self.samples_p = []
-        save(data, fname)
+        save(data, 'mcdata/'+fname)
 
         self.block_cnt += 1
         self.block_size = 0
         self.status = 'ready'
 
         if cmd != None:
-            # print
-            #print fname
-            #print cmd.replace('fname',fname)
             os.system(cmd.replace('fname', fname))
 
     def run(self, fname, cmd):
@@ -507,3 +453,9 @@ class NEST:
                 self.results('%s-%d.mc' % (fname, self.block_cnt), cmd)
                 break
         print
+
+
+
+
+
+

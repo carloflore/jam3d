@@ -99,17 +99,17 @@ class RESMAN:
     def setup_tmds(self):
         conf['lam2'] = 0.4 
         conf['Q02']  = 1.0
-        conf['pdf']          = qcdlib.tmdlib.PDF()
-        conf['ppdf']         = qcdlib.tmdlib.PPDF()
-        conf['ff']           = qcdlib.tmdlib.FF()
-        conf['transversity'] = qcdlib.tmdlib.TRANSVERSITY()
-        conf['sivers']       = qcdlib.tmdlib.SIVERS()
-        conf['boermulders']  = qcdlib.tmdlib.BOERMULDERS()
-        conf['pretzelosity'] = qcdlib.tmdlib.PRETZELOSITY()
-        conf['wormgearg']    = qcdlib.tmdlib.WORMGEARG()
-        conf['wormgearh']    = qcdlib.tmdlib.WORMGEARH()
-        conf['collins']      = qcdlib.tmdlib.COLLINS()
-        conf['Htilde']       = qcdlib.tmdlib.HTILDE()
+        if 'pdf'          in conf['params']:conf['pdf']          = qcdlib.tmdlib.PDF()
+        if 'ppdf'         in conf['params']:conf['ppdf']         = qcdlib.tmdlib.PPDF()
+        if 'ff'           in conf['params']:conf['ff']           = qcdlib.tmdlib.FF()
+        if 'transversity' in conf['params']:conf['transversity'] = qcdlib.tmdlib.TRANSVERSITY()
+        if 'sivers'       in conf['params']:conf['sivers']       = qcdlib.tmdlib.SIVERS()
+        if 'boermulders'  in conf['params']:conf['boermulders']  = qcdlib.tmdlib.BOERMULDERS()
+        if 'pretzelosity' in conf['params']:conf['pretzelosity'] = qcdlib.tmdlib.PRETZELOSITY()
+        if 'wormgearg'    in conf['params']:conf['wormgearg']    = qcdlib.tmdlib.WORMGEARG()
+        if 'wormgearh'    in conf['params']:conf['wormgearh']    = qcdlib.tmdlib.WORMGEARH()
+        if 'collins'      in conf['params']:conf['collins']      = qcdlib.tmdlib.COLLINS()
+        if 'Htilde'       in conf['params']:conf['Htilde']       = qcdlib.tmdlib.HTILDE()
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')

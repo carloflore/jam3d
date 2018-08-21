@@ -1,0 +1,193 @@
+#!/usr/bin/env python
+import os
+import sys
+import time
+import argparse
+import numpy as np
+import pylab as py
+import pandas as pd
+from tools.tools import load, save
+from tools.config import load_config,conf
+from tools.inputmod import INPUTMOD
+from fitlab.parman import PARMAN
+
+def chi2hist(runs):
+
+    nrows,ncols=1,1
+    fig = py.figure(figsize=(ncols*5,nrows*3))
+    
+    ax=py.subplot(nrows,ncols,1)
+    for k in runs:
+        if k=='all': continue
+        ax.hist(2*runs[k]['nll'],bins=50,range=None,histtype='step',label=str(k))#,normed=True);
+    ax.legend()#bbox_to_anchor=(-0.1,1))
+    #ax.set_ylim(0,500)
+    ax.set_xlabel('chi2-npts')
+    #ax.semilogx()
+    py.tight_layout()
+    py.savefig('chi2hist.pdf')
+
+class parhist:
+
+    def get_ordered_free_params(self):
+        order=[]
+
+        for k in conf['params']:
+            for kk in conf['params'][k]:
+                if conf['params'][k][kk]['fixed']==False:
+                    order.append([1,k,kk])
+
+        if 'datasets' in conf:
+            for k in conf['datasets']:
+                for kk in conf['datasets'][k]['norm']:
+                    if conf['datasets'][k]['norm'][kk]['fixed']==False:
+                      order.append([2,k,kk])
+
+        return order
+
+    def get_tabs(self,runs):
+        """
+        create pandas data frame for the samples
+        """
+        tabs={}
+        for k in runs:
+            tab={}
+            tab['nll']=runs[k]['nll']
+            tab['weights']=runs[k]['weights']
+            samples=np.transpose(runs[k]['samples'])
+            for i in range(len(self.order)):
+                _,kind,par=self.order[i]
+                #print par
+                tab['%s:%s'%(kind,str(par))]=samples[i]
+            tabs[k]=pd.DataFrame(tab)
+        return tabs
+
+    def get_flav_labels(self,kind):
+        fl=[]
+        for par in conf['params'][kind]:
+            fl.append(par.split()[0])
+        return sorted(list(set(fl)))
+
+    def get_entries1(self,kind,flav):
+        entries=[]
+        for par in ['N','a','b','c','d']:
+            if conf['params'][kind]['%s %s'%(flav,par)]['fixed']==False:
+                entries.append('%s:%s %s'%(kind,flav,par))
+            else:
+                entries.append(None)
+        return entries
+
+    def get_entries2(self,kind):
+        entries=[]
+        for idx in conf['datasets'][kind]['norm']:
+            if conf['datasets'][kind]['norm'][idx]['fixed']==False:
+                entries.append('%s:%s'%(kind,idx))
+        return entries
+
+    def plot(self,tabs,entries,kind1,kind2,iRange=0):
+
+        for i in range(len(entries)):
+            self.cnt+=1
+            if entries[i]==None: continue
+            ax=py.subplot(self.nrows,self.ncols,self.cnt)
+            kind,par=entries[i].split(':')
+            for _ in kind1: 
+              if kind==_:
+                vmin=conf['params'][_][par]['min']
+                vmax=conf['params'][_][par]['max']
+                R=(vmin,vmax)
+            for _ in kind2: 
+              if kind==_:
+                vmin=conf['datasets'][_]['norm'][int(par)]['min']
+                vmax=conf['datasets'][_]['norm'][int(par)]['max']
+                R=(vmin,vmax)
+            if iRange==0:pass
+            else: R=None         
+
+            for _ in tabs:
+                if _=='all': continue
+                tab=tabs[_]
+                ax.hist(tab[entries[i]],range=R,bins=100,weights=tab['weights'],histtype='step',label=str(_))   
+
+            ax.hist(tabs['all'][entries[i]],range=R,bins=100,\
+                    edgecolor='k',hatch='...',\
+                    weights=tabs['all']['weights'],histtype='step',label='all')
+
+            # update input.py            
+            E=np.einsum('i,i',tabs['all']['weights'],tabs['all'][entries[i]])
+            for _ in kind1: 
+              if kind==_: self.inputmod.mod_par(_,par,'value',E)
+            for _ in kind2: 
+              if kind==_: self.inputmod.mod_norm(_,par,'value',E)
+
+            ax.set_title('%s:%s'%(kind,par))
+
+    def __init__(self,runs,inputmod):
+
+        self.inputmod=inputmod 
+        self.order=self.get_ordered_free_params()
+        tabs=self.get_tabs(runs)
+
+        kind1=[]
+        kind2=[]
+
+        for _ in conf['params']:   kind1.append(_)
+        for _ in conf['datasets']: kind2.append(_)    
+
+
+        #############################################
+        self.ncols=5
+        self.nrows=0
+
+        entries1=[]
+        for kind in kind1:
+            flav_labels=self.get_flav_labels(kind)
+            for fl in flav_labels:
+                entry=self.get_entries1(kind,fl)
+                if all([_==None for _ in entry]): continue
+                entries1.append(entry)
+                self.nrows+=1               
+
+
+        self.cnt=0
+        fig = py.figure(figsize=(self.ncols*3,self.nrows*2))
+        for _ in entries1: self.plot(tabs,_,kind1,kind2,iRange=0)
+        py.tight_layout()
+        py.savefig('parhist1.pdf')
+        py.close()
+
+        #############################################
+        self.ncols=5
+        self.nrows=0
+
+        entries2=[]
+        for kind in kind2:
+            entries2.append(self.get_entries2(kind))
+        self.nrows=int(len(entries2)/self.ncols)
+        if len(entries2)%self.ncols!=0: self.nrows+=1
+
+        for _ in entries2: print _ 
+
+        self.cnt=0
+        fig = py.figure(figsize=(self.ncols*3,self.nrows*2))
+        for _ in entries2: self.plot(tabs,_,kind1,kind2,iRange=0)
+        py.tight_layout()
+        py.savefig('parhist2.pdf')
+        py.close()
+
+if __name__=="__main__":
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument('-m','--mcpfile', help='*.mcp file')
+    ap.add_argument('-i','--inputfile', help='input.py file')
+    args = ap.parse_args()
+
+    runs=load(args.mcpfile)
+    load_config(args.inputfile)
+    inputmod=INPUTMOD(args.inputfile)
+    chi2hist(runs)
+    parhist(runs,inputmod)
+    #inputmod.gen_input()
+
+
+
