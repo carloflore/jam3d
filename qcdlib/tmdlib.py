@@ -248,7 +248,7 @@ class FF(CORE):
 
     def set_state(self, state):
         self.widths1 = state[0]
-        self.widths2 = state[0]
+        self.widths2 = state[1]
 
 class PPDF(CORE):
 

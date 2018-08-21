@@ -128,16 +128,19 @@ class PARMAN:
         if 'widths1 pi+fav' in conf['params']['ff']:
             conf['ff']._widths1['pi+ fav']   = conf['params']['ff']['widths1 pi+fav']['value']
             conf['ff']._widths1['pi+ unfav'] = conf['params']['ff']['widths1 pi+unfav']['value']
+        if 'widths2 pi+fav' in conf['params']['ff']:
             conf['ff']._widths2['pi+ fav']   = conf['params']['ff']['widths2 pi+fav']['value']
             conf['ff']._widths2['pi+ unfav'] = conf['params']['ff']['widths2 pi+unfav']['value']
         if 'widths1 k+fav' in conf['params']['ff']:
             conf['ff']._widths1['k+ fav']   = conf['params']['ff']['widths1 k+fav']['value']
             conf['ff']._widths1['k+ unfav'] = conf['params']['ff']['widths1 k+unfav']['value']
+        if 'widths2 k+fav' in conf['params']['ff']:
             conf['ff']._widths2['k+ fav']   = conf['params']['ff']['widths2 k+fav']['value']
             conf['ff']._widths2['k+ unfav'] = conf['params']['ff']['widths2 k+unfav']['value']
         if 'widths1 h+fav' in conf['params']['ff']:
             conf['ff']._widths1['h+ fav']   = conf['params']['ff']['widths1 h+fav']['value']
             conf['ff']._widths1['h+ unfav'] = conf['params']['ff']['widths1 h+unfav']['value']
+        if 'widths2 h+fav' in conf['params']['ff']:
             conf['ff']._widths2['h+ fav']   = conf['params']['ff']['widths2 h+fav']['value']
             conf['ff']._widths2['h+ unfav'] = conf['params']['ff']['widths2 h+unfav']['value']
         conf['ff'].setup()

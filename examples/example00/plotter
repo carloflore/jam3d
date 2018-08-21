@@ -50,23 +50,36 @@ class parhist:
         create pandas data frame for the samples
         """
         tabs={}
+        tabs_a={}
         for k in runs:
-            tab={}
+            tab,tab_a={},{}
             tab['nll']=runs[k]['nll']
             tab['weights']=runs[k]['weights']
             samples=np.transpose(runs[k]['samples'])
+            active_p=np.transpose(runs[k]['active p'])
             for i in range(len(self.order)):
                 _,kind,par=self.order[i]
                 #print par
                 tab['%s:%s'%(kind,str(par))]=samples[i]
+                tab_a['%s:%s'%(kind,str(par))]=active_p[i]
             tabs[k]=pd.DataFrame(tab)
-        return tabs
+            tabs_a[k]=pd.DataFrame(tab_a)
+        return tabs,tabs_a
 
-    def get_flav_labels(self,kind):
+    def get_flav_labels(self,kind,idx):
         fl=[]
         for par in conf['params'][kind]:
-            fl.append(par.split()[0])
+            fl.append(par.split()[idx])
         return sorted(list(set(fl)))
+
+    def get_entries0(self,kind,flav):
+        entries=[]
+        for par in ['widths1','widths2']:
+            if conf['params'][kind]['%s %s'%(par,flav)]['fixed']==False:
+                entries.append('%s:%s %s'%(kind,par,flav))
+            else:
+                entries.append(None)
+        return entries
 
     def get_entries1(self,kind,flav):
         entries=[]
@@ -84,7 +97,7 @@ class parhist:
                 entries.append('%s:%s'%(kind,idx))
         return entries
 
-    def plot(self,tabs,entries,kind1,kind2,iRange=0):
+    def plot(self,tabs,tabs_a,entries,kind1,kind2,iRange=0):
 
         for i in range(len(entries)):
             self.cnt+=1
@@ -96,11 +109,13 @@ class parhist:
                 vmin=conf['params'][_][par]['min']
                 vmax=conf['params'][_][par]['max']
                 R=(vmin,vmax)
+                E0=conf['params'][_][par]['value']
             for _ in kind2: 
               if kind==_:
                 vmin=conf['datasets'][_]['norm'][int(par)]['min']
                 vmax=conf['datasets'][_]['norm'][int(par)]['max']
                 R=(vmin,vmax)
+                E0=conf['datasets'][_]['norm'][int(par)]['value']
             if iRange==0:pass
             else: R=None         
 
@@ -112,6 +127,9 @@ class parhist:
             ax.hist(tabs['all'][entries[i]],range=R,bins=100,\
                     edgecolor='k',hatch='...',\
                     weights=tabs['all']['weights'],histtype='step',label='all')
+
+            ax.plot(tabs_a['all'][entries[i]],np.zeros(tabs_a['all'][entries[i]].size),'ro')
+            ax.axvline(E0)
 
             # update input.py            
             E=np.einsum('i,i',tabs['all']['weights'],tabs['all'][entries[i]])
@@ -126,7 +144,7 @@ class parhist:
 
         self.inputmod=inputmod 
         self.order=self.get_ordered_free_params()
-        tabs=self.get_tabs(runs)
+        tabs,tabs_a=self.get_tabs(runs)
 
         kind1=[]
         kind2=[]
@@ -134,21 +152,40 @@ class parhist:
         for _ in conf['params']:   kind1.append(_)
         for _ in conf['datasets']: kind2.append(_)    
 
+        #############################################
 
+        entries0=[]
+        for kind in kind1:
+            flav_labels=self.get_flav_labels(kind,1)
+            for fl in flav_labels:
+                entry=self.get_entries0(kind,fl)
+                print entry
+                if all([_==None for _ in entry]): continue
+                entries0.append(entry)
+
+        self.ncols=2
+        self.nrows=len(entries0)
+        fig = py.figure(figsize=(self.ncols*3,self.nrows*1.5))
+        self.cnt=0
+        for _ in entries0: self.plot(tabs,tabs_a,_,kind1,kind2,iRange=0)
+        py.tight_layout()
+        py.savefig('parhist0.pdf')
+        py.close()
+        sys.exit()
         #############################################
         self.ncols=5
         self.nrows=0
 
         entries1=[]
         for kind in kind1:
-            flav_labels=self.get_flav_labels(kind)
+            flav_labels=self.get_flav_labels(kind,0)
             for fl in flav_labels:
                 entry=self.get_entries1(kind,fl)
                 if all([_==None for _ in entry]): continue
                 entries1.append(entry)
                 self.nrows+=1               
-
-
+        print entries1
+        sys.exit()
         self.cnt=0
         fig = py.figure(figsize=(self.ncols*3,self.nrows*2))
         for _ in entries1: self.plot(tabs,_,kind1,kind2,iRange=0)

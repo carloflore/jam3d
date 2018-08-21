@@ -23,7 +23,7 @@ def get_runs(path2mc,veto=[]):
   runs={}
   cnt=0
   for name in names:
-    run_files=[f for f in F if name in f]
+    run_files=sorted([f for f in F if name in f])
     run_data=[load('%s/%s'%(path2mc,f)) for f in run_files]
     nap=run_data[0]['num active points']
     samples=[] 
@@ -31,9 +31,10 @@ def get_runs(path2mc,veto=[]):
     for _ in run_data: 
       for p in _['samples']: samples.append(p)
       nll.extend(_['nll'])
+    active_p=run_data[-1]['active p']
     nll=np.array(nll)
     samples=np.array(samples)
-    runs[cnt]={'samples':samples,'nll':nll,'num active points':nap,'name':name}
+    runs[cnt]={'samples':samples,'nll':nll,'num active points':nap,'name':name,'active p':active_p}
     cnt+=1
 
   # remove veto runs
@@ -44,14 +45,16 @@ def get_runs(path2mc,veto=[]):
   # combine samples
   nap=0
   samples=[] 
+  active_p=[] 
   nll=[]
   for k in runs:
     for p in runs[k]['samples']: samples.append(p)
+    for p in runs[k]['active p']: active_p.append(p)
     nll.extend(runs[k]['nll'])
     nap+=runs[k]['num active points'] 
   nll=np.array(nll)
   samples=np.array(samples)
-  runs['all']={'samples':samples,'nll':nll,'num active points':nap,'name':'all'}
+  runs['all']={'samples':samples,'nll':nll,'num active points':nap,'name':'all','active p':active_p}
   print 'original samples size =',len(samples)
   return runs
 
@@ -107,11 +110,12 @@ if __name__=="__main__":
   for k in runs:
     nap=runs[k]['num active points']
     samples=runs[k]['samples']
+    active_p=runs[k]['active p']
     name=runs[k]['name']
     nll=runs[k]['nll']
     nll,weights,samples = get_ordered_samples(nap,nll,samples)
 
-    runs[k]={'nap':nap,'nll':nll,'samples':samples,'weights':weights}
+    runs[k]={'nap':nap,'nll':nll,'samples':samples,'weights':weights,'active p':active_p}
     chi2s=2*np.sort(runs[k]['nll'])[:5]
     try: 
       msg ='run = %2d '%k
