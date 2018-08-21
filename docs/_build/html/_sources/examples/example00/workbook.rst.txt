@@ -1,11 +1,11 @@
 example00: unpolarized TMDs
-===========================
+---------------------------
 
 In this example we will extract TMD PDFs and FFs using HERMES SIDIS unpolarized multiplicities. 
 
 
 Input file
-----------
+==========
 Lets examine the input.py provided at ::
 
   examples/examples00/input.py
@@ -113,7 +113,7 @@ Finally filters can be applied at :code:`conf['datasets']['sidis']['filters']` a
 
 
 Single fit
-----------
+==========
 
 We next proceed to perform a single fit ::
 
@@ -153,7 +153,7 @@ At this point one can study the results to make plots etc. However the uncertain
 (i.e. Hessian error propagation). Instead, the uncertainties will be infered by performing a likelihood analysis using MC sampling. 
 
 MC sampling 
------------
+===========
 
 Samples generation
 ::::::::::::::::::
@@ -233,7 +233,7 @@ code lines are shown below.
 
 
 Chi2 profile for each run
-=========================
+:::::::::::::::::::::::::
 
 .. code:: python
 
@@ -255,7 +255,7 @@ Chi2 profile for each run
 
 
 distribution of parameters
-==========================
+::::::::::::::::::::::::::
 
 .. code:: python
 
@@ -372,7 +372,7 @@ distribution of parameters
 
 
 purge the samples
-=================
+:::::::::::::::::
 
 .. code:: python
 
@@ -411,7 +411,7 @@ purge the samples
 
 
 compute theory
-==============
+::::::::::::::
 
 .. code:: python
 
@@ -435,7 +435,7 @@ compute theory
     218/218
 
 compute averages
-================
+::::::::::::::::
 
 .. code:: python
 
@@ -524,7 +524,7 @@ compute averages
 
 
 plot data and theory
-====================
+::::::::::::::::::::
 
 .. code:: python
 

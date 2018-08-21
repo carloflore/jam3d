@@ -92,16 +92,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#mc-sampling">MC sampling</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#samples-generation">Samples generation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#analysis">Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#chi2-profile-for-each-run">Chi2 profile for each run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#distribution-of-parameters">distribution of parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#purge-the-samples">purge the samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compute-theory">compute theory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compute-averages">compute averages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plot-data-and-theory">plot data and theory</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#chi2-profile-for-each-run">Chi2 profile for each run</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#distribution-of-parameters">distribution of parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#purge-the-samples">purge the samples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#compute-theory">compute theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#compute-averages">compute averages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plot-data-and-theory">plot data and theory</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../physics.html">Physics</a></li>
@@ -363,10 +363,8 @@ code lines are shown below.</p>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
 <div class="section" id="chi2-profile-for-each-run">
-<h1>Chi2 profile for each run<a class="headerlink" href="#chi2-profile-for-each-run" title="Permalink to this headline">¶</a></h1>
+<h3>Chi2 profile for each run<a class="headerlink" href="#chi2-profile-for-each-run" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nrows</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">ncols</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span><span class="n">nrows</span><span class="o">*</span><span class="mi">3</span><span class="p">))</span>
 
@@ -383,7 +381,7 @@ code lines are shown below.</p>
 <img alt="../../_images/output_5_0.png" src="../../_images/output_5_0.png" />
 </div>
 <div class="section" id="distribution-of-parameters">
-<h1>distribution of parameters<a class="headerlink" href="#distribution-of-parameters" title="Permalink to this headline">¶</a></h1>
+<h3>distribution of parameters<a class="headerlink" href="#distribution-of-parameters" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">parhist</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">runs</span><span class="p">,</span><span class="n">inputmod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -495,7 +493,7 @@ code lines are shown below.</p>
 <img alt="../../_images/output_7_0.png" src="../../_images/output_7_0.png" />
 </div>
 <div class="section" id="purge-the-samples">
-<h1>purge the samples<a class="headerlink" href="#purge-the-samples" title="Permalink to this headline">¶</a></h1>
+<h3>purge the samples<a class="headerlink" href="#purge-the-samples" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cdfcut</span><span class="o">=</span><span class="mf">0.001</span>
 <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">][</span><span class="s1">&#39;weights&#39;</span><span class="p">])</span>
 <span class="n">cdf0</span><span class="o">=</span><span class="p">[]</span>
@@ -527,7 +525,7 @@ code lines are shown below.</p>
 <img alt="../../_images/output_9_1.png" src="../../_images/output_9_1.png" />
 </div>
 <div class="section" id="compute-theory">
-<h1>compute theory<a class="headerlink" href="#compute-theory" title="Permalink to this headline">¶</a></h1>
+<h3>compute theory<a class="headerlink" href="#compute-theory" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;weights&#39;</span><span class="p">:</span><span class="n">weights</span><span class="p">}</span>
 <span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
@@ -548,7 +546,7 @@ code lines are shown below.</p>
 </div>
 </div>
 <div class="section" id="compute-averages">
-<h1>compute averages<a class="headerlink" href="#compute-averages" title="Permalink to this headline">¶</a></h1>
+<h3>compute averages<a class="headerlink" href="#compute-averages" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">=</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;results/</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39;sidis.dat&#39;</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 <span class="n">thy</span><span class="p">,</span><span class="n">dthy</span><span class="o">=</span><span class="p">{},{}</span>
@@ -627,7 +625,7 @@ code lines are shown below.</p>
 </div>
 </div>
 <div class="section" id="plot-data-and-theory">
-<h1>plot data and theory<a class="headerlink" href="#plot-data-and-theory" title="Permalink to this headline">¶</a></h1>
+<h3>plot data and theory<a class="headerlink" href="#plot-data-and-theory" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">=</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;results/data_and_thy.dat&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -887,6 +885,8 @@ code lines are shown below.</p>
 </pre></div>
 </div>
 <img alt="../../_images/output_41_0.png" src="../../_images/output_41_0.png" />
+</div>
+</div>
 </div>
 
 
