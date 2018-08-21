@@ -1,5 +1,5 @@
-example00
-=========
+example00: unpolarized TMDs
+===========================
 
 In this example we will extract TMD PDFs and FFs using HERMES SIDIS unpolarized multiplicities. 
 
@@ -179,9 +179,19 @@ The setups for NS are in code-block of  :code:`input.py`
 
 The sampling is more dense with increasing values of :code:`factor`
 
+With the MC setup, the sampling can be started using ::
+  
+  jam3d -t 3 input.py
+
+optionally one can add the flag :code:`-p` to parallelize the likelihood evaluation. 
+
 
 Analysis 
 ::::::::
+
+The example00 comes with a jupyter notebook  to guide the analysis. The relevant 
+code lines are shown below. 
+
 
 .. code:: python
 
@@ -223,7 +233,7 @@ Analysis
 
 
 Chi2 profile for each run
-:::::::::::::::::::::::::
+=========================
 
 .. code:: python
 
@@ -245,7 +255,7 @@ Chi2 profile for each run
 
 
 distribution of parameters
-::::::::::::::::::::::::::
+==========================
 
 .. code:: python
 
@@ -362,7 +372,7 @@ distribution of parameters
 
 
 purge the samples
-:::::::::::::::::
+=================
 
 .. code:: python
 
@@ -392,8 +402,8 @@ purge the samples
 
 .. parsed-literal::
 
-    initial size= 6205
-    final   size= 1084
+    initial size= 1056
+    final   size= 218
 
 
 
@@ -401,7 +411,7 @@ purge the samples
 
 
 compute theory
-::::::::::::::
+==============
 
 .. code:: python
 
@@ -422,10 +432,10 @@ compute theory
 
 .. parsed-literal::
 
-    130/130
+    218/218
 
 compute averages
-::::::::::::::::
+================
 
 .. code:: python
 
@@ -503,24 +513,25 @@ compute averages
     
     reaction: sidis
         idx        tar        had        col        obs  npts       chi2      rchi2      nchi2
-       1000     proton        pi+     hermes   M_Hermes   127     321.86       0.00       0.00
-       1001     proton        pi-     hermes   M_Hermes   124     171.97       0.00       0.00
-       1002     proton         k+     hermes   M_Hermes   122      74.01       0.00       0.00
-       1003     proton         k-     hermes   M_Hermes   115      43.51       0.00       0.00
-       1004   deuteron        pi+     hermes   M_Hermes   124     155.66       0.00       0.00
-       1005   deuteron        pi-     hermes   M_Hermes   122     158.47       0.00       0.00
-       1006   deuteron         k+     hermes   M_Hermes   122      78.42       0.00       0.00
-       1007   deuteron         k-     hermes   M_Hermes   122     172.44       0.00       0.00
+       1000     proton        pi+     hermes   M_Hermes   127     322.28       0.00       0.00
+       1001     proton        pi-     hermes   M_Hermes   124     168.29       0.00       0.00
+       1002     proton         k+     hermes   M_Hermes   122      72.20       0.00       0.00
+       1003     proton         k-     hermes   M_Hermes   115      42.68       0.00       0.00
+       1004   deuteron        pi+     hermes   M_Hermes   124     159.89       0.00       0.00
+       1005   deuteron        pi-     hermes   M_Hermes   122     157.78       0.00       0.00
+       1006   deuteron         k+     hermes   M_Hermes   122      76.20       0.00       0.00
+       1007   deuteron         k-     hermes   M_Hermes   122     169.94       0.00       0.00
 
 
 plot data and theory
-::::::::::::::::::::
+====================
 
 .. code:: python
 
     data=load('results/data_and_thy.dat')
 
 1000: tar=p had=pi+
+
 
 .. code:: python
 
@@ -565,6 +576,7 @@ plot data and theory
 
 1001 tar=p had=pi-
 
+
 .. code:: python
 
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1001')
@@ -607,6 +619,7 @@ plot data and theory
 
 
 1004: tar=d had=pi+
+
 
 .. code:: python
 
@@ -862,6 +875,8 @@ plot data and theory
 
 
 .. image:: output_41_0.png
+
+
 
 
 

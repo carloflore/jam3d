@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>example00 &mdash; JAM3D 1.0.0 documentation</title>
+  <title>example00: unpolarized TMDs &mdash; JAM3D 1.0.0 documentation</title>
   
 
   
@@ -86,22 +86,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">example00</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">example00: unpolarized TMDs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#input-file">Input file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#single-fit">Single fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mc-sampling">MC sampling</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#samples-generation">Samples generation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#analysis">Analysis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#chi2-profile-for-each-run">Chi2 profile for each run</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#distribution-of-parameters">distribution of parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#purge-the-samples">purge the samples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#compute-theory">compute theory</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#compute-averages">compute averages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#plot-data-and-theory">plot data and theory</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#chi2-profile-for-each-run">Chi2 profile for each run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distribution-of-parameters">distribution of parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#purge-the-samples">purge the samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compute-theory">compute theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compute-averages">compute averages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plot-data-and-theory">plot data and theory</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../physics.html">Physics</a></li>
@@ -154,7 +154,7 @@
         
           <li><a href="../examples.html">Examples</a> &raquo;</li>
         
-      <li>example00</li>
+      <li>example00: unpolarized TMDs</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -173,8 +173,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="example00">
-<h1>example00<a class="headerlink" href="#example00" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="example00-unpolarized-tmds">
+<h1>example00: unpolarized TMDs<a class="headerlink" href="#example00-unpolarized-tmds" title="Permalink to this headline">¶</a></h1>
 <p>In this example we will extract TMD PDFs and FFs using HERMES SIDIS unpolarized multiplicities.</p>
 <div class="section" id="input-file">
 <h2>Input file<a class="headerlink" href="#input-file" title="Permalink to this headline">¶</a></h2>
@@ -319,9 +319,16 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 <div class="math notranslate nohighlight">
 \[{\rm active~points} = {\rm factor} \times {\rm number~of~parameters}\]</div>
 <p>The sampling is more dense with increasing values of <code class="code docutils literal notranslate"><span class="pre">factor</span></code></p>
+<p>With the MC setup, the sampling can be started using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jam3d</span> <span class="o">-</span><span class="n">t</span> <span class="mi">3</span> <span class="nb">input</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>optionally one can add the flag <code class="code docutils literal notranslate"><span class="pre">-p</span></code> to parallelize the likelihood evaluation.</p>
 </div>
 <div class="section" id="analysis">
 <h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<p>The example00 comes with a jupyter notebook  to guide the analysis. The relevant
+code lines are shown below.</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">fitlab.resman</span> <span class="k">import</span> <span class="n">RESMAN</span>
 <span class="kn">from</span> <span class="nn">fitlab.mcsamp</span> <span class="k">import</span> <span class="n">MCSAMP</span>
@@ -356,8 +363,10 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 </pre></div>
 </div>
 </div>
+</div>
+</div>
 <div class="section" id="chi2-profile-for-each-run">
-<h3>Chi2 profile for each run<a class="headerlink" href="#chi2-profile-for-each-run" title="Permalink to this headline">¶</a></h3>
+<h1>Chi2 profile for each run<a class="headerlink" href="#chi2-profile-for-each-run" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nrows</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">ncols</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span><span class="n">nrows</span><span class="o">*</span><span class="mi">3</span><span class="p">))</span>
 
@@ -374,7 +383,7 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 <img alt="../../_images/output_5_0.png" src="../../_images/output_5_0.png" />
 </div>
 <div class="section" id="distribution-of-parameters">
-<h3>distribution of parameters<a class="headerlink" href="#distribution-of-parameters" title="Permalink to this headline">¶</a></h3>
+<h1>distribution of parameters<a class="headerlink" href="#distribution-of-parameters" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">parhist</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">runs</span><span class="p">,</span><span class="n">inputmod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -486,7 +495,7 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 <img alt="../../_images/output_7_0.png" src="../../_images/output_7_0.png" />
 </div>
 <div class="section" id="purge-the-samples">
-<h3>purge the samples<a class="headerlink" href="#purge-the-samples" title="Permalink to this headline">¶</a></h3>
+<h1>purge the samples<a class="headerlink" href="#purge-the-samples" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cdfcut</span><span class="o">=</span><span class="mf">0.001</span>
 <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">][</span><span class="s1">&#39;weights&#39;</span><span class="p">])</span>
 <span class="n">cdf0</span><span class="o">=</span><span class="p">[]</span>
@@ -511,14 +520,14 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 <span class="n">py</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial</span> <span class="n">size</span><span class="o">=</span> <span class="mi">6205</span>
-<span class="n">final</span>   <span class="n">size</span><span class="o">=</span> <span class="mi">1084</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial</span> <span class="n">size</span><span class="o">=</span> <span class="mi">1056</span>
+<span class="n">final</span>   <span class="n">size</span><span class="o">=</span> <span class="mi">218</span>
 </pre></div>
 </div>
 <img alt="../../_images/output_9_1.png" src="../../_images/output_9_1.png" />
 </div>
 <div class="section" id="compute-theory">
-<h3>compute theory<a class="headerlink" href="#compute-theory" title="Permalink to this headline">¶</a></h3>
+<h1>compute theory<a class="headerlink" href="#compute-theory" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;weights&#39;</span><span class="p">:</span><span class="n">weights</span><span class="p">}</span>
 <span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
@@ -534,12 +543,12 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 <span class="n">save</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;results/</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39;sidis.dat&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">130</span><span class="o">/</span><span class="mi">130</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">218</span><span class="o">/</span><span class="mi">218</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="compute-averages">
-<h3>compute averages<a class="headerlink" href="#compute-averages" title="Permalink to this headline">¶</a></h3>
+<h1>compute averages<a class="headerlink" href="#compute-averages" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">=</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;results/</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39;sidis.dat&#39;</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 <span class="n">thy</span><span class="p">,</span><span class="n">dthy</span><span class="o">=</span><span class="p">{},{}</span>
@@ -606,19 +615,19 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reaction</span><span class="p">:</span> <span class="n">sidis</span>
     <span class="n">idx</span>        <span class="n">tar</span>        <span class="n">had</span>        <span class="n">col</span>        <span class="n">obs</span>  <span class="n">npts</span>       <span class="n">chi2</span>      <span class="n">rchi2</span>      <span class="n">nchi2</span>
-   <span class="mi">1000</span>     <span class="n">proton</span>        <span class="n">pi</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">127</span>     <span class="mf">321.86</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1001</span>     <span class="n">proton</span>        <span class="n">pi</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">124</span>     <span class="mf">171.97</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1002</span>     <span class="n">proton</span>         <span class="n">k</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>      <span class="mf">74.01</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1003</span>     <span class="n">proton</span>         <span class="n">k</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">115</span>      <span class="mf">43.51</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1004</span>   <span class="n">deuteron</span>        <span class="n">pi</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">124</span>     <span class="mf">155.66</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1005</span>   <span class="n">deuteron</span>        <span class="n">pi</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>     <span class="mf">158.47</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1006</span>   <span class="n">deuteron</span>         <span class="n">k</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>      <span class="mf">78.42</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
-   <span class="mi">1007</span>   <span class="n">deuteron</span>         <span class="n">k</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>     <span class="mf">172.44</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1000</span>     <span class="n">proton</span>        <span class="n">pi</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">127</span>     <span class="mf">322.28</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1001</span>     <span class="n">proton</span>        <span class="n">pi</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">124</span>     <span class="mf">168.29</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1002</span>     <span class="n">proton</span>         <span class="n">k</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>      <span class="mf">72.20</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1003</span>     <span class="n">proton</span>         <span class="n">k</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">115</span>      <span class="mf">42.68</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1004</span>   <span class="n">deuteron</span>        <span class="n">pi</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">124</span>     <span class="mf">159.89</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1005</span>   <span class="n">deuteron</span>        <span class="n">pi</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>     <span class="mf">157.78</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1006</span>   <span class="n">deuteron</span>         <span class="n">k</span><span class="o">+</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>      <span class="mf">76.20</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
+   <span class="mi">1007</span>   <span class="n">deuteron</span>         <span class="n">k</span><span class="o">-</span>     <span class="n">hermes</span>   <span class="n">M_Hermes</span>   <span class="mi">122</span>     <span class="mf">169.94</span>       <span class="mf">0.00</span>       <span class="mf">0.00</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="plot-data-and-theory">
-<h3>plot data and theory<a class="headerlink" href="#plot-data-and-theory" title="Permalink to this headline">¶</a></h3>
+<h1>plot data and theory<a class="headerlink" href="#plot-data-and-theory" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">=</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;results/data_and_thy.dat&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -878,8 +887,6 @@ The setups for NS are in code-block of  <code class="code docutils literal notra
 </pre></div>
 </div>
 <img alt="../../_images/output_41_0.png" src="../../_images/output_41_0.png" />
-</div>
-</div>
 </div>
 
 
