@@ -90,8 +90,7 @@ class RESMAN:
         defaults['cKmff']  = 'dssKmNLO_0000'
 
         for k in defaults:
-            if k in conf:  conf[k] = qcdlib.interpolator.INTERPOLATOR(conf[k])
-            else:          conf[k] = qcdlib.interpolator.INTERPOLATOR(defaults[k])
+            conf[k] = qcdlib.interpolator.INTERPOLATOR(defaults[k])
 
     def setup_idis(self):
         conf['dis stfuncs']  = obslib.idis.stfuncs.STFUNCS()

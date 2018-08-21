@@ -157,20 +157,20 @@ class FF(CORE):
     def set_default_params(self):
 
         self._widths1 = {}
-        self._widths1['pi+ fav']   = 0.12
-        self._widths1['pi+ unfav'] = 0.12
-        self._widths1['h+ fav']    = 0.12
-        self._widths1['h+ unfav']  = 0.12
-        self._widths1['k+ fav']    = 0.12
-        self._widths1['k+ unfav']  = 0.12
+        self._widths1['pi+fav']   = 0.12
+        self._widths1['pi+unfav'] = 0.12
+        self._widths1['h+fav']    = 0.12
+        self._widths1['h+unfav']  = 0.12
+        self._widths1['k+fav']    = 0.12
+        self._widths1['k+unfav']  = 0.12
 
         self._widths2 = {}
-        self._widths2['pi+ fav']   = 0
-        self._widths2['pi+ unfav'] = 0
-        self._widths2['h+ fav']    = 0
-        self._widths2['h+ unfav']  = 0
-        self._widths2['k+ fav']    = 0
-        self._widths2['k+ unfav']  = 0
+        self._widths2['pi+fav']   = 0
+        self._widths2['pi+unfav'] = 0
+        self._widths2['h+fav']    = 0
+        self._widths2['h+unfav']  = 0
+        self._widths2['k+fav']    = 0
+        self._widths2['k+unfav']  = 0
 
         self.widths1 = {}
         self.widths1['pi+'] = np.ones(11)
@@ -196,34 +196,34 @@ class FF(CORE):
     def setup(self):
 
         for i in range(1, 11):
-            if   i == 1: self.widths1['pi+'][i] = self._widths1['pi+ fav']
-            elif i == 4: self.widths1['pi+'][i] = self._widths1['pi+ fav']
-            else:        self.widths1['pi+'][i] = self._widths1['pi+ unfav']
+            if   i == 1: self.widths1['pi+'][i] = self._widths1['pi+fav']
+            elif i == 4: self.widths1['pi+'][i] = self._widths1['pi+fav']
+            else:        self.widths1['pi+'][i] = self._widths1['pi+unfav']
 
         for i in range(1, 11):
-            if   i == 1: self.widths1['h+'][i] = self._widths1['h+ fav']
-            elif i == 4: self.widths1['h+'][i] = self._widths1['h+ fav']
-            else:        self.widths1['h+'][i] = self._widths1['h+ unfav']
+            if   i == 1: self.widths1['h+'][i] = self._widths1['h+fav']
+            elif i == 4: self.widths1['h+'][i] = self._widths1['h+fav']
+            else:        self.widths1['h+'][i] = self._widths1['h+unfav']
 
         for i in range(1, 11):
-            if   i == 1: self.widths1['k+'][i] = self._widths1['k+ fav']
-            elif i == 6: self.widths1['k+'][i] = self._widths1['k+ fav']
-            else:        self.widths1['k+'][i] = self._widths1['k+ unfav']
+            if   i == 1: self.widths1['k+'][i] = self._widths1['k+fav']
+            elif i == 6: self.widths1['k+'][i] = self._widths1['k+fav']
+            else:        self.widths1['k+'][i] = self._widths1['k+unfav']
 
         for i in range(1, 11):
-            if   i == 1: self.widths2['pi+'][i] = self._widths2['pi+ fav']
-            elif i == 4: self.widths2['pi+'][i] = self._widths2['pi+ fav']
-            else:        self.widths2['pi+'][i] = self._widths2['pi+ unfav']
+            if   i == 1: self.widths2['pi+'][i] = self._widths2['pi+fav']
+            elif i == 4: self.widths2['pi+'][i] = self._widths2['pi+fav']
+            else:        self.widths2['pi+'][i] = self._widths2['pi+unfav']
 
         for i in range(1, 11):
-            if   i == 1: self.widths2['h+'][i] = self._widths2['h+ fav']
-            elif i == 4: self.widths2['h+'][i] = self._widths2['h+ fav']
-            else:        self.widths2['h+'][i] = self._widths2['h+ unfav']
+            if   i == 1: self.widths2['h+'][i] = self._widths2['h+fav']
+            elif i == 4: self.widths2['h+'][i] = self._widths2['h+fav']
+            else:        self.widths2['h+'][i] = self._widths2['h+unfav']
 
         for i in range(1, 11):
-            if   i == 1: self.widths2['k+'][i] = self._widths2['k+ fav']
-            elif i == 6: self.widths2['k+'][i] = self._widths2['k+ fav']
-            else:        self.widths2['k+'][i] = self._widths2['k+ unfav']
+            if   i == 1: self.widths2['k+'][i] = self._widths2['k+fav']
+            elif i == 6: self.widths2['k+'][i] = self._widths2['k+fav']
+            else:        self.widths2['k+'][i] = self._widths2['k+unfav']
 
 
         self.widths1['pi-'] = self.charge_conj(self.widths1['pi+'])
@@ -248,7 +248,7 @@ class FF(CORE):
 
     def set_state(self, state):
         self.widths1 = state[0]
-        self.widths2 = state[0]
+        self.widths2 = state[1]
 
 class PPDF(CORE):
 

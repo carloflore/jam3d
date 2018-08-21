@@ -427,6 +427,7 @@ class NEST:
         data = {}
         data['nll'] = copy.copy(self.samples_nll)
         data['samples'] = copy.copy(self.samples_p)
+        data['active p'] = copy.copy(self.active_p)
         data['num active points'] = conf['num points']
 
         self.samples_nll = []
