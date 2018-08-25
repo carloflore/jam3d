@@ -96,7 +96,7 @@ class RESMAN:
         conf['dis stfuncs']  = obslib.idis.stfuncs.STFUNCS()
 
     def setup_tmds(self):
-        conf['lam2'] = 0.4 
+        conf['lam2'] = 0.4
         conf['Q02']  = 1.0
         if 'pdf'          in conf['params']:conf['pdf']          = qcdlib.tmdlib.PDF()
         if 'ppdf'         in conf['params']:conf['ppdf']         = qcdlib.tmdlib.PPDF()
@@ -154,6 +154,12 @@ class RESMAN:
             self.ANres.mproc = self.master.wrap_mproc('AN', self.ANres.mproc)
 
     def get_residuals(self, par, calc=True, simple=False):
+        """
+        Get the residuals that result from parameters, 'par'.
+
+        A 3-tuple of the residuals, r-residuals, and normalized residuals will
+        be returned.
+        """
         conf['parman'].set_new_params(par)
 
         if (self.master):
@@ -183,6 +189,7 @@ class RESMAN:
         return res, rres, nres
 
     def gen_report(self, verb=0, level=0):
+        """Get a report (as a list of lines)."""
         L = []
         if 'sidis' in conf['datasets']:
             L.extend(self.sidisres.gen_report(verb, level))
@@ -198,6 +205,7 @@ class RESMAN:
         self.slave.run()
 
     def shutdown(self):
+        """Release the resources used by the RESMAN instance."""
         if (self.master):
             self.master.finis()
             time.sleep(3)
