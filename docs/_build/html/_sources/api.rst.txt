@@ -1,11 +1,5 @@
 API
 =======
 
-under construction
-
-
-
-
-
-
-
+.. automodule:: fitlab.resman
+   :members:
