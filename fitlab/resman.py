@@ -155,10 +155,15 @@ class RESMAN:
 
     def get_residuals(self, par, calc=True, simple=False):
         """
-        Get the residuals that result from parameters, 'par'.
+        Get the residuals that result from the given parameters.
 
-        A 3-tuple of the residuals, r-residuals, and normalized residuals will
-        be returned.
+        Args:
+            par (vector): A vector (numpy array) of the parameters for the fit.
+
+        Returns:
+            A 3-tuple of the residuals, *'r-residuals'*, and normalized
+            residuals. The *r-residuals* result from the correlational
+            considerations.
         """
         conf['parman'].set_new_params(par)
 
@@ -189,7 +194,12 @@ class RESMAN:
         return res, rres, nres
 
     def gen_report(self, verb=0, level=0):
-        """Get a report (as a list of lines)."""
+        """
+        Get a report.
+
+        Returns:
+            A list of the lines of the report.
+        """
         L = []
         if 'sidis' in conf['datasets']:
             L.extend(self.sidisres.gen_report(verb, level))

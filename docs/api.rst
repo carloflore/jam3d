@@ -1,5 +1,7 @@
 API
-=======
+===
 
-.. automodule:: fitlab.resman
-   :members:
+.. toctree::
+   :maxdepth: 2
+
+   fitlab_resman
