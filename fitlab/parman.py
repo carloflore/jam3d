@@ -55,6 +55,12 @@ class PARMAN:
         self.propagate_params(semaphore)
 
     def gen_report(self):
+        """
+        Get a report.
+
+        Returns:
+            A list of the lines of the report.
+        """
         L = []
 
         for k in conf['params']:
@@ -386,7 +392,8 @@ class PARMAN:
             conf['transversity'].setup()
 
     def set_boermulders_params(self):
-        ''' Currently we're using the symmetric sea approximation
+        '''
+        Currently we're using the symmetric sea approximation
         where below, all sea quark parameters are set based on the
         value of the s quark parameters.
         '''
@@ -415,7 +422,8 @@ class PARMAN:
         conf['boermulders'].setup()
 
     def set_pretzelosity_params(self):
-        ''' Currently we're using the symmetric sea approximation
+        '''
+        Currently we're using the symmetric sea approximation
         where below, all sea quark parameters are set based on the
         value of the s quark parameters.
         '''
