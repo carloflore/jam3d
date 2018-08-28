@@ -35,6 +35,11 @@ class RESIDUALS(_RESIDUALS):
             thy = self.stfuncs.get_xsec(
                 x, z, y, Q2, pT, phi_h, phi_S, Sperp, Spar, le, 'p', hadron)
 
+        elif obs == 'FUU' and target == 'proton':
+
+            FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
+            thy = FUU
+
         elif obs == 'M_EIC' and target == 'proton':
 
             FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
