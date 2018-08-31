@@ -274,8 +274,8 @@ class RESIDUALS(_RESIDUALS):
 
         L.append('reaction: %s' % self.reaction)
 
-        L.append('%7s %10s %10s %10s %10s %5s %10s %10s %10s' % (
-            'idx', 'tar', 'had', 'col', 'obs', 'npts', 'chi2', 'rchi2', 'nchi2'))
+        L.append('%7s %10s %10s %10s %10s %5s %10s %10s %10s %10s' % (
+            'idx', 'tar', 'had', 'col', 'obs', 'npts', 'chi2', 'chi2/npts', 'rchi2', 'nchi2'))
         for k in self.tabs:
             #print k,len(self.tabs[k]['value'])
             if self.tabs[k]['value'].size == 0:
@@ -292,8 +292,13 @@ class RESIDUALS(_RESIDUALS):
             obs = self.tabs[k]['obs'][0].split()[0]
             had = self.tabs[k]['hadron'][0].split()[0]
             npts = res.size
-            L.append('%7d %10s %10s %10s %10s %5d %10.2f %10.2f %10.2f' %
-                     (k, tar, had, col, obs, npts, chi2, rchi2, nchi2))
+            if npts>0:
+                L.append('%7d %10s %10s %10s %10s %5d %10.2f %10.2f  %10.2f %10.2f' %
+                     (k, tar, had, col, obs, npts, chi2, chi2/npts, rchi2, nchi2))
+            elif npts==0:
+                L.append('%7d %10s %10s %10s %10s %5d %10.2f %10.2f %10.2f %10.2f' %
+                     (k, tar, had, col, obs, npts, chi2, 0.0, rchi2, nchi2))
+                    
 
         if level == 1:
             L.append('-' * 100)
