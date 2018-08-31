@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API &mdash; JAM3D 1.0.0 documentation</title>
+  <title>tools.tools &mdash; JAM3D 1.0.0 documentation</title>
   
 
   
@@ -28,8 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="fitlab.maxlike" href="fitlab_maxlike.html" />
-    <link rel="prev" title="Publications" href="publications.html" /> 
+    <link rel="prev" title="tools.config" href="tools_config.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -88,16 +87,16 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="physics/physics.html">Physics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="bin_jam3d.html">bin/jam3d</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fitlab_maxlike.html">fitlab.maxlike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fitlab_parman.html">fitlab.parman</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fitlab_resman.html">fitlab.resman</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qcdlib_alphaS.html">qcdlib.alphaS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qcdlib_aux.html">qcdlib.aux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="qcdlib_interpolator.html">qcdlib.interpolator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qcdlib_tmdlib.html">qcdlib.tmdlib</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools_config.html">tools.config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools_tools.html">tools.tools</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">tools.tools</a></li>
 </ul>
 </li>
 </ul>
@@ -145,13 +144,15 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>API</li>
+          <li><a href="api.html">API</a> &raquo;</li>
+        
+      <li>tools.tools</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/tools_tools.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -164,21 +165,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="api">
-<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="fitlab_maxlike.html">fitlab.maxlike</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitlab_parman.html">fitlab.parman</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitlab_resman.html">fitlab.resman</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qcdlib_alphaS.html">qcdlib.alphaS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qcdlib_aux.html">qcdlib.aux</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qcdlib_interpolator.html">qcdlib.interpolator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qcdlib_tmdlib.html">qcdlib.tmdlib</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools_config.html">tools.config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools_tools.html">tools.tools</a></li>
-</ul>
-</div>
+  <div class="section" id="module-tools.tools">
+<span id="tools-tools"></span><h1>tools.tools<a class="headerlink" href="#module-tools.tools" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="tools.tools.checkdir">
+<code class="descclassname">tools.tools.</code><code class="descname">checkdir</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#checkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.checkdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.tools.isnumeric">
+<code class="descclassname">tools.tools.</code><code class="descname">isnumeric</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#isnumeric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.isnumeric" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.tools.load">
+<code class="descclassname">tools.tools.</code><code class="descname">load</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.tools.load_config">
+<code class="descclassname">tools.tools.</code><code class="descname">load_config</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#load_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.load_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.tools.lprint">
+<code class="descclassname">tools.tools.</code><code class="descname">lprint</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#lprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.lprint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.tools.save">
+<code class="descclassname">tools.tools.</code><code class="descname">save</code><span class="sig-paren">(</span><em>data</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.tools.tex">
+<code class="descclassname">tools.tools.</code><code class="descname">tex</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/tools.html#tex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.tools.tex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 
@@ -189,10 +212,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fitlab_maxlike.html" class="btn btn-neutral float-right" title="fitlab.maxlike" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="publications.html" class="btn btn-neutral" title="Publications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tools_config.html" class="btn btn-neutral" title="tools.config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
