@@ -100,8 +100,14 @@ conf['params']['collins']['pi+ d d1 2']  = {'value':    0.00000000000000000000e+
 
 # TRANSVERSITY TMD PDF:
 conf['params']['transversity']={}
-conf['params']['transversity']['widths0 valence'] = {'value':    5.24140000000000050306e-01,'fixed':False,'min':1e-5,'max':0.52414}
-conf['params']['transversity']['widths0 sea']     = {'value':    5.84650000000000003020e-01,'fixed':False,'min':1e-5,'max':0.58465}
+conf['params']['transversity']['u widths1']  ={'value':    5.24140000000000050306e-01,'min': 0,'max':1,'fixed':True}
+conf['params']['transversity']['u widths2']  ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
+conf['params']['transversity']['d widths1']  ={'value':    5.24140000000000050306e-01,'min': 0,'max':1,'fixed':'uv widths1'}
+conf['params']['transversity']['d widths2']  ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':'uv widths2'}
+conf['params']['transversity']['sea widths1'] ={'value':    5.84650000000000003020e-01,'min': 0,'max':1,'fixed':True}
+conf['params']['transversity']['sea widths2'] ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
+
+
 conf['params']['transversity']['u N0']             = {'value':    6.93615720926875667374e+00 ,'fixed':False,'min':-10,'max':10}
 conf['params']['transversity']['u a0']             = {'value':    7.50418051324418744485e-01 ,'fixed':False,'min':-1,'max':10}
 conf['params']['transversity']['u b0']             = {'value':    2.35588099798776795524e+00 ,'fixed':False,'min':1e-5,'max':10}
