@@ -266,14 +266,14 @@ class PARMAN:
     def set_transversity_params(self):
         self.set_constraits('transversity')
 
-        #conf['transversity'].widths0['valence'] = conf['params']['transversity']['widths0 valence']['value']
-        #conf['transversity'].widths0['sea'] = conf['params']['transversity']['widths0 sea']['value']
-        conf['transversity'].widths1['u']  = conf['params']['transversity']['u widths1']['value']
-        conf['transversity'].widths1['d']  = conf['params']['transversity']['d widths1']['value']
-        conf['transversity'].widths1['sea'] = conf['params']['transversity']['sea widths1']['value']
-        conf['transversity'].widths2['u']  = conf['params']['transversity']['u widths2']['value']
-        conf['transversity'].widths2['d']  = conf['params']['transversity']['d widths2']['value']
-        conf['transversity'].widths2['sea'] = conf['params']['transversity']['sea widths2']['value']
+        conf['transversity'].widths0['valence'] = conf['params']['transversity']['widths0 valence']['value']
+        conf['transversity'].widths0['sea'] = conf['params']['transversity']['widths0 sea']['value']
+        #conf['transversity'].widths1['u']  = conf['params']['transversity']['u widths1']['value']
+        #conf['transversity'].widths1['d']  = conf['params']['transversity']['d widths1']['value']
+        #conf['transversity'].widths1['sea'] = conf['params']['transversity']['sea widths1']['value']
+        #conf['transversity'].widths2['u']  = conf['params']['transversity']['u widths2']['value']
+        #conf['transversity'].widths2['d']  = conf['params']['transversity']['d widths2']['value']
+        #conf['transversity'].widths2['sea'] = conf['params']['transversity']['sea widths2']['value']
 
         if conf['evo'] == 'yes':
             # u
