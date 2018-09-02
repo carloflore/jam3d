@@ -268,13 +268,13 @@ class PARMAN:
 
         #conf['transversity'].widths0['valence'] = conf['params']['transversity']['widths0 valence']['value']
         #conf['transversity'].widths0['sea'] = conf['params']['transversity']['widths0 sea']['value']
-        conf['pdf'].widths1['u']  = conf['params']['pdf']['u widths1']['value']
-        conf['pdf'].widths1['d']  = conf['params']['pdf']['d widths1']['value']
-        conf['pdf'].widths1['sea'] = conf['params']['pdf']['sea widths1']['value']
-        conf['pdf'].widths2['u']  = conf['params']['pdf']['u widths2']['value']
-        conf['pdf'].widths2['d']  = conf['params']['pdf']['d widths2']['value']
-        conf['pdf'].widths2['sea'] = conf['params']['pdf']['sea widths2']['value']
-        
+        conf['transversity'].widths1['u']  = conf['params']['transversity']['u widths1']['value']
+        conf['transversity'].widths1['d']  = conf['params']['transversity']['d widths1']['value']
+        conf['transversity'].widths1['sea'] = conf['params']['transversity']['sea widths1']['value']
+        conf['transversity'].widths2['u']  = conf['params']['transversity']['u widths2']['value']
+        conf['transversity'].widths2['d']  = conf['params']['transversity']['d widths2']['value']
+        conf['transversity'].widths2['sea'] = conf['params']['transversity']['sea widths2']['value']
+
         if conf['evo'] == 'yes':
             # u
             conf['transversity'].shape1['p'][1][0] = conf['params']['transversity']['u N0']['value']
