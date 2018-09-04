@@ -25,8 +25,15 @@ class MOMENTS:
     def beta(self, a, b):
         return gamma(a) * gamma(b) / gamma(a + b)
 
+    def get_s(self,Q2):
+        lam2 = conf['lam2']
+        Q02  = conf['Q02']
+        return np.log(np.log(Q2/lam2)/np.log(Q02/lam2))
+
+
     def get_moment(self, p):
         # AP: needs to check normalization
+        s=get_s(Q2)
         N=p[0] + p[5] * s
         a=p[1] + p[6] * s
         b=p[2] + p[7] * s
