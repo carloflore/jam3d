@@ -33,7 +33,9 @@ class MOMENTS:
 
     def get_moment(self, p):
         # AP: needs to check normalization
-        s=get_s(Q2)
+        # test
+        Q2=4.
+        s=self.get_s(Q2)
         N=p[0] + p[5] * s
         a=p[1] + p[6] * s
         b=p[2] + p[7] * s
