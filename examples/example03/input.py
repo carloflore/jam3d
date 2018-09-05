@@ -262,6 +262,73 @@ conf['params']['collins']['k+ s d0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed'
 conf['params']['collins']['k+ s d1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
 
 
+conf['params']['collins']['h+fav widths1']   = {'value': 1.24049999999999993605e-01,'min':0, 'max':1, 'fixed':False}
+conf['params']['collins']['h+unfav widths1'] = {'value':  1.43729999999999996652e-01,'min':0, 'max':1, 'fixed':False}
+conf['params']['collins']['h+fav widths2']   = {'value':  0.0,'min':0, 'max':1, 'fixed':True}
+conf['params']['collins']['h+unfav widths2'] = {'value':  0.0,'min':0, 'max':1, 'fixed':True}
+
+conf['params']['collins']['h+ u N0 1'] = {'value':  -3.43290097947612160567e+00,'min': -15, 'max': 2, 'fixed':False}
+conf['params']['collins']['h+ u N1 1'] = {'value':  0.0,'min': -10, 'max': 10, 'fixed':True}
+conf['params']['collins']['h+ u a0 1'] = {'value':  1.07876853314680998253e+00,'min':-2, 'max': 5, 'fixed':False}
+conf['params']['collins']['h+ u a1 1'] = {'value':  0.0,'min':-2, 'max': 5, 'fixed':True}
+conf['params']['collins']['h+ u b0 1'] = {'value':  3.18601609944188135515e+00,'min': 0, 'max':10, 'fixed':False}
+conf['params']['collins']['h+ u b1 1'] = {'value':  0.0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ u c0 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u c1 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u d0 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u d1 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u N0 2'] = {'value': 1.05827284963755605673e+01,'min': -10, 'max': 10, 'fixed':False}
+conf['params']['collins']['h+ u N1 2'] = {'value': 0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u a0 2'] = {'value': 7.94843162206008546633e+00,'min':-2, 'max': 20, 'fixed':False}
+conf['params']['collins']['h+ u a1 2'] = {'value': 0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ u b0 2'] = {'value': 3.00185190517106192942e+00,'min': 0, 'max':10, 'fixed':False}
+conf['params']['collins']['h+ u b1 2'] = {'value': 0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ u c0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u c1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u d0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ u d1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+
+conf['params']['collins']['h+ d N0 1'] = {'value':  -3.43290097947612160567e+00,'min': -10, 'max': 10, 'fixed':False}
+conf['params']['collins']['h+ d N1 1'] = {'value':  0.0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d a0 1'] = {'value':  1.07876853314680998253e+00,'min':-2, 'max': 2, 'fixed':False}
+conf['params']['collins']['h+ d a1 1'] = {'value':  0.0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ d b0 1'] = {'value':  3.18601609944188135515e+00,'min': 0, 'max':10, 'fixed':False}
+conf['params']['collins']['h+ d b1 1'] = {'value':  0.0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ d c0 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d c1 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d d0 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d d1 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d N0 2'] = {'value': 0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d N1 2'] = {'value': 0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d a0 2'] = {'value': 0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ d a1 2'] = {'value': 0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ d b0 2'] = {'value': 0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ d b1 2'] = {'value': 0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ d c0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d c1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d d0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ d d1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+
+conf['params']['collins']['h+ s N0 1'] = {'value':  0.0,'min': 0, 'max': 1, 'fixed':False}
+conf['params']['collins']['h+ s N1 1'] = {'value':  0.0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s a0 1'] = {'value': -0.5,'min':-2, 'max': 2, 'fixed':False}
+conf['params']['collins']['h+ s a1 1'] = {'value':  0.0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ s b0 1'] = {'value':  3.0,'min': 0, 'max':10, 'fixed':False}
+conf['params']['collins']['h+ s b1 1'] = {'value':  0.0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ s c0 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s c1 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s d0 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s d1 1'] = {'value':  0.0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s N0 2'] = {'value': 0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s N1 2'] = {'value': 0,'min': 0, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s a0 2'] = {'value': 0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ s a1 2'] = {'value': 0,'min':-2, 'max': 2, 'fixed':True}
+conf['params']['collins']['h+ s b0 2'] = {'value': 0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ s b1 2'] = {'value': 0,'min': 0, 'max':10, 'fixed':True}
+conf['params']['collins']['h+ s c0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s c1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s d0 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
+conf['params']['collins']['h+ s d1 2'] = {'value': 0,'min':-1, 'max': 1, 'fixed':True}
 
 
 ############################################################################
