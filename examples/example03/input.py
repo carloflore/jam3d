@@ -128,7 +128,7 @@ conf['params']['collins']['pi+unfav widths1'] = {'value':  7.82e-02,'min':0, 'ma
 conf['params']['collins']['pi+fav widths2']   = {'value':  0.0,'min':0, 'max':1, 'fixed':True}
 conf['params']['collins']['pi+unfav widths2'] = {'value':  0.0,'min':0, 'max':1, 'fixed':True}
 
-conf['params']['collins']['pi+ u N0 1'] = {'value': 7.27e-02,'min': -15, 'max': 2, 'fixed':False}
+conf['params']['collins']['pi+ u N0 1'] = {'value': 7.27e-01,'min': -15, 'max': 2, 'fixed':False}
 conf['params']['collins']['pi+ u N1 1'] = {'value':  0.0,'min': -10, 'max': 10, 'fixed':True}
 conf['params']['collins']['pi+ u a0 1'] = {'value':  -1.8529e+00,'min':-2.5, 'max': 5, 'fixed':False}
 conf['params']['collins']['pi+ u a1 1'] = {'value':  0.0,'min':-2, 'max': 5, 'fixed':True}
