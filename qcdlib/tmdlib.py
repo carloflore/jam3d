@@ -306,20 +306,34 @@ class TRANSVERSITY(CORE):
         self.shape2 = {}
         self.shape2['p'] = np.zeros((11, 10))
 
-        self.widths0 = {}
-        self.widths0['valence'] = 0.26
-        self.widths0['sea'] = 0.26
+        self._widths1 = {}
+        self._widths1['uv']  = 0.3
+        self._widths1['dv']  = 0.3
+        self._widths1['sea'] = 0.3
 
-        self.widths = {}
-        self.widths['p'] = np.ones(11)
+        self._widths2 = {}
+        self._widths2['uv']  = 0
+        self._widths2['dv']  = 0
+        self._widths2['sea'] = 0
+
+        self.widths1 = {}
+        self.widths1['p'] = np.ones(11)
+        self.widths2 = {}
+        self.widths2['p'] = np.ones(11)
 
     def setup(self):
         for i in range(11):
-            if i == 1 or i == 3:  self.widths['p'][i] = self.widths0['valence']
-            else:                 self.widths['p'][i] = self.widths0['sea']
+            if   i == 1: self.widths1['p'][i] = self._widths1['uv']
+            elif i == 3: self.widths1['p'][i] = self._widths1['dv']
+            else:        self.widths1['p'][i] = self._widths1['sea']
+        for i in range(11):
+            if   i == 1: self.widths2['p'][i] = self._widths2['uv']
+            elif i == 3: self.widths2['p'][i] = self._widths2['dv']
+            else:        self.widths2['p'][i] = self._widths2['sea']
+        self.widths1['n'] = self.p2n(self.widths1['p'])
+        self.widths2['n'] = self.p2n(self.widths2['p'])
         self.shape1['n'] = self.p2n(self.shape1['p'])
         self.shape2['n'] = self.p2n(self.shape2['p'])
-        self.widths['n'] = self.p2n(self.widths['p'])
 
     def get_C(self, x, Q2, target='p'):
         C = self.get_collinear(x, target, Q2)
@@ -327,12 +341,13 @@ class TRANSVERSITY(CORE):
         return C
 
     def get_state(self):
-        return (self.widths, self.shape1,self.shape2)
+        return (self.widths1,self.widths2, self.shape1,self.shape2)
 
     def set_state(self, state):
-        self.widths = state[0]
-        self.shape1 = state[1]
-        self.shape2 = state[3]
+        self.widths1 = state[0]
+        self.widths2 = state[1]
+        self.shape1  = state[2]
+        self.shape2  = state[3]
 
 class SIVERS(CORE):
 
@@ -558,23 +573,6 @@ class COLLINS(CORE):
 
     def set_default_params(self):
 
-        self.Mh = {}
-        self.Mh['pi+'] = self.aux.Mpi
-        self.Mh['pi-'] = self.aux.Mpi
-        self.Mh['pi0'] = self.aux.Mpi
-        self.Mh['h+'] = self.aux.Mpi
-        self.Mh['h-'] = self.aux.Mpi
-        self.Mh['k+'] = self.aux.Mk
-        self.Mh['k-'] = self.aux.Mk
-
-        self.widths0 = {}
-        self.widths0['pi+ fav'] = 0.11
-        self.widths0['pi+ unfav'] = 0.11
-        self.widths0['h+ fav'] = 0.11
-        self.widths0['h+ unfav'] = 0.11
-        self.widths0['k+ fav'] = 0.11
-        self.widths0['k+ unfav'] = 0.11
-
         self.shape1 = {}
         self.shape1['pi+'] = np.zeros((11, 10))
         self.shape1['h+'] = np.zeros((11, 10))
@@ -585,10 +583,30 @@ class COLLINS(CORE):
         self.shape2['h+'] = np.zeros((11, 10))
         self.shape2['k+'] = np.zeros((11, 10))
 
-        self.widths = {}
-        self.widths['pi+'] = np.ones(11)
-        self.widths['h+'] = np.ones(11)
-        self.widths['k+'] = np.ones(11)
+        ##############################################
+        self._widths1 = {}
+        self._widths2 = {}
+        for had in ['pi+','k+','h+']:
+            self._widths1['%sfav'%had]   = 0.3
+            self._widths1['%sunfav'%had] = 0.3
+            self._widths2['%sfav'%had]   = 0
+            self._widths2['%sunfav'%had] = 0
+
+        self.widths1 = {}
+        self.widths2 = {}
+        for had in ['pi+','k+','h+']:
+            self.widths1[had] = np.ones(11)
+            self.widths2[had] = np.ones(11)
+
+        ##############################################
+        self.Mh = {}
+        self.Mh['pi+'] = self.aux.Mpi
+        self.Mh['pi-'] = self.aux.Mpi
+        self.Mh['pi0'] = self.aux.Mpi
+        self.Mh['h+'] = self.aux.Mpi
+        self.Mh['h-'] = self.aux.Mpi
+        self.Mh['k+'] = self.aux.Mk
+        self.Mh['k-'] = self.aux.Mk
 
         self.K = {}
         self.K['pi+'] = np.ones(11)
@@ -605,22 +623,17 @@ class COLLINS(CORE):
         return 1
 
     def get_K(self, z, hadron):
-        return 2 * z**2 * self.Mh[hadron]**2 / self.widths[hadron]
+        return 2 * z**2 * self.Mh[hadron]**2 / self.get_widths(1.0,hadron)
 
     def setup(self):
         # 1,  2,  3,  4,  5,  6,  7,  8,  9, 10
         # u, ub,  d, db,  s, sb,  c, cb,  b, bb
-        for i in range(1, 11):
-            if i == 1 or i == 4:  self.widths['pi+'][i] = np.copy(self.widths0['pi+ fav'])
-            else:                 self.widths['pi+'][i] = np.copy(self.widths0['pi+ unfav'])
-
-        for i in range(1, 11):
-            if i == 1 or i == 4:  self.widths['h+'][i] = np.copy(self.widths0['h+ fav'])
-            else:                 self.widths['h+'][i] = np.copy(self.widths0['h+ unfav'])
-
-        for i in range(1, 11):
-            if i == 1 or i == 6:  self.widths['k+'][i] = np.copy(self.widths0['k+ fav'])
-            else:                 self.widths['k+'][i] = np.copy(self.widths0['k+ unfav'])
+        for had in ['pi+','k+','h+']:
+            for i in range(1, 11):
+                if i == 1 or i == 4:  self.widths1[had][i] = np.copy(self._widths1['%sfav'%had])
+                else:                 self.widths1[had][i] = np.copy(self._widths1['%sunfav'%had])
+                if i == 1 or i == 4:  self.widths2[had][i] = np.copy(self._widths2['%sfav'%had])
+                else:                 self.widths2[had][i] = np.copy(self._widths2['%sunfav'%had])
 
         self.shape1['pi-'] = self.charge_conj(self.shape1['pi+'])
         self.shape2['pi-'] = self.charge_conj(self.shape2['pi+'])
@@ -631,9 +644,12 @@ class COLLINS(CORE):
         self.shape1['k-']  = self.charge_conj(self.shape1['k+'])
         self.shape2['k-']  = self.charge_conj(self.shape2['k+'])
 
-        self.widths['pi-'] = self.charge_conj(self.widths['pi+'])
-        self.widths['h-']  = self.charge_conj(self.widths['h+'])
-        self.widths['k-']  = self.charge_conj(self.widths['k+'])
+        self.widths1['pi-'] = self.charge_conj(self.widths1['pi+'])
+        self.widths1['h-']  = self.charge_conj(self.widths1['h+'])
+        self.widths1['k-']  = self.charge_conj(self.widths1['k+'])
+        self.widths2['pi-'] = self.charge_conj(self.widths2['pi+'])
+        self.widths2['h-']  = self.charge_conj(self.widths2['h+'])
+        self.widths2['k-']  = self.charge_conj(self.widths2['k+'])
 
         for hadron in ['pi+', 'pi-', 'h+', 'h-', 'k+', 'k-']:
             self.norm[hadron] = self.get_norm(hadron)
@@ -648,12 +664,13 @@ class COLLINS(CORE):
         return C
 
     def get_state(self):
-        return (self.widths, self.shape1, self.shape2)
+        return (self.widths1,self.widths2,self.shape1, self.shape2)
 
     def set_state(self, state):
-        self.widths = state[0]
-        self.shape1 = state[1]
-        self.shape2 = state[2]
+        self.widths1 = state[0]
+        self.widths2 = state[1]
+        self.shape1  = state[2]
+        self.shape2  = state[3]
 
 class HTILDE(CORE):  # Htilde has same form as Collins
 

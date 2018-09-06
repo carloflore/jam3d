@@ -25,20 +25,27 @@ class MOMENTS:
     def beta(self, a, b):
         return gamma(a) * gamma(b) / gamma(a + b)
 
-    def get_moment(self, params):
+    def get_s(self,Q2):
+        lam2 = conf['lam2']
+        Q02  = conf['Q02']
+        return np.log(np.log(Q2/lam2)/np.log(Q02/lam2))
 
-        if conf['shape'] == 0:
-            N, a, b, c, d = params
-            return N * (self.beta(1 + a, b + 1) + c * self.beta(1 + 0.5 + a, b + 1) + d * self.beta(1 + 1 + a, b + 1))
 
-        if conf['shape'] == 1:
-            p = params
-            norm = self.beta(1 + p[1], p[2] + 1) + p[3] * self.beta(1 +
-                                                            p[1] + 1, p[2] + 1) + p[4] * self.beta(1 + p[1] + 2, p[2] + 1)
-            return (self.beta(1 + p[1], p[2] + 1) + c * self.beta(1 + 0.5 + p[1], p[2] + 1) + d * self.beta(1 + 1 + p[1], p[2] + 1)) / norm
+    def get_moment(self, p):
+        # AP: needs to check normalization
+        # test
+        Q2=4.
+        s=self.get_s(Q2)
+        N=p[0] + p[5] * s
+        a=p[1] + p[6] * s
+        b=p[2] + p[7] * s
+        c=p[3] + p[8] * s
+        d=p[4] + p[9] * s
+        n= self.beta(1+a,b+1) + c*self.beta(1+a+1,b + 1) + d*self.beta(1+a+1,b + 1)
+        return N * (self.beta(1 + a, b + 1) + c * self.beta(1 + 0.5 + a, b + 1) + d * self.beta(1 + 1 + a, b + 1))
 
     def get_flav(self, flav):
-        shape = conf['transversity'].shape['p']
+        shape = conf['transversity'].shape1['p']
         if flav == 'u':
             return self.get_moment(shape[1]) - self.get_moment(shape[2])
         if flav == 'd':
@@ -51,7 +58,7 @@ class MOMENTS:
             return self.get_moment(shape[7]) - self.get_moment(shape[8])
 
     def get_gT(self):
-        shape = conf['transversity'].shape['p']
+        shape = conf['transversity'].shape1['p']
         # mom_u=self.get_moment(shape[1])
         # mom_d=self.get_moment(shape[3])
         mom_u = self.get_flav('u')

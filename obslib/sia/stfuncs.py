@@ -60,8 +60,8 @@ class STFUNCS:
                 return 2. * self.Mh[hadron1]**2 * z1**2 / (np.pi * wq)
 
     def get_Wq(self, z1, z2, k1, k2, hadron1, hadron2):
-        return (z1**2 * self.get_cc(conf[k1].widths[hadron2])
-                + z2**2 * conf[k2].widths[hadron1]
+        return (z1**2 * self.get_cc(conf[k1].get_widths(1,hadron2))
+                + z2**2 * conf[k2].get_widths(1,hadron1)
                 ) / z2**2
 
     def get_gauss(self, z1, z2, pT, k1, k2, wq):

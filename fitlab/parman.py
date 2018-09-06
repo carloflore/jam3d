@@ -125,24 +125,10 @@ class PARMAN:
 
     def set_ff_params(self):
         self.set_constraits('ff')
-        if 'pi+fav widths1' in conf['params']['ff']:
-            conf['ff']._widths1['pi+fav']   = conf['params']['ff']['pi+fav widths1']['value']
-            conf['ff']._widths1['pi+unfav'] = conf['params']['ff']['pi+unfav widths1']['value']
-        if 'pi+fav widths2' in conf['params']['ff']:
-            conf['ff']._widths2['pi+fav']   = conf['params']['ff']['pi+fav widths2']['value']
-            conf['ff']._widths2['pi+unfav'] = conf['params']['ff']['pi+unfav widths2']['value']
-        if 'k+fav widths1' in conf['params']['ff']:
-            conf['ff']._widths1['k+fav']    = conf['params']['ff']['k+fav widths1']['value']
-            conf['ff']._widths1['k+unfav']  = conf['params']['ff']['k+unfav widths1']['value']
-        if 'k+fav widths2' in conf['params']['ff']:
-            conf['ff']._widths2['k+fav']    = conf['params']['ff']['k+fav widths2']['value']
-            conf['ff']._widths2['k+unfav']  = conf['params']['ff']['k+unfav widths2']['value']
-        if 'h+fav widths1' in conf['params']['ff']:
-            conf['ff']._widths1['h+fav']    = conf['params']['ff']['h+fav widths1']['value']
-            conf['ff']._widths1['h+unfav']  = conf['params']['ff']['h+unfav widths1']['value']
-        if 'h+fav widths2' in conf['params']['ff']:
-            conf['ff']._widths2['h+fav']    = conf['params']['ff']['h+fav widths2']['value']
-            conf['ff']._widths2['h+unfav']  = conf['params']['ff']['h+unfav widths2']['value']
+        for had in ['pi+','k+','h+']:
+            for _ in ['fav','unfav']:
+              conf['ff']._widths1['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths1'%(had,_)]['value']
+              conf['ff']._widths2['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths2'%(had,_)]['value']
         conf['ff'].setup()
 
     def set_ppdf_params(self):
@@ -266,136 +252,18 @@ class PARMAN:
     def set_transversity_params(self):
         self.set_constraits('transversity')
 
-        conf['transversity'].widths0['valence'] = conf['params']['transversity']['widths0 valence']['value']
-        conf['transversity'].widths0['sea'] = conf['params']['transversity']['widths0 sea']['value']
-        #conf['transversity'].widths1['u']  = conf['params']['transversity']['u widths1']['value']
-        #conf['transversity'].widths1['d']  = conf['params']['transversity']['d widths1']['value']
-        #conf['transversity'].widths1['sea'] = conf['params']['transversity']['sea widths1']['value']
-        #conf['transversity'].widths2['u']  = conf['params']['transversity']['u widths2']['value']
-        #conf['transversity'].widths2['d']  = conf['params']['transversity']['d widths2']['value']
-        #conf['transversity'].widths2['sea'] = conf['params']['transversity']['sea widths2']['value']
+        for par in ['uv','dv','sea']:
+            conf['transversity']._widths1[par]  = conf['params']['transversity']['%s widths1'%par]['value']
+            conf['transversity']._widths2[par]  = conf['params']['transversity']['%s widths2'%par]['value']
 
-        if conf['evo'] == 'yes':
-            # u
-            conf['transversity'].shape1['p'][1][0] = conf['params']['transversity']['u N0']['value']
-            conf['transversity'].shape1['p'][1][1] = conf['params']['transversity']['u N1']['value']
-            conf['transversity'].shape1['p'][1][2] = conf['params']['transversity']['u a0']['value']
-            conf['transversity'].shape1['p'][1][3] = conf['params']['transversity']['u a1']['value']
-            conf['transversity'].shape1['p'][1][4] = conf['params']['transversity']['u b0']['value']
-            conf['transversity'].shape1['p'][1][5] = conf['params']['transversity']['u b1']['value']
-            conf['transversity'].shape1['p'][1][6] = conf['params']['transversity']['u c0']['value']
-            conf['transversity'].shape1['p'][1][7] = conf['params']['transversity']['u c1']['value']
-            conf['transversity'].shape1['p'][1][8] = conf['params']['transversity']['u d0']['value']
-            conf['transversity'].shape1['p'][1][9] = conf['params']['transversity']['u d1']['value']
-
-            # d
-            conf['transversity'].shape1['p'][3][0] = conf['params']['transversity']['d N0']['value']
-            conf['transversity'].shape1['p'][3][1] = conf['params']['transversity']['d N1']['value']
-            conf['transversity'].shape1['p'][3][2] = conf['params']['transversity']['d a0']['value']
-            conf['transversity'].shape1['p'][3][3] = conf['params']['transversity']['d a1']['value']
-            conf['transversity'].shape1['p'][3][4] = conf['params']['transversity']['d b0']['value']
-            conf['transversity'].shape1['p'][3][5] = conf['params']['transversity']['d b1']['value']
-            conf['transversity'].shape1['p'][3][6] = conf['params']['transversity']['d c0']['value']
-            conf['transversity'].shape1['p'][3][7] = conf['params']['transversity']['d c1']['value']
-            conf['transversity'].shape1['p'][3][8] = conf['params']['transversity']['d d0']['value']
-            conf['transversity'].shape1['p'][3][9] = conf['params']['transversity']['d d1']['value']
-
-            # the model is all sea quark transversities are equal to s quark transversity
-            # s
-            conf['transversity'].shape1['p'][5][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][5][1] = conf['params']['transversity']['s N1']['value']
-            conf['transversity'].shape1['p'][5][2] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][5][3] = conf['params']['transversity']['s a1']['value']
-            conf['transversity'].shape1['p'][5][4] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][5][5] = conf['params']['transversity']['s b1']['value']
-            conf['transversity'].shape1['p'][5][6] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][5][7] = conf['params']['transversity']['s c1']['value']
-            conf['transversity'].shape1['p'][5][8] = conf['params']['transversity']['s d0']['value']
-            conf['transversity'].shape1['p'][5][9] = conf['params']['transversity']['s d1']['value']
-
-            # ub
-            conf['transversity'].shape1['p'][2][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][2][1] = conf['params']['transversity']['s N1']['value']
-            conf['transversity'].shape1['p'][2][2] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][2][3] = conf['params']['transversity']['s a1']['value']
-            conf['transversity'].shape1['p'][2][4] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][2][5] = conf['params']['transversity']['s b1']['value']
-            conf['transversity'].shape1['p'][2][6] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][2][7] = conf['params']['transversity']['s c1']['value']
-            conf['transversity'].shape1['p'][2][8] = conf['params']['transversity']['s d0']['value']
-            conf['transversity'].shape1['p'][2][9] = conf['params']['transversity']['s d1']['value']
-
-            # db
-            conf['transversity'].shape1['p'][4][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][4][1] = conf['params']['transversity']['s N1']['value']
-            conf['transversity'].shape1['p'][4][2] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][4][3] = conf['params']['transversity']['s a1']['value']
-            conf['transversity'].shape1['p'][4][4] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][4][5] = conf['params']['transversity']['s b1']['value']
-            conf['transversity'].shape1['p'][4][6] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][4][7] = conf['params']['transversity']['s c1']['value']
-            conf['transversity'].shape1['p'][4][8] = conf['params']['transversity']['s d0']['value']
-            conf['transversity'].shape1['p'][4][9] = conf['params']['transversity']['s d1']['value']
-
-            # sb
-            conf['transversity'].shape1['p'][6][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][6][1] = conf['params']['transversity']['s N1']['value']
-            conf['transversity'].shape1['p'][6][2] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][6][3] = conf['params']['transversity']['s a1']['value']
-            conf['transversity'].shape1['p'][6][4] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][6][5] = conf['params']['transversity']['s b1']['value']
-            conf['transversity'].shape1['p'][6][6] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][6][7] = conf['params']['transversity']['s c1']['value']
-            conf['transversity'].shape1['p'][6][8] = conf['params']['transversity']['s d0']['value']
-            conf['transversity'].shape1['p'][6][9] = conf['params']['transversity']['s d1']['value']
-
-            conf['transversity'].setup()
-
-        else:
-            # u
-            conf['transversity'].shape1['p'][1][0] = conf['params']['transversity']['u N0']['value']
-            conf['transversity'].shape1['p'][1][1] = conf['params']['transversity']['u a0']['value']
-            conf['transversity'].shape1['p'][1][2] = conf['params']['transversity']['u b0']['value']
-            conf['transversity'].shape1['p'][1][3] = conf['params']['transversity']['u c0']['value']
-            conf['transversity'].shape1['p'][1][4] = conf['params']['transversity']['u d0']['value']
-
-            # d
-            conf['transversity'].shape1['p'][3][0] = conf['params']['transversity']['d N0']['value']
-            conf['transversity'].shape1['p'][3][1] = conf['params']['transversity']['d a0']['value']
-            conf['transversity'].shape1['p'][3][2] = conf['params']['transversity']['d b0']['value']
-            conf['transversity'].shape1['p'][3][3] = conf['params']['transversity']['d c0']['value']
-            conf['transversity'].shape1['p'][3][4] = conf['params']['transversity']['d d0']['value']
-
-            # the model is all sea quark transversiries are equal to s quark transversity
-            # s
-            conf['transversity'].shape1['p'][5][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][5][1] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][5][2] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][5][3] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][5][4] = conf['params']['transversity']['s d0']['value']
-
-            # ub
-            conf['transversity'].shape1['p'][2][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][2][1] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][2][2] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][2][3] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][2][4] = conf['params']['transversity']['s d0']['value']
-
-            # db
-            conf['transversity'].shape1['p'][4][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][4][1] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][4][2] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][4][3] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][4][4] = conf['params']['transversity']['s d0']['value']
-
-            # sb
-            conf['transversity'].shape1['p'][6][0] = conf['params']['transversity']['s N0']['value']
-            conf['transversity'].shape1['p'][6][1] = conf['params']['transversity']['s a0']['value']
-            conf['transversity'].shape1['p'][6][2] = conf['params']['transversity']['s b0']['value']
-            conf['transversity'].shape1['p'][6][3] = conf['params']['transversity']['s c0']['value']
-            conf['transversity'].shape1['p'][6][4] = conf['params']['transversity']['s d0']['value']
-
-            conf['transversity'].setup()
+        iflav=0
+        for flav in ['u','d','s']:
+            iflav+=1
+            ipar=-1
+            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+                ipar+=1
+                conf['transversity'].shape1['p'][iflav][ipar] = conf['params']['transversity']['%s %s 1'%(flav,par)]['value']
+                conf['transversity'].shape2['p'][iflav][ipar] = conf['params']['transversity']['%s %s 2'%(flav,par)]['value']
 
     def set_boermulders_params(self):
         '''
@@ -460,306 +328,22 @@ class PARMAN:
     def set_collins_params(self):
 
         self.set_constraits('collins')
+        for had in ['pi+','k+','h+']:
 
-        if conf['evo'] == 'yes':
-            if 'pi+ u N0 1' in conf['params']['collins']:
-                conf['collins'].widths0['pi+ fav'] = conf['params']['collins']['widths0 pi+ fav']['value']
-                conf['collins'].widths0['pi+ unfav'] = conf['params']['collins']['widths0 pi+ unfav']['value']
+            for _ in ['fav','unfav']:
+                conf['collins']._widths1['%s%s'%(had,_)]    = conf['params']['collins']['%s%s widths1'%(had,_)]['value']
+                conf['collins']._widths2['%s%s'%(had,_)]   = conf['params']['collins']['%s%s widths2'%(had,_)]['value']
 
-                conf['collins'].shape1['pi+'][1][0] = conf['params']['collins']['pi+ u N0 1']['value']
-                conf['collins'].shape1['pi+'][1][1] = conf['params']['collins']['pi+ u N1 1']['value']
-                conf['collins'].shape1['pi+'][1][2] = conf['params']['collins']['pi+ u a0 1']['value']
-                conf['collins'].shape1['pi+'][1][3] = conf['params']['collins']['pi+ u a1 1']['value']
-                conf['collins'].shape1['pi+'][1][4] = conf['params']['collins']['pi+ u b0 1']['value']
-                conf['collins'].shape1['pi+'][1][5] = conf['params']['collins']['pi+ u b1 1']['value']
-                conf['collins'].shape1['pi+'][1][6] = conf['params']['collins']['pi+ u c0 1']['value']
-                conf['collins'].shape1['pi+'][1][7] = conf['params']['collins']['pi+ u c1 1']['value']
-                conf['collins'].shape1['pi+'][1][8] = conf['params']['collins']['pi+ u d0 1']['value']
-                conf['collins'].shape1['pi+'][1][9] = conf['params']['collins']['pi+ u d1 1']['value']
+            iflav=0
+            for flav in ['u','d','s']:
+                iflav+=1
+                ipar=-1
+                for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+                    ipar+=1
+                    conf['collins'].shape1[had][iflav][ipar] = conf['params']['collins']['%s %s %s 1'%(had,flav,par)]['value']
+                    conf['collins'].shape2[had][iflav][ipar] = conf['params']['collins']['%s %s %s 2'%(had,flav,par)]['value']
 
-                conf['collins'].shape1['pi+'][2][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][2][1] = conf['params']['collins']['pi+ d N1 1']['value']
-                conf['collins'].shape1['pi+'][2][2] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][2][3] = conf['params']['collins']['pi+ d a1 1']['value']
-                conf['collins'].shape1['pi+'][2][4] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][2][5] = conf['params']['collins']['pi+ d b1 1']['value']
-                conf['collins'].shape1['pi+'][2][6] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][2][7] = conf['params']['collins']['pi+ d c1 1']['value']
-                conf['collins'].shape1['pi+'][2][8] = conf['params']['collins']['pi+ d d0 1']['value']
-                conf['collins'].shape1['pi+'][2][9] = conf['params']['collins']['pi+ d d1 1']['value']
-
-                conf['collins'].shape1['pi+'][3][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][3][1] = conf['params']['collins']['pi+ d N1 1']['value']
-                conf['collins'].shape1['pi+'][3][2] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][3][3] = conf['params']['collins']['pi+ d a1 1']['value']
-                conf['collins'].shape1['pi+'][3][4] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][3][5] = conf['params']['collins']['pi+ d b1 1']['value']
-                conf['collins'].shape1['pi+'][3][6] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][3][7] = conf['params']['collins']['pi+ d c1 1']['value']
-                conf['collins'].shape1['pi+'][3][8] = conf['params']['collins']['pi+ d d0 1']['value']
-                conf['collins'].shape1['pi+'][3][9] = conf['params']['collins']['pi+ d d1 1']['value']
-
-                conf['collins'].shape1['pi+'][4][0] = conf['params']['collins']['pi+ u N0 1']['value']
-                conf['collins'].shape1['pi+'][4][1] = conf['params']['collins']['pi+ u N1 1']['value']
-                conf['collins'].shape1['pi+'][4][2] = conf['params']['collins']['pi+ u a0 1']['value']
-                conf['collins'].shape1['pi+'][4][3] = conf['params']['collins']['pi+ u a1 1']['value']
-                conf['collins'].shape1['pi+'][4][4] = conf['params']['collins']['pi+ u b0 1']['value']
-                conf['collins'].shape1['pi+'][4][5] = conf['params']['collins']['pi+ u b1 1']['value']
-                conf['collins'].shape1['pi+'][4][6] = conf['params']['collins']['pi+ u c0 1']['value']
-                conf['collins'].shape1['pi+'][4][7] = conf['params']['collins']['pi+ u c1 1']['value']
-                conf['collins'].shape1['pi+'][4][8] = conf['params']['collins']['pi+ u d0 1']['value']
-                conf['collins'].shape1['pi+'][4][9] = conf['params']['collins']['pi+ u d1 1']['value']
-
-                conf['collins'].shape1['pi+'][5][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][5][1] = conf['params']['collins']['pi+ d N1 1']['value']
-                conf['collins'].shape1['pi+'][5][2] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][5][3] = conf['params']['collins']['pi+ d a1 1']['value']
-                conf['collins'].shape1['pi+'][5][4] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][5][5] = conf['params']['collins']['pi+ d b1 1']['value']
-                conf['collins'].shape1['pi+'][5][6] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][5][7] = conf['params']['collins']['pi+ d c1 1']['value']
-                conf['collins'].shape1['pi+'][5][8] = conf['params']['collins']['pi+ d d0 1']['value']
-                conf['collins'].shape1['pi+'][5][9] = conf['params']['collins']['pi+ d d1 1']['value']
-
-                conf['collins'].shape1['pi+'][6][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][6][1] = conf['params']['collins']['pi+ d N1 1']['value']
-                conf['collins'].shape1['pi+'][6][2] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][6][3] = conf['params']['collins']['pi+ d a1 1']['value']
-                conf['collins'].shape1['pi+'][6][4] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][6][5] = conf['params']['collins']['pi+ d b1 1']['value']
-                conf['collins'].shape1['pi+'][6][6] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][6][7] = conf['params']['collins']['pi+ d c1 1']['value']
-                conf['collins'].shape1['pi+'][6][8] = conf['params']['collins']['pi+ d d0 1']['value']
-                conf['collins'].shape1['pi+'][6][9] = conf['params']['collins']['pi+ d d1 1']['value']
-
-                # ------------------
-
-                conf['collins'].shape2['pi+'][1][0] = conf['params']['collins']['pi+ u N0 2']['value']
-                conf['collins'].shape2['pi+'][1][1] = conf['params']['collins']['pi+ u N1 2']['value']
-                conf['collins'].shape2['pi+'][1][2] = conf['params']['collins']['pi+ u a0 2']['value']
-                conf['collins'].shape2['pi+'][1][3] = conf['params']['collins']['pi+ u a1 2']['value']
-                conf['collins'].shape2['pi+'][1][4] = conf['params']['collins']['pi+ u b0 2']['value']
-                conf['collins'].shape2['pi+'][1][5] = conf['params']['collins']['pi+ u b1 2']['value']
-                conf['collins'].shape2['pi+'][1][6] = conf['params']['collins']['pi+ u c0 2']['value']
-                conf['collins'].shape2['pi+'][1][7] = conf['params']['collins']['pi+ u c1 2']['value']
-                conf['collins'].shape2['pi+'][1][8] = conf['params']['collins']['pi+ u d0 2']['value']
-                conf['collins'].shape2['pi+'][1][9] = conf['params']['collins']['pi+ u d1 2']['value']
-
-                conf['collins'].shape2['pi+'][4][0] = conf['params']['collins']['pi+ u N0 2']['value']
-                conf['collins'].shape2['pi+'][4][1] = conf['params']['collins']['pi+ u N1 2']['value']
-                conf['collins'].shape2['pi+'][4][2] = conf['params']['collins']['pi+ u a0 2']['value']
-                conf['collins'].shape2['pi+'][4][3] = conf['params']['collins']['pi+ u a1 2']['value']
-                conf['collins'].shape2['pi+'][4][4] = conf['params']['collins']['pi+ u b0 2']['value']
-                conf['collins'].shape2['pi+'][4][5] = conf['params']['collins']['pi+ u b1 2']['value']
-                conf['collins'].shape2['pi+'][4][6] = conf['params']['collins']['pi+ u c0 2']['value']
-                conf['collins'].shape2['pi+'][4][7] = conf['params']['collins']['pi+ u c1 2']['value']
-                conf['collins'].shape2['pi+'][4][8] = conf['params']['collins']['pi+ u d0 2']['value']
-                conf['collins'].shape2['pi+'][4][9] = conf['params']['collins']['pi+ u d1 2']['value']
-
-            if 'k+ u N0 1' in conf['params']['collins']:
-                conf['collins'].widths0['k+ fav'] = conf['params']['collins']['widths0 k+ fav']['value']
-                conf['collins'].widths0['k+ unfav'] = conf['params']['collins']['widths0 k+ unfav']['value']
-
-                conf['collins'].shape1['k+'][1][0] = conf['params']['collins']['k+ u N0 1']['value']
-                conf['collins'].shape1['k+'][1][1] = conf['params']['collins']['k+ u N1 1']['value']
-                conf['collins'].shape1['k+'][1][2] = conf['params']['collins']['k+ u a0 1']['value']
-                conf['collins'].shape1['k+'][1][3] = conf['params']['collins']['k+ u a1 1']['value']
-                conf['collins'].shape1['k+'][1][4] = conf['params']['collins']['k+ u b0 1']['value']
-                conf['collins'].shape1['k+'][1][5] = conf['params']['collins']['k+ u b1 1']['value']
-                conf['collins'].shape1['k+'][1][6] = conf['params']['collins']['k+ u c0 1']['value']
-                conf['collins'].shape1['k+'][1][7] = conf['params']['collins']['k+ u c1 1']['value']
-                conf['collins'].shape1['k+'][1][8] = conf['params']['collins']['k+ u d0 1']['value']
-                conf['collins'].shape1['k+'][1][9] = conf['params']['collins']['k+ u d1 1']['value']
-
-                conf['collins'].shape1['k+'][2][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][2][1] = conf['params']['collins']['k+ d N1 1']['value']
-                conf['collins'].shape1['k+'][2][2] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][2][3] = conf['params']['collins']['k+ d a1 1']['value']
-                conf['collins'].shape1['k+'][2][4] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][2][5] = conf['params']['collins']['k+ d b1 1']['value']
-                conf['collins'].shape1['k+'][2][6] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][2][7] = conf['params']['collins']['k+ d c1 1']['value']
-                conf['collins'].shape1['k+'][2][8] = conf['params']['collins']['k+ d d0 1']['value']
-                conf['collins'].shape1['k+'][2][9] = conf['params']['collins']['k+ d d1 1']['value']
-
-                conf['collins'].shape1['k+'][3][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][3][1] = conf['params']['collins']['k+ d N1 1']['value']
-                conf['collins'].shape1['k+'][3][2] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][3][3] = conf['params']['collins']['k+ d a1 1']['value']
-                conf['collins'].shape1['k+'][3][4] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][3][5] = conf['params']['collins']['k+ d b1 1']['value']
-                conf['collins'].shape1['k+'][3][6] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][3][7] = conf['params']['collins']['k+ d c1 1']['value']
-                conf['collins'].shape1['k+'][3][8] = conf['params']['collins']['k+ d d0 1']['value']
-                conf['collins'].shape1['k+'][3][9] = conf['params']['collins']['k+ d d1 1']['value']
-
-                conf['collins'].shape1['k+'][4][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][4][1] = conf['params']['collins']['k+ d N1 1']['value']
-                conf['collins'].shape1['k+'][4][2] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][4][3] = conf['params']['collins']['k+ d a1 1']['value']
-                conf['collins'].shape1['k+'][4][4] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][4][5] = conf['params']['collins']['k+ d b1 1']['value']
-                conf['collins'].shape1['k+'][4][6] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][4][7] = conf['params']['collins']['k+ d c1 1']['value']
-                conf['collins'].shape1['k+'][4][8] = conf['params']['collins']['k+ d d0 1']['value']
-                conf['collins'].shape1['k+'][4][9] = conf['params']['collins']['k+ d d1 1']['value']
-
-                conf['collins'].shape1['k+'][5][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][5][1] = conf['params']['collins']['k+ d N1 1']['value']
-                conf['collins'].shape1['k+'][5][2] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][5][3] = conf['params']['collins']['k+ d a1 1']['value']
-                conf['collins'].shape1['k+'][5][4] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][5][5] = conf['params']['collins']['k+ d b1 1']['value']
-                conf['collins'].shape1['k+'][5][6] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][5][7] = conf['params']['collins']['k+ d c1 1']['value']
-                conf['collins'].shape1['k+'][5][8] = conf['params']['collins']['k+ d d0 1']['value']
-                conf['collins'].shape1['k+'][5][9] = conf['params']['collins']['k+ d d1 1']['value']
-
-                conf['collins'].shape1['k+'][6][0] = conf['params']['collins']['k+ sb N0 1']['value']
-                conf['collins'].shape1['k+'][6][1] = conf['params']['collins']['k+ sb N1 1']['value']
-                conf['collins'].shape1['k+'][6][2] = conf['params']['collins']['k+ sb a0 1']['value']
-                conf['collins'].shape1['k+'][6][3] = conf['params']['collins']['k+ sb a1 1']['value']
-                conf['collins'].shape1['k+'][6][4] = conf['params']['collins']['k+ sb b0 1']['value']
-                conf['collins'].shape1['k+'][6][5] = conf['params']['collins']['k+ sb b1 1']['value']
-                conf['collins'].shape1['k+'][6][6] = conf['params']['collins']['k+ sb c0 1']['value']
-                conf['collins'].shape1['k+'][6][7] = conf['params']['collins']['k+ sb c1 1']['value']
-                conf['collins'].shape1['k+'][6][8] = conf['params']['collins']['k+ sb d0 1']['value']
-                conf['collins'].shape1['k+'][6][9] = conf['params']['collins']['k+ sb d1 1']['value']
-
-                # ------------------
-
-                conf['collins'].shape2['k+'][1][0] = conf['params']['collins']['k+ u N0 2']['value']
-                conf['collins'].shape2['k+'][1][1] = conf['params']['collins']['k+ u N1 2']['value']
-                conf['collins'].shape2['k+'][1][2] = conf['params']['collins']['k+ u a0 2']['value']
-                conf['collins'].shape2['k+'][1][3] = conf['params']['collins']['k+ u a1 2']['value']
-                conf['collins'].shape2['k+'][1][4] = conf['params']['collins']['k+ u b0 2']['value']
-                conf['collins'].shape2['k+'][1][5] = conf['params']['collins']['k+ u b1 2']['value']
-                conf['collins'].shape2['k+'][1][6] = conf['params']['collins']['k+ u c0 2']['value']
-                conf['collins'].shape2['k+'][1][7] = conf['params']['collins']['k+ u c1 2']['value']
-                conf['collins'].shape2['k+'][1][8] = conf['params']['collins']['k+ u d0 2']['value']
-                conf['collins'].shape2['k+'][1][9] = conf['params']['collins']['k+ u d1 2']['value']
-
-                conf['collins'].shape2['k+'][6][0] = conf['params']['collins']['k+ sb N0 2']['value']
-                conf['collins'].shape2['k+'][6][1] = conf['params']['collins']['k+ sb N1 2']['value']
-                conf['collins'].shape2['k+'][6][2] = conf['params']['collins']['k+ sb a0 2']['value']
-                conf['collins'].shape2['k+'][6][3] = conf['params']['collins']['k+ sb a1 2']['value']
-                conf['collins'].shape2['k+'][6][4] = conf['params']['collins']['k+ sb b0 2']['value']
-                conf['collins'].shape2['k+'][6][5] = conf['params']['collins']['k+ sb b1 2']['value']
-                conf['collins'].shape2['k+'][6][6] = conf['params']['collins']['k+ sb c0 2']['value']
-                conf['collins'].shape2['k+'][6][7] = conf['params']['collins']['k+ sb c1 2']['value']
-                conf['collins'].shape2['k+'][6][8] = conf['params']['collins']['k+ sb d0 2']['value']
-                conf['collins'].shape2['k+'][6][9] = conf['params']['collins']['k+ sb d1 2']['value']
-
-            conf['collins'].setup()
-
-        else:
-            if 'pi+ u N0 1' in conf['params']['collins']:
-                conf['collins'].widths0['pi+ fav'] = conf['params']['collins']['widths0 pi+ fav']['value']
-                conf['collins'].widths0['pi+ unfav'] = conf['params']['collins']['widths0 pi+ unfav']['value']
-
-                conf['collins'].shape1['pi+'][1][0] = conf['params']['collins']['pi+ u N0 1']['value']
-                conf['collins'].shape1['pi+'][1][1] = conf['params']['collins']['pi+ u a0 1']['value']
-                conf['collins'].shape1['pi+'][1][2] = conf['params']['collins']['pi+ u b0 1']['value']
-                conf['collins'].shape1['pi+'][1][3] = conf['params']['collins']['pi+ u c0 1']['value']
-                conf['collins'].shape1['pi+'][1][4] = conf['params']['collins']['pi+ u d0 1']['value']
-
-                conf['collins'].shape1['pi+'][2][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][2][1] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][2][2] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][2][3] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][2][4] = conf['params']['collins']['pi+ d d0 1']['value']
-
-                conf['collins'].shape1['pi+'][3][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][3][1] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][3][2] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][3][3] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][3][4] = conf['params']['collins']['pi+ d d0 1']['value']
-
-                conf['collins'].shape1['pi+'][4][0] = conf['params']['collins']['pi+ u N0 1']['value']
-                conf['collins'].shape1['pi+'][4][1] = conf['params']['collins']['pi+ u a0 1']['value']
-                conf['collins'].shape1['pi+'][4][2] = conf['params']['collins']['pi+ u b0 1']['value']
-                conf['collins'].shape1['pi+'][4][3] = conf['params']['collins']['pi+ u c0 1']['value']
-                conf['collins'].shape1['pi+'][4][4] = conf['params']['collins']['pi+ u d0 1']['value']
-
-                conf['collins'].shape1['pi+'][5][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][5][1] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][5][2] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][5][3] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][5][4] = conf['params']['collins']['pi+ d d0 1']['value']
-
-                conf['collins'].shape1['pi+'][6][0] = conf['params']['collins']['pi+ d N0 1']['value']
-                conf['collins'].shape1['pi+'][6][1] = conf['params']['collins']['pi+ d a0 1']['value']
-                conf['collins'].shape1['pi+'][6][2] = conf['params']['collins']['pi+ d b0 1']['value']
-                conf['collins'].shape1['pi+'][6][3] = conf['params']['collins']['pi+ d c0 1']['value']
-                conf['collins'].shape1['pi+'][6][4] = conf['params']['collins']['pi+ d d0 1']['value']
-
-                # ------------------
-
-                conf['collins'].shape2['pi+'][1][0] = conf['params']['collins']['pi+ u N0 2']['value']
-                conf['collins'].shape2['pi+'][1][1] = conf['params']['collins']['pi+ u a0 2']['value']
-                conf['collins'].shape2['pi+'][1][2] = conf['params']['collins']['pi+ u b0 2']['value']
-                conf['collins'].shape2['pi+'][1][3] = conf['params']['collins']['pi+ u c0 2']['value']
-                conf['collins'].shape2['pi+'][1][4] = conf['params']['collins']['pi+ u d0 2']['value']
-
-                conf['collins'].shape2['pi+'][4][0] = conf['params']['collins']['pi+ u N0 2']['value']
-                conf['collins'].shape2['pi+'][4][1] = conf['params']['collins']['pi+ u a0 2']['value']
-                conf['collins'].shape2['pi+'][4][2] = conf['params']['collins']['pi+ u b0 2']['value']
-                conf['collins'].shape2['pi+'][4][3] = conf['params']['collins']['pi+ u c0 2']['value']
-                conf['collins'].shape2['pi+'][4][4] = conf['params']['collins']['pi+ u d0 2']['value']
-
-            if 'k+ u N0 1' in conf['params']['collins']:
-                conf['collins'].widths0['k+ fav'] = conf['params']['collins']['widths0 k+ fav']['value']
-                conf['collins'].widths0['k+ unfav'] = conf['params']['collins']['widths0 k+ unfav']['value']
-
-                conf['collins'].shape1['k+'][1][0] = conf['params']['collins']['k+ u N0 1']['value']
-                conf['collins'].shape1['k+'][1][1] = conf['params']['collins']['k+ u a0 1']['value']
-                conf['collins'].shape1['k+'][1][2] = conf['params']['collins']['k+ u b0 1']['value']
-                conf['collins'].shape1['k+'][1][3] = conf['params']['collins']['k+ u c0 1']['value']
-                conf['collins'].shape1['k+'][1][4] = conf['params']['collins']['k+ u d0 1']['value']
-
-                conf['collins'].shape1['k+'][2][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][2][1] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][2][2] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][2][3] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][2][4] = conf['params']['collins']['k+ d d0 1']['value']
-
-                conf['collins'].shape1['k+'][3][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][3][1] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][3][2] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][3][3] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][3][4] = conf['params']['collins']['k+ d d0 1']['value']
-
-                conf['collins'].shape1['k+'][4][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][4][1] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][4][2] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][4][3] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][4][4] = conf['params']['collins']['k+ d d0 1']['value']
-
-                conf['collins'].shape1['k+'][5][0] = conf['params']['collins']['k+ d N0 1']['value']
-                conf['collins'].shape1['k+'][5][1] = conf['params']['collins']['k+ d a0 1']['value']
-                conf['collins'].shape1['k+'][5][2] = conf['params']['collins']['k+ d b0 1']['value']
-                conf['collins'].shape1['k+'][5][3] = conf['params']['collins']['k+ d c0 1']['value']
-                conf['collins'].shape1['k+'][5][4] = conf['params']['collins']['k+ d d0 1']['value']
-
-                conf['collins'].shape1['k+'][6][0] = conf['params']['collins']['k+ sb N0 1']['value']
-                conf['collins'].shape1['k+'][6][1] = conf['params']['collins']['k+ sb a0 1']['value']
-                conf['collins'].shape1['k+'][6][2] = conf['params']['collins']['k+ sb b0 1']['value']
-                conf['collins'].shape1['k+'][6][3] = conf['params']['collins']['k+ sb c0 1']['value']
-                conf['collins'].shape1['k+'][6][4] = conf['params']['collins']['k+ sb d0 1']['value']
-
-                conf['collins'].shape2['k+'][1][0] = conf['params']['collins']['k+ u N0 2']['value']
-                conf['collins'].shape2['k+'][1][1] = conf['params']['collins']['k+ u a0 2']['value']
-                conf['collins'].shape2['k+'][1][2] = conf['params']['collins']['k+ u b0 2']['value']
-                conf['collins'].shape2['k+'][1][3] = conf['params']['collins']['k+ u c0 2']['value']
-                conf['collins'].shape2['k+'][1][4] = conf['params']['collins']['k+ u d0 2']['value']
-
-                conf['collins'].shape2['k+'][6][0] = conf['params']['collins']['k+ sb N0 2']['value']
-                conf['collins'].shape2['k+'][6][1] = conf['params']['collins']['k+ sb a0 2']['value']
-                conf['collins'].shape2['k+'][6][2] = conf['params']['collins']['k+ sb b0 2']['value']
-                conf['collins'].shape2['k+'][6][3] = conf['params']['collins']['k+ sb c0 2']['value']
-                conf['collins'].shape2['k+'][6][4] = conf['params']['collins']['k+ sb d0 2']['value']
-
-            conf['collins'].setup()
+        conf['collins'].setup()
 
     def set_Htilde_params(self):
 
