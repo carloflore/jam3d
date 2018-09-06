@@ -50,6 +50,12 @@ elif args.parallel:
     mode = 'parallel'
     ip = 'localhost'
 
+try:
+  import mkl
+except:
+  if args.parallel:
+      sys.exit('mkl lib not found. please remove -p argument')
+
 
 resman = RESMAN(mode=mode, ip=ip, nworkers=nworkers)
 conf['resman'] = resman

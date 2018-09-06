@@ -9,8 +9,11 @@ import numpy as np
 import socket
 import time
 import os
-import mkl
 from tools.config import conf
+try:
+  import mkl
+except:
+  pass
 
 use_pickles = False
 
