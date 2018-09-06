@@ -127,8 +127,10 @@ class PARMAN:
         self.set_constraits('ff')
         for had in ['pi+','k+','h+']:
             for _ in ['fav','unfav']:
-              conf['ff']._widths1['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths1'%(had,_)]['value']
-              conf['ff']._widths2['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths2'%(had,_)]['value']
+                if '%s%s widths1'%(had,_) in conf['params']['ff']:
+                    conf['ff']._widths1['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths1'%(had,_)]['value']
+                if '%s%s widths2'%(had,_) in conf['params']['ff']:
+                    conf['ff']._widths2['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths2'%(had,_)]['value']
         conf['ff'].setup()
 
     def set_ppdf_params(self):
