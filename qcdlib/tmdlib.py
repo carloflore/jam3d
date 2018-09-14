@@ -75,11 +75,19 @@ class CORE:
         d=p[4] + p[9] * s
         n= self.beta(1+a,b+1) + c*self.beta(1+a+1,b + 1) + d*self.beta(1+a+1,b + 1)
         return self.__get_dshape(x,[N/n,a,b,c,d])
-
+        
+# AP seems redundant to define get_dshape and get_shape
+    def get_dshape(self,x,Q2,p1,p2):
+        s=self.get_s(Q2)
+        shape=self._get_dshape(x,p1,s)
+        if p2[0]!=0: shape+=self._get_dshape(x,p2,s)
+        return shape
+        
+        
     def get_dcollinear(self, x, hadron, Q2):  
         """Derivative of the collinear piece"""
         N = np.zeros(11)
-        for i in range(11): N[i] = self.get_dshape(x,self.shape1[hadron][i],self.shape2[hadron][i],Q2)
+        for i in range(11): N[i] = self.get_dshape(x,Q2,self.shape1[hadron][i],self.shape2[hadron][i])
         return N
 
     def get_widths(self,Q2,hadron):
@@ -318,8 +326,10 @@ class TRANSVERSITY(CORE):
 
         self.widths1 = {}
         self.widths1['p'] = np.ones(11)
+        self.widths1['n'] = np.ones(11)
         self.widths2 = {}
         self.widths2['p'] = np.ones(11)
+        self.widths2['n'] = np.ones(11)
 
     def setup(self):
         for i in range(11):

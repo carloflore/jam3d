@@ -267,6 +267,8 @@ class PARMAN:
                 conf['transversity'].shape1['p'][iflav][ipar] = conf['params']['transversity']['%s %s 1'%(flav,par)]['value']
                 conf['transversity'].shape2['p'][iflav][ipar] = conf['params']['transversity']['%s %s 2'%(flav,par)]['value']
 
+        conf['transversity'].setup()
+
     def set_boermulders_params(self):
         '''
         Currently we're using the symmetric sea approximation
