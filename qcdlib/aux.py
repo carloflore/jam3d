@@ -1,5 +1,6 @@
 import sys
 import os
+import numpy as np
 from mpmath import fp
 from scipy.special import gamma
 from scipy.integrate import quad
@@ -12,6 +13,7 @@ class AUX:
         self.set_constants()
         self.set_masses()
         self.set_couplings()
+        self.set_evolution()
 
     def set_constants(self):
 
@@ -60,3 +62,29 @@ class AUX:
         self.s2wMZ = 0.23116
         self.alfa = 1 / 137.036
         self.alphaSMZ = 0.118
+
+    def set_evolution(self):
+        self.Q02=1.0
+        self.lam2=0.4
+
+    def p2n(self, p):
+        return np.copy(p[[0,3,4,1,2,5,6,7,8,9,10]])
+
+    def charge_conj(self,p):
+        return np.copy(p[[0,2,1,4,3,6,5,8,7,10,9]])
+
+    def pip2piz(self, pip):
+        piz = np.copy(pip)
+        u = pip[1]
+        ub = pip[2]
+        d = pip[3]
+        db = pip[4]
+        piz[1] = 0.5 * (u + ub)
+        piz[2] = 0.5 * (u + ub)
+        piz[3] = 0.5 * (d + db)
+        piz[4] = 0.5 * (d + db)
+        return piz
+
+
+
+

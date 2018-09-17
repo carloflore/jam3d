@@ -4,12 +4,11 @@ import time
 import logging
 import fitlab.parallel as parallel
 import numpy as np
-import qcdlib.tmdlib
+import qcdlib
+from qcdlib import pdf0,ff0,pdf1,ff1
 import qcdlib.aux
 import qcdlib.alphaS
 import qcdlib.interpolator
-import obslib.idis.stfuncs
-import obslib.sidis.stfuncs
 import obslib.sidis.residuals
 import obslib.sidis.reader
 import obslib.sia.stfuncs
@@ -23,7 +22,6 @@ import obslib.AN_pp.residuals
 import obslib.AN_pp.reader
 from parman import PARMAN
 from tools.config import load_config, conf
-
 
 class RESMAN:
 
@@ -46,73 +44,35 @@ class RESMAN:
 
         # theory setups
         conf['aux'] = qcdlib.aux.AUX()
-        self.load_collinear_distributions()
-        self.set_alphaS()
         self.setup_tmds()
         conf['parman'] = PARMAN()
         conf['moments'] = obslib.moments.moments.MOMENTS()
 
         if 'datasets' in conf:
 
-            if 'sidis' in conf['datasets']:
-                self.setup_idis()
-                self.setup_sidis()
-
-            if 'sia' in conf['datasets']:
-                self.setup_sia()
-
-            if 'moments' in conf['datasets']:
-                self.setup_moments()
-
-            if 'AN' in conf['datasets']:
-                self.setup_AN()
+            if 'sidis'   in conf['datasets']: self.setup_sidis()
+            if 'sia'     in conf['datasets']: self.setup_sia()
+            if 'moments' in conf['datasets']: self.setup_moments()
+            if 'AN'      in conf['datasets']: self.setup_AN()
 
         # final setups for paralleization
         if self.mode == 'parallel':
             self.broker.run_subprocess()
             self.slave.run_subprocess()
 
-    def set_alphaS(self):
-
-        conf['alphaSmode'] = 'backward'
-        conf['Q20'] = 1
-        conf['order'] = 'NLO'
-        conf['alphaS'] = qcdlib.alphaS.ALPHAS()
-
-    def load_collinear_distributions(self):
-
-        defaults={}
-        defaults['cpdf']   = 'CJ15lo_0000'
-        defaults['cppdf']  = 'CJ15lo_0000'
-        defaults['cpipff'] = 'dsspipLO_0000'
-        defaults['cpimff'] = 'dsspimLO_0000'
-        defaults['cKpff']  = 'dssKpNLO_0000'
-        defaults['cKmff']  = 'dssKmNLO_0000'
-
-        for k in defaults:
-            conf[k] = qcdlib.interpolator.INTERPOLATOR(defaults[k])
-
-    def setup_idis(self):
-        conf['dis stfuncs']  = obslib.idis.stfuncs.STFUNCS()
-
     def setup_tmds(self):
-        conf['lam2'] = 0.4
-        conf['Q02']  = 1.0
-        if 'pdf'          in conf['params']:conf['pdf']          = qcdlib.tmdlib.PDF()
-        if 'ppdf'         in conf['params']:conf['ppdf']         = qcdlib.tmdlib.PPDF()
-        if 'ff'           in conf['params']:conf['ff']           = qcdlib.tmdlib.FF()
-        if 'transversity' in conf['params']:conf['transversity'] = qcdlib.tmdlib.TRANSVERSITY()
-        if 'sivers'       in conf['params']:conf['sivers']       = qcdlib.tmdlib.SIVERS()
-        if 'boermulders'  in conf['params']:conf['boermulders']  = qcdlib.tmdlib.BOERMULDERS()
-        if 'pretzelosity' in conf['params']:conf['pretzelosity'] = qcdlib.tmdlib.PRETZELOSITY()
-        if 'wormgearg'    in conf['params']:conf['wormgearg']    = qcdlib.tmdlib.WORMGEARG()
-        if 'wormgearh'    in conf['params']:conf['wormgearh']    = qcdlib.tmdlib.WORMGEARH()
-        if 'collins'      in conf['params']:conf['collins']      = qcdlib.tmdlib.COLLINS()
-        if 'Htilde'       in conf['params']:conf['Htilde']       = qcdlib.tmdlib.HTILDE()
+
+        if 'pdf'          in conf['params']: conf['pdf']          = pdf0.PDF()
+        if 'transversity' in conf['params']: conf['transversity'] = pdf1.PDF()
+        if 'sivers'       in conf['params']: conf['sivers']       = pdf1.PDF()
+
+        if 'ffpi' in conf['params']: conf['ffpi'] = ff0.FF('pi')
+        if 'ffk'  in conf['params']: conf['ffk']  = ff0.FF('k')
+        if 'collinspi' in conf['params']: conf['collinspi'] = ff1.FF('pi')
+        if 'collinsk'  in conf['params']: conf['collinsk']  = ff1.FF('k')
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')
-        conf['sidis stfuncs'] = obslib.sidis.stfuncs.STFUNCS()
         self.sidisres = obslib.sidis.residuals.RESIDUALS()
 
         if (self.slave):

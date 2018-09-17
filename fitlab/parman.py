@@ -81,578 +81,131 @@ class PARMAN:
         return L
 
     def propagate_params(self, semaphore):
-        #print 'semaphore:',semaphore
-        if 'pdf' in semaphore and semaphore['pdf'] == 1:
-            self.set_pdf_params()
-        if 'ppdf' in semaphore and semaphore['ppdf'] == 1:
-            self.set_ppdf_params()
-        if 'ff' in semaphore and semaphore['ff'] == 1:
-            self.set_ff_params()
-        if 'sivers' in semaphore and semaphore['sivers'] == 1:
-            self.set_sivers_params()
-        if 'transversity' in semaphore and semaphore['transversity'] == 1:
-            self.set_transversity_params()
-        if 'collins' in semaphore and semaphore['collins'] == 1:
-            self.set_collins_params()
-        if 'boermulders' in semaphore and semaphore['boermulders'] == 1:
-            self.set_boermulders_params()
-        if 'pretzelosity' in semaphore and semaphore['pretzelosity'] == 1:
-            self.set_pretzelosity_params()
-        if 'soft' in semaphore and semaphore['soft'] == 1:
-            self.set_soft_params()
-        if 'Htilde' in semaphore and semaphore['Htilde'] == 1:
-            self.set_Htilde_params()
+        if 'pdf'          in semaphore and semaphore['pdf']          == 1: self.set_pdf_params()
+        if 'transversity' in semaphore and semaphore['transversity'] == 1: self.set_transversity_params()
+        if 'sivers'       in semaphore and semaphore['sivers']       == 1: self.set_sivers_params()
+        if 'ffpi'         in semaphore and semaphore['ffpi']         == 1: self.set_ffpi_params()
+        if 'ffk'          in semaphore and semaphore['ffk']          == 1: self.set_ffk_params()
+        if 'collinspi'    in semaphore and semaphore['collinspi']    == 1: self.set_collinspi_params()
+        if 'collinsk'     in semaphore and semaphore['collinsk']     == 1: self.set_collinsk_params()
 
     def set_constraits(self, parkind):
 
         for k in conf['params'][parkind]:
-            if conf['params'][parkind][k]['fixed'] == True:
-                continue
-            if conf['params'][parkind][k]['fixed'] == False:
-                continue
+            if conf['params'][parkind][k]['fixed'] == True:  continue
+            if conf['params'][parkind][k]['fixed'] == False: continue
             ref_par = conf['params'][parkind][k]['fixed']
             conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
 
     def set_pdf_params(self):
         self.set_constraits('pdf')
-        conf['pdf']._widths1['uv']  = conf['params']['pdf']['uv widths1']['value']
-        conf['pdf']._widths1['dv']  = conf['params']['pdf']['dv widths1']['value']
-        conf['pdf']._widths1['sea'] = conf['params']['pdf']['sea widths1']['value']
-        conf['pdf']._widths2['uv']  = conf['params']['pdf']['uv widths2']['value']
-        conf['pdf']._widths2['dv']  = conf['params']['pdf']['dv widths2']['value']
-        conf['pdf']._widths2['sea'] = conf['params']['pdf']['sea widths2']['value']
+        conf['pdf']._widths1_uv  = conf['params']['pdf']['widths1_uv' ]['value']
+        conf['pdf']._widths1_dv  = conf['params']['pdf']['widths1_dv' ]['value']
+        conf['pdf']._widths1_sea = conf['params']['pdf']['widths1_sea']['value']
+        conf['pdf']._widths2_uv  = conf['params']['pdf']['widths2_uv' ]['value']
+        conf['pdf']._widths2_dv  = conf['params']['pdf']['widths2_dv' ]['value']
+        conf['pdf']._widths2_sea = conf['params']['pdf']['widths2_sea']['value']
         conf['pdf'].setup()
-
-    def set_ff_params(self):
-        self.set_constraits('ff')
-        for had in ['pi+','k+','h+']:
-            for _ in ['fav','unfav']:
-                if '%s%s widths1'%(had,_) in conf['params']['ff']:
-                    conf['ff']._widths1['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths1'%(had,_)]['value']
-                if '%s%s widths2'%(had,_) in conf['params']['ff']:
-                    conf['ff']._widths2['%s%s'%(had,_)]   = conf['params']['ff']['%s%s widths2'%(had,_)]['value']
-        conf['ff'].setup()
-
-    def set_ppdf_params(self):
-        self.set_constraits('ppdf')
-        conf['ppdf'].widths0['valence'] = conf['params']['ppdf']['widths0 valence']['value']
-        conf['ppdf'].widths0['sea'] = conf['params']['ppdf']['widths0 sea']['value']
-        conf['ppdf'].setup()
-
-    def set_sivers_params(self):
-        self.set_constraits('sivers')
-
-        conf['sivers'].widths0['valence'] = conf['params']['sivers']['widths0 valence']['value']
-        conf['sivers'].widths0['sea'] = conf['params']['sivers']['widths0 sea']['value']
-
-        if conf['evo'] == 'yes':
-            conf['sivers'].shape1['p'][1][0] = conf['params']['sivers']['u N0']['value']
-            conf['sivers'].shape1['p'][1][1] = conf['params']['sivers']['u N1']['value']
-            conf['sivers'].shape1['p'][1][2] = conf['params']['sivers']['u a0']['value']
-            conf['sivers'].shape1['p'][1][3] = conf['params']['sivers']['u a1']['value']
-            conf['sivers'].shape1['p'][1][4] = conf['params']['sivers']['u b0']['value']
-            conf['sivers'].shape1['p'][1][5] = conf['params']['sivers']['u b1']['value']
-            conf['sivers'].shape1['p'][1][6] = conf['params']['sivers']['u c0']['value']
-            conf['sivers'].shape1['p'][1][7] = conf['params']['sivers']['u c1']['value']
-            conf['sivers'].shape1['p'][1][8] = conf['params']['sivers']['u d0']['value']
-            conf['sivers'].shape1['p'][1][9] = conf['params']['sivers']['u d1']['value']
-
-            conf['sivers'].shape1['p'][3][0] = conf['params']['sivers']['d N0']['value']
-            conf['sivers'].shape1['p'][3][1] = conf['params']['sivers']['d N1']['value']
-            conf['sivers'].shape1['p'][3][2] = conf['params']['sivers']['d a0']['value']
-            conf['sivers'].shape1['p'][3][3] = conf['params']['sivers']['d a1']['value']
-            conf['sivers'].shape1['p'][3][4] = conf['params']['sivers']['d b0']['value']
-            conf['sivers'].shape1['p'][3][5] = conf['params']['sivers']['d b1']['value']
-            conf['sivers'].shape1['p'][3][6] = conf['params']['sivers']['d c0']['value']
-            conf['sivers'].shape1['p'][3][7] = conf['params']['sivers']['d c1']['value']
-            conf['sivers'].shape1['p'][3][8] = conf['params']['sivers']['d d0']['value']
-            conf['sivers'].shape1['p'][3][9] = conf['params']['sivers']['d d1']['value']
-
-            conf['sivers'].shape1['p'][5][0] = conf['params']['sivers']['s N0']['value']
-            conf['sivers'].shape1['p'][5][1] = conf['params']['sivers']['s N1']['value']
-            conf['sivers'].shape1['p'][5][2] = conf['params']['sivers']['s a0']['value']
-            conf['sivers'].shape1['p'][5][3] = conf['params']['sivers']['s a1']['value']
-            conf['sivers'].shape1['p'][5][4] = conf['params']['sivers']['s b0']['value']
-            conf['sivers'].shape1['p'][5][5] = conf['params']['sivers']['s b1']['value']
-            conf['sivers'].shape1['p'][5][6] = conf['params']['sivers']['s c0']['value']
-            conf['sivers'].shape1['p'][5][7] = conf['params']['sivers']['s c1']['value']
-            conf['sivers'].shape1['p'][5][8] = conf['params']['sivers']['s d0']['value']
-            conf['sivers'].shape1['p'][5][9] = conf['params']['sivers']['s d1']['value']
-
-            conf['sivers'].shape1['p'][2][0] = conf['params']['sivers']['ub N0']['value']
-            conf['sivers'].shape1['p'][2][1] = conf['params']['sivers']['ub N1']['value']
-            conf['sivers'].shape1['p'][2][2] = conf['params']['sivers']['ub a0']['value']
-            conf['sivers'].shape1['p'][2][3] = conf['params']['sivers']['ub a1']['value']
-            conf['sivers'].shape1['p'][2][4] = conf['params']['sivers']['ub b0']['value']
-            conf['sivers'].shape1['p'][2][5] = conf['params']['sivers']['ub b1']['value']
-            conf['sivers'].shape1['p'][2][6] = conf['params']['sivers']['ub c0']['value']
-            conf['sivers'].shape1['p'][2][7] = conf['params']['sivers']['ub c1']['value']
-            conf['sivers'].shape1['p'][2][8] = conf['params']['sivers']['ub d0']['value']
-            conf['sivers'].shape1['p'][2][9] = conf['params']['sivers']['ub d1']['value']
-
-            conf['sivers'].shape1['p'][4][0] = conf['params']['sivers']['db N0']['value']
-            conf['sivers'].shape1['p'][4][1] = conf['params']['sivers']['db N1']['value']
-            conf['sivers'].shape1['p'][4][2] = conf['params']['sivers']['db a0']['value']
-            conf['sivers'].shape1['p'][4][3] = conf['params']['sivers']['db a1']['value']
-            conf['sivers'].shape1['p'][4][4] = conf['params']['sivers']['db b0']['value']
-            conf['sivers'].shape1['p'][4][5] = conf['params']['sivers']['db b1']['value']
-            conf['sivers'].shape1['p'][4][6] = conf['params']['sivers']['db c0']['value']
-            conf['sivers'].shape1['p'][4][7] = conf['params']['sivers']['db c1']['value']
-            conf['sivers'].shape1['p'][4][8] = conf['params']['sivers']['db d0']['value']
-            conf['sivers'].shape1['p'][4][9] = conf['params']['sivers']['db d1']['value']
-
-            conf['sivers'].shape1['p'][6][0] = conf['params']['sivers']['sb N0']['value']
-            conf['sivers'].shape1['p'][6][1] = conf['params']['sivers']['sb N1']['value']
-            conf['sivers'].shape1['p'][6][2] = conf['params']['sivers']['sb a0']['value']
-            conf['sivers'].shape1['p'][6][3] = conf['params']['sivers']['sb a1']['value']
-            conf['sivers'].shape1['p'][6][4] = conf['params']['sivers']['sb b0']['value']
-            conf['sivers'].shape1['p'][6][5] = conf['params']['sivers']['sb b1']['value']
-            conf['sivers'].shape1['p'][6][6] = conf['params']['sivers']['sb c0']['value']
-            conf['sivers'].shape1['p'][6][7] = conf['params']['sivers']['sb c1']['value']
-            conf['sivers'].shape1['p'][6][8] = conf['params']['sivers']['sb d0']['value']
-            conf['sivers'].shape1['p'][6][9] = conf['params']['sivers']['sb d1']['value']
-
-        else:
-            conf['sivers'].shape1['p'][1][0] = conf['params']['sivers']['u N0']['value']
-            conf['sivers'].shape1['p'][1][1] = conf['params']['sivers']['u a0']['value']
-            conf['sivers'].shape1['p'][1][2] = conf['params']['sivers']['u b0']['value']
-            conf['sivers'].shape1['p'][1][3] = conf['params']['sivers']['u c0']['value']
-            conf['sivers'].shape1['p'][1][4] = conf['params']['sivers']['u d0']['value']
-
-            conf['sivers'].shape1['p'][3][0] = conf['params']['sivers']['d N0']['value']
-            conf['sivers'].shape1['p'][3][1] = conf['params']['sivers']['d a0']['value']
-            conf['sivers'].shape1['p'][3][2] = conf['params']['sivers']['d b0']['value']
-            conf['sivers'].shape1['p'][3][3] = conf['params']['sivers']['d c0']['value']
-            conf['sivers'].shape1['p'][3][4] = conf['params']['sivers']['d d0']['value']
-
-            conf['sivers'].shape1['p'][5][0] = conf['params']['sivers']['s N0']['value']
-            conf['sivers'].shape1['p'][5][1] = conf['params']['sivers']['s a0']['value']
-            conf['sivers'].shape1['p'][5][2] = conf['params']['sivers']['s b0']['value']
-            conf['sivers'].shape1['p'][5][3] = conf['params']['sivers']['s c0']['value']
-            conf['sivers'].shape1['p'][5][4] = conf['params']['sivers']['s d0']['value']
-
-            conf['sivers'].shape1['p'][2][0] = conf['params']['sivers']['ub N0']['value']
-            conf['sivers'].shape1['p'][2][1] = conf['params']['sivers']['ub a0']['value']
-            conf['sivers'].shape1['p'][2][2] = conf['params']['sivers']['ub b0']['value']
-            conf['sivers'].shape1['p'][2][3] = conf['params']['sivers']['ub c0']['value']
-            conf['sivers'].shape1['p'][2][4] = conf['params']['sivers']['ub d0']['value']
-
-            conf['sivers'].shape1['p'][4][0] = conf['params']['sivers']['db N0']['value']
-            conf['sivers'].shape1['p'][4][1] = conf['params']['sivers']['db a0']['value']
-            conf['sivers'].shape1['p'][4][2] = conf['params']['sivers']['db b0']['value']
-            conf['sivers'].shape1['p'][4][3] = conf['params']['sivers']['db c0']['value']
-            conf['sivers'].shape1['p'][4][4] = conf['params']['sivers']['db d0']['value']
-
-            conf['sivers'].shape1['p'][6][0] = conf['params']['sivers']['sb N0']['value']
-            conf['sivers'].shape1['p'][6][1] = conf['params']['sivers']['sb a0']['value']
-            conf['sivers'].shape1['p'][6][2] = conf['params']['sivers']['sb b0']['value']
-            conf['sivers'].shape1['p'][6][3] = conf['params']['sivers']['sb c0']['value']
-            conf['sivers'].shape1['p'][6][4] = conf['params']['sivers']['sb d0']['value']
-
-        conf['sivers'].setup()
 
     def set_transversity_params(self):
         self.set_constraits('transversity')
 
-        for par in ['uv','dv','sea']:
-            conf['transversity']._widths1[par]  = conf['params']['transversity']['%s widths1'%par]['value']
-            conf['transversity']._widths2[par]  = conf['params']['transversity']['%s widths2'%par]['value']
+        conf['transversity']._widths1_uv  = conf['params']['transversity']['widths1_uv']['value']
+        conf['transversity']._widths1_dv  = conf['params']['transversity']['widths1_dv']['value']
+        conf['transversity']._widths1_sea = conf['params']['transversity']['widths1_sea']['value']
+
+        conf['transversity']._widths2_uv  = conf['params']['transversity']['widths2_uv']['value']
+        conf['transversity']._widths2_dv  = conf['params']['transversity']['widths2_dv']['value']
+        conf['transversity']._widths2_sea = conf['params']['transversity']['widths2_sea']['value']
 
         iflav=0
-        for flav in ['u','d','s']:
+        for flav in ['u','d','s','ub','db','sb']:
             iflav+=1
             ipar=-1
             for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
                 ipar+=1
-                conf['transversity'].shape1['p'][iflav][ipar] = conf['params']['transversity']['%s %s 1'%(flav,par)]['value']
-                conf['transversity'].shape2['p'][iflav][ipar] = conf['params']['transversity']['%s %s 2'%(flav,par)]['value']
+                if '%s %s 1'%(flav,par) in conf['params']['transversity']:
+                    conf['transversity'].shape1[iflav][ipar] = conf['params']['transversity']['%s %s 1'%(flav,par)]['value']
+                if '%s %s 2'%(flav,par) in conf['params']['transversity']:
+                    conf['transversity'].shape2[iflav][ipar] = conf['params']['transversity']['%s %s 2'%(flav,par)]['value']
 
-    def set_boermulders_params(self):
-        '''
-        Currently we're using the symmetric sea approximation
-        where below, all sea quark parameters are set based on the
-        value of the s quark parameters.
-        '''
+        conf['transversity'].setup()
 
-        self.set_constraits('boermulders')
-        conf['boermulders'].widths0['valence'] = conf['params']['boermulders']['widths0 valence']['value']
-        conf['boermulders'].widths0['sea'] = conf['params']['boermulders']['widths0 sea']['value']
-        conf['boermulders'].shape1['p'][1][0] = conf['params']['boermulders']['u N']['value']
-        conf['boermulders'].shape1['p'][1][1] = conf['params']['boermulders']['u a']['value']
-        conf['boermulders'].shape1['p'][1][2] = conf['params']['boermulders']['u b']['value']
-        conf['boermulders'].shape1['p'][3][0] = conf['params']['boermulders']['d N']['value']
-        conf['boermulders'].shape1['p'][3][1] = conf['params']['boermulders']['d a']['value']
-        conf['boermulders'].shape1['p'][3][2] = conf['params']['boermulders']['d b']['value']
-        conf['boermulders'].shape1['p'][4][0] = conf['params']['boermulders']['s N']['value']
-        conf['boermulders'].shape1['p'][4][1] = conf['params']['boermulders']['s a']['value']
-        conf['boermulders'].shape1['p'][4][2] = conf['params']['boermulders']['s b']['value']
-        conf['boermulders'].shape1['p'][5][0] = conf['params']['boermulders']['s N']['value']
-        conf['boermulders'].shape1['p'][5][1] = conf['params']['boermulders']['s a']['value']
-        conf['boermulders'].shape1['p'][5][2] = conf['params']['boermulders']['s b']['value']
-        conf['boermulders'].shape1['p'][6][0] = conf['params']['boermulders']['s N']['value']
-        conf['boermulders'].shape1['p'][6][1] = conf['params']['boermulders']['s a']['value']
-        conf['boermulders'].shape1['p'][6][2] = conf['params']['boermulders']['s b']['value']
-        conf['boermulders'].shape1['p'][2][0] = conf['params']['boermulders']['s N']['value']
-        conf['boermulders'].shape1['p'][2][1] = conf['params']['boermulders']['s a']['value']
-        conf['boermulders'].shape1['p'][2][2] = conf['params']['boermulders']['s b']['value']
-        conf['boermulders'].setup()
+    def set_sivers_params(self):
+        self.set_constraits('sivers')
 
-    def set_pretzelosity_params(self):
-        '''
-        Currently we're using the symmetric sea approximation
-        where below, all sea quark parameters are set based on the
-        value of the s quark parameters.
-        '''
+        conf['sivers']._widths1_uv  = conf['params']['sivers']['widths1_uv']['value']
+        conf['sivers']._widths1_dv  = conf['params']['sivers']['widths1_dv']['value']
+        conf['sivers']._widths1_sea = conf['params']['sivers']['widths1_sea']['value']
 
-        self.set_constraits('pretzelosity')
-        conf['pretzelosity'].widths0['valence'] = conf['params']['pretzelosity']['widths0 valence']['value']
-        conf['pretzelosity'].widths0['sea'] = conf['params']['pretzelosity']['widths0 sea']['value']
-        conf['pretzelosity'].shape1['p'][1][0] = conf['params']['pretzelosity']['u N']['value']
-        conf['pretzelosity'].shape1['p'][1][1] = conf['params']['pretzelosity']['u a']['value']
-        conf['pretzelosity'].shape1['p'][1][2] = conf['params']['pretzelosity']['u b']['value']
-        conf['pretzelosity'].shape1['p'][3][0] = conf['params']['pretzelosity']['d N']['value']
-        conf['pretzelosity'].shape1['p'][3][1] = conf['params']['pretzelosity']['d a']['value']
-        conf['pretzelosity'].shape1['p'][3][2] = conf['params']['pretzelosity']['d b']['value']
-        conf['pretzelosity'].shape1['p'][4][0] = conf['params']['pretzelosity']['s N']['value']
-        conf['pretzelosity'].shape1['p'][4][1] = conf['params']['pretzelosity']['s a']['value']
-        conf['pretzelosity'].shape1['p'][4][2] = conf['params']['pretzelosity']['s b']['value']
-        conf['pretzelosity'].shape1['p'][5][0] = conf['params']['pretzelosity']['s N']['value']
-        conf['pretzelosity'].shape1['p'][5][1] = conf['params']['pretzelosity']['s a']['value']
-        conf['pretzelosity'].shape1['p'][5][2] = conf['params']['pretzelosity']['s b']['value']
-        conf['pretzelosity'].shape1['p'][6][0] = conf['params']['pretzelosity']['s N']['value']
-        conf['pretzelosity'].shape1['p'][6][1] = conf['params']['pretzelosity']['s a']['value']
-        conf['pretzelosity'].shape1['p'][6][2] = conf['params']['pretzelosity']['s b']['value']
-        conf['pretzelosity'].shape1['p'][2][0] = conf['params']['pretzelosity']['s N']['value']
-        conf['pretzelosity'].shape1['p'][2][1] = conf['params']['pretzelosity']['s a']['value']
-        conf['pretzelosity'].shape1['p'][2][2] = conf['params']['pretzelosity']['s b']['value']
-        conf['pretzelosity'].setup()
+        conf['sivers']._widths2_uv  = conf['params']['sivers']['widths2_uv']['value']
+        conf['sivers']._widths2_dv  = conf['params']['sivers']['widths2_dv']['value']
+        conf['sivers']._widths2_sea = conf['params']['sivers']['widths2_sea']['value']
 
-    def set_collins_params(self):
+        iflav=0
+        for flav in ['u','d','s','ub','db','sb']:
+            iflav+=1
+            ipar=-1
+            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+                ipar+=1
+                if '%s %s 1'%(flav,par) in conf['params']['sivers']:
+                    conf['sivers'].shape1[iflav][ipar] = conf['params']['sivers']['%s %s 1'%(flav,par)]['value']
+                if '%s %s 2'%(flav,par) in conf['params']['sivers']:
+                    conf['sivers'].shape2[iflav][ipar] = conf['params']['sivers']['%s %s 2'%(flav,par)]['value']
 
-        self.set_constraits('collins')
-        for had in ['pi+','k+','h+']:
+        conf['sivers'].setup()
 
-            for _ in ['fav','unfav']:
-                conf['collins']._widths1['%s%s'%(had,_)]    = conf['params']['collins']['%s%s widths1'%(had,_)]['value']
-                conf['collins']._widths2['%s%s'%(had,_)]   = conf['params']['collins']['%s%s widths2'%(had,_)]['value']
+    def set_ffpi_params(self):
+        self.set_constraits('ffpi')
+        conf['ffpi']._widths1_fav  = conf['params']['ffpi']['widths1_fav']['value']
+        conf['ffpi']._widths1_ufav = conf['params']['ffpi']['widths1_ufav']['value']
+        conf['ffpi']._widths2_fav  = conf['params']['ffpi']['widths2_fav']['value']
+        conf['ffpi']._widths2_ufav = conf['params']['ffpi']['widths2_ufav']['value']
+        conf['ffpi'].setup()
 
-            iflav=0
-            for flav in ['u','d','s']:
-                iflav+=1
-                ipar=-1
-                for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
-                    ipar+=1
-                    conf['collins'].shape1[had][iflav][ipar] = conf['params']['collins']['%s %s %s 1'%(had,flav,par)]['value']
-                    conf['collins'].shape2[had][iflav][ipar] = conf['params']['collins']['%s %s %s 2'%(had,flav,par)]['value']
+    def set_ffk_params(self):
+        self.set_constraits('ffk')
+        conf['ffk']._widths1_fav   = conf['params']['ffk']['widths1_fav']['value']
+        conf['ffk']._widths1_ufav  = conf['params']['ffk']['widths1_ufav']['value']
+        conf['ffk']._widths2_fav   = conf['params']['ffk']['widths2_fav']['value']
+        conf['ffk']._widths2_ufav  = conf['params']['ffk']['widths2_ufav']['value']
+        conf['ffk'].setup()
 
-        conf['collins'].setup()
+    def set_collinspi_params(self):
+        self.set_constraits('collinspi')
+        conf['collinspi']._widths1_fav  = conf['params']['collinspi']['widths1_fav']['value']
+        conf['collinspi']._widths1_ufav = conf['params']['collinspi']['widths1_ufav']['value']
+        conf['collinspi']._widths2_fav  = conf['params']['collinspi']['widths2_fav']['value']
+        conf['collinspi']._widths2_ufav = conf['params']['collinspi']['widths2_ufav']['value']
 
-    def set_Htilde_params(self):
+        iflav=0
+        for flav in ['u','d','s','ub','db','sb']:
+            iflav+=1
+            ipar=-1
+            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+                ipar+=1
+                if '%s %s 1'%(flav,par) in conf['params']['collinspi']:
+                    conf['collinspi'].shape1[iflav][ipar] = conf['params']['collinspi']['%s %s 1'%(flav,par)]['value']
+                if '%s %s 2'%(flav,par) in conf['params']['collinspi']:
+                    conf['collinspi'].shape2[iflav][ipar] = conf['params']['collinspi']['%s %s 2'%(flav,par)]['value']
+        conf['collinspi'].setup()
 
-        self.set_constraits('Htilde')
+    def set_collinsk_params(self):
+        self.set_constraits('collinsk')
+        conf['collinsk']._widths1_fav   = conf['params']['collinsk']['widths1_fav']['value']
+        conf['collinsk']._widths1_ufav  = conf['params']['collinsk']['widths1_ufav']['value']
+        conf['collinsk']._widths2_fav   = conf['params']['collinsk']['widths2_fav']['value']
+        conf['collinsk']._widths2_ufav  = conf['params']['collinsk']['widths2_ufav']['value']
+        iflav=0
+        for flav in ['u','d','s','ub','db','sb']:
+            iflav+=1
+            ipar=-1
+            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+                ipar+=1
+                if '%s %s 1'%(flav,par) in conf['params']['collinsk']:
+                    conf['collinsk'].shape1[iflav][ipar] = conf['params']['collinsk']['%s %s 1'%(flav,par)]['value']
+                if '%s %s 2'%(flav,par) in conf['params']['collinsk']:
+                    conf['collinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
+        conf['collinsk'].setup()
 
-        if conf['evo'] == 'yes':
-            if 'pi+ u N0 1' in conf['params']['Htilde']:
-                conf['Htilde'].widths0['pi+ fav'] = conf['params']['Htilde']['widths0 pi+ fav']['value']
-                conf['Htilde'].widths0['pi+ unfav'] = conf['params']['Htilde']['widths0 pi+ unfav']['value']
 
-                conf['Htilde'].shape1['pi+'][1][0] = conf['params']['Htilde']['pi+ u N0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][1] = conf['params']['Htilde']['pi+ u N1 1']['value']
-                conf['Htilde'].shape1['pi+'][1][2] = conf['params']['Htilde']['pi+ u a0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][3] = conf['params']['Htilde']['pi+ u a1 1']['value']
-                conf['Htilde'].shape1['pi+'][1][4] = conf['params']['Htilde']['pi+ u b0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][5] = conf['params']['Htilde']['pi+ u b1 1']['value']
-                conf['Htilde'].shape1['pi+'][1][6] = conf['params']['Htilde']['pi+ u c0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][7] = conf['params']['Htilde']['pi+ u c1 1']['value']
-                conf['Htilde'].shape1['pi+'][1][8] = conf['params']['Htilde']['pi+ u d0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][9] = conf['params']['Htilde']['pi+ u d1 1']['value']
-
-                conf['Htilde'].shape1['pi+'][2][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][1] = conf['params']['Htilde']['pi+ d N1 1']['value']
-                conf['Htilde'].shape1['pi+'][2][2] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][3] = conf['params']['Htilde']['pi+ d a1 1']['value']
-                conf['Htilde'].shape1['pi+'][2][4] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][5] = conf['params']['Htilde']['pi+ d b1 1']['value']
-                conf['Htilde'].shape1['pi+'][2][6] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][7] = conf['params']['Htilde']['pi+ d c1 1']['value']
-                conf['Htilde'].shape1['pi+'][2][8] = conf['params']['Htilde']['pi+ d d0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][9] = conf['params']['Htilde']['pi+ d d1 1']['value']
-
-                conf['Htilde'].shape1['pi+'][3][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][1] = conf['params']['Htilde']['pi+ d N1 1']['value']
-                conf['Htilde'].shape1['pi+'][3][2] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][3] = conf['params']['Htilde']['pi+ d a1 1']['value']
-                conf['Htilde'].shape1['pi+'][3][4] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][5] = conf['params']['Htilde']['pi+ d b1 1']['value']
-                conf['Htilde'].shape1['pi+'][3][6] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][7] = conf['params']['Htilde']['pi+ d c1 1']['value']
-                conf['Htilde'].shape1['pi+'][3][8] = conf['params']['Htilde']['pi+ d d0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][9] = conf['params']['Htilde']['pi+ d d1 1']['value']
-
-                conf['Htilde'].shape1['pi+'][4][0] = conf['params']['Htilde']['pi+ u N0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][1] = conf['params']['Htilde']['pi+ u N1 1']['value']
-                conf['Htilde'].shape1['pi+'][4][2] = conf['params']['Htilde']['pi+ u a0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][3] = conf['params']['Htilde']['pi+ u a1 1']['value']
-                conf['Htilde'].shape1['pi+'][4][4] = conf['params']['Htilde']['pi+ u b0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][5] = conf['params']['Htilde']['pi+ u b1 1']['value']
-                conf['Htilde'].shape1['pi+'][4][6] = conf['params']['Htilde']['pi+ u c0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][7] = conf['params']['Htilde']['pi+ u c1 1']['value']
-                conf['Htilde'].shape1['pi+'][4][8] = conf['params']['Htilde']['pi+ u d0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][9] = conf['params']['Htilde']['pi+ u d1 1']['value']
-
-                conf['Htilde'].shape1['pi+'][5][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][1] = conf['params']['Htilde']['pi+ d N1 1']['value']
-                conf['Htilde'].shape1['pi+'][5][2] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][3] = conf['params']['Htilde']['pi+ d a1 1']['value']
-                conf['Htilde'].shape1['pi+'][5][4] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][5] = conf['params']['Htilde']['pi+ d b1 1']['value']
-                conf['Htilde'].shape1['pi+'][5][6] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][7] = conf['params']['Htilde']['pi+ d c1 1']['value']
-                conf['Htilde'].shape1['pi+'][5][8] = conf['params']['Htilde']['pi+ d d0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][9] = conf['params']['Htilde']['pi+ d d1 1']['value']
-
-                conf['Htilde'].shape1['pi+'][6][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][1] = conf['params']['Htilde']['pi+ d N1 1']['value']
-                conf['Htilde'].shape1['pi+'][6][2] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][3] = conf['params']['Htilde']['pi+ d a1 1']['value']
-                conf['Htilde'].shape1['pi+'][6][4] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][5] = conf['params']['Htilde']['pi+ d b1 1']['value']
-                conf['Htilde'].shape1['pi+'][6][6] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][7] = conf['params']['Htilde']['pi+ d c1 1']['value']
-                conf['Htilde'].shape1['pi+'][6][8] = conf['params']['Htilde']['pi+ d d0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][9] = conf['params']['Htilde']['pi+ d d1 1']['value']
-
-                # ------------------
-
-                #conf['Htilde'].shape2['pi+'][1][0]=conf['params']['Htilde']['pi+ u N0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][1]=conf['params']['Htilde']['pi+ u N1 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][2]=conf['params']['Htilde']['pi+ u a0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][3]=conf['params']['Htilde']['pi+ u a1 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][4]=conf['params']['Htilde']['pi+ u b0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][5]=conf['params']['Htilde']['pi+ u b1 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][6]=conf['params']['Htilde']['pi+ u c0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][7]=conf['params']['Htilde']['pi+ u c1 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][8]=conf['params']['Htilde']['pi+ u d0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][9]=conf['params']['Htilde']['pi+ u d1 2']['value']
-
-                #conf['Htilde'].shape2['pi+'][4][0]=conf['params']['Htilde']['pi+ u N0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][1]=conf['params']['Htilde']['pi+ u N1 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][2]=conf['params']['Htilde']['pi+ u a0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][3]=conf['params']['Htilde']['pi+ u a1 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][4]=conf['params']['Htilde']['pi+ u b0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][5]=conf['params']['Htilde']['pi+ u b1 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][6]=conf['params']['Htilde']['pi+ u c0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][7]=conf['params']['Htilde']['pi+ u c1 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][8]=conf['params']['Htilde']['pi+ u d0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][9]=conf['params']['Htilde']['pi+ u d1 2']['value']
-
-            if 'k+ u N0 1' in conf['params']['Htilde']:
-                conf['Htilde'].widths0['k+ fav'] = conf['params']['Htilde']['widths0 k+ fav']['value']
-                conf['Htilde'].widths0['k+ unfav'] = conf['params']['Htilde']['widths0 k+ unfav']['value']
-
-                conf['Htilde'].shape1['k+'][1][0] = conf['params']['Htilde']['k+ u N0 1']['value']
-                conf['Htilde'].shape1['k+'][1][1] = conf['params']['Htilde']['k+ u N1 1']['value']
-                conf['Htilde'].shape1['k+'][1][2] = conf['params']['Htilde']['k+ u a0 1']['value']
-                conf['Htilde'].shape1['k+'][1][3] = conf['params']['Htilde']['k+ u a1 1']['value']
-                conf['Htilde'].shape1['k+'][1][4] = conf['params']['Htilde']['k+ u b0 1']['value']
-                conf['Htilde'].shape1['k+'][1][5] = conf['params']['Htilde']['k+ u b1 1']['value']
-                conf['Htilde'].shape1['k+'][1][6] = conf['params']['Htilde']['k+ u c0 1']['value']
-                conf['Htilde'].shape1['k+'][1][7] = conf['params']['Htilde']['k+ u c1 1']['value']
-                conf['Htilde'].shape1['k+'][1][8] = conf['params']['Htilde']['k+ u d0 1']['value']
-                conf['Htilde'].shape1['k+'][1][9] = conf['params']['Htilde']['k+ u d1 1']['value']
-
-                conf['Htilde'].shape1['k+'][2][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][2][1] = conf['params']['Htilde']['k+ d N1 1']['value']
-                conf['Htilde'].shape1['k+'][2][2] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][2][3] = conf['params']['Htilde']['k+ d a1 1']['value']
-                conf['Htilde'].shape1['k+'][2][4] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][2][5] = conf['params']['Htilde']['k+ d b1 1']['value']
-                conf['Htilde'].shape1['k+'][2][6] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][2][7] = conf['params']['Htilde']['k+ d c1 1']['value']
-                conf['Htilde'].shape1['k+'][2][8] = conf['params']['Htilde']['k+ d d0 1']['value']
-                conf['Htilde'].shape1['k+'][2][9] = conf['params']['Htilde']['k+ d d1 1']['value']
-
-                conf['Htilde'].shape1['k+'][3][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][3][1] = conf['params']['Htilde']['k+ d N1 1']['value']
-                conf['Htilde'].shape1['k+'][3][2] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][3][3] = conf['params']['Htilde']['k+ d a1 1']['value']
-                conf['Htilde'].shape1['k+'][3][4] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][3][5] = conf['params']['Htilde']['k+ d b1 1']['value']
-                conf['Htilde'].shape1['k+'][3][6] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][3][7] = conf['params']['Htilde']['k+ d c1 1']['value']
-                conf['Htilde'].shape1['k+'][3][8] = conf['params']['Htilde']['k+ d d0 1']['value']
-                conf['Htilde'].shape1['k+'][3][9] = conf['params']['Htilde']['k+ d d1 1']['value']
-
-                conf['Htilde'].shape1['k+'][4][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][4][1] = conf['params']['Htilde']['k+ d N1 1']['value']
-                conf['Htilde'].shape1['k+'][4][2] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][4][3] = conf['params']['Htilde']['k+ d a1 1']['value']
-                conf['Htilde'].shape1['k+'][4][4] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][4][5] = conf['params']['Htilde']['k+ d b1 1']['value']
-                conf['Htilde'].shape1['k+'][4][6] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][4][7] = conf['params']['Htilde']['k+ d c1 1']['value']
-                conf['Htilde'].shape1['k+'][4][8] = conf['params']['Htilde']['k+ d d0 1']['value']
-                conf['Htilde'].shape1['k+'][4][9] = conf['params']['Htilde']['k+ d d1 1']['value']
-
-                conf['Htilde'].shape1['k+'][5][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][5][1] = conf['params']['Htilde']['k+ d N1 1']['value']
-                conf['Htilde'].shape1['k+'][5][2] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][5][3] = conf['params']['Htilde']['k+ d a1 1']['value']
-                conf['Htilde'].shape1['k+'][5][4] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][5][5] = conf['params']['Htilde']['k+ d b1 1']['value']
-                conf['Htilde'].shape1['k+'][5][6] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][5][7] = conf['params']['Htilde']['k+ d c1 1']['value']
-                conf['Htilde'].shape1['k+'][5][8] = conf['params']['Htilde']['k+ d d0 1']['value']
-                conf['Htilde'].shape1['k+'][5][9] = conf['params']['Htilde']['k+ d d1 1']['value']
-
-                conf['Htilde'].shape1['k+'][6][0] = conf['params']['Htilde']['k+ sb N0 1']['value']
-                conf['Htilde'].shape1['k+'][6][1] = conf['params']['Htilde']['k+ sb N1 1']['value']
-                conf['Htilde'].shape1['k+'][6][2] = conf['params']['Htilde']['k+ sb a0 1']['value']
-                conf['Htilde'].shape1['k+'][6][3] = conf['params']['Htilde']['k+ sb a1 1']['value']
-                conf['Htilde'].shape1['k+'][6][4] = conf['params']['Htilde']['k+ sb b0 1']['value']
-                conf['Htilde'].shape1['k+'][6][5] = conf['params']['Htilde']['k+ sb b1 1']['value']
-                conf['Htilde'].shape1['k+'][6][6] = conf['params']['Htilde']['k+ sb c0 1']['value']
-                conf['Htilde'].shape1['k+'][6][7] = conf['params']['Htilde']['k+ sb c1 1']['value']
-                conf['Htilde'].shape1['k+'][6][8] = conf['params']['Htilde']['k+ sb d0 1']['value']
-                conf['Htilde'].shape1['k+'][6][9] = conf['params']['Htilde']['k+ sb d1 1']['value']
-
-                # ------------------
-
-                #conf['Htilde'].shape2['k+'][1][0]=conf['params']['Htilde']['k+ u N0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][1]=conf['params']['Htilde']['k+ u N1 2']['value']
-                #conf['Htilde'].shape2['k+'][1][2]=conf['params']['Htilde']['k+ u a0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][3]=conf['params']['Htilde']['k+ u a1 2']['value']
-                #conf['Htilde'].shape2['k+'][1][4]=conf['params']['Htilde']['k+ u b0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][5]=conf['params']['Htilde']['k+ u b1 2']['value']
-                #conf['Htilde'].shape2['k+'][1][6]=conf['params']['Htilde']['k+ u c0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][7]=conf['params']['Htilde']['k+ u c1 2']['value']
-                #conf['Htilde'].shape2['k+'][1][8]=conf['params']['Htilde']['k+ u d0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][9]=conf['params']['Htilde']['k+ u d1 2']['value']
-
-                #conf['Htilde'].shape2['k+'][6][0]=conf['params']['Htilde']['k+ sb N0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][1]=conf['params']['Htilde']['k+ sb N1 2']['value']
-                #conf['Htilde'].shape2['k+'][6][2]=conf['params']['Htilde']['k+ sb a0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][3]=conf['params']['Htilde']['k+ sb a1 2']['value']
-                #conf['Htilde'].shape2['k+'][6][4]=conf['params']['Htilde']['k+ sb b0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][5]=conf['params']['Htilde']['k+ sb b1 2']['value']
-                #conf['Htilde'].shape2['k+'][6][6]=conf['params']['Htilde']['k+ sb c0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][7]=conf['params']['Htilde']['k+ sb c1 2']['value']
-                #conf['Htilde'].shape2['k+'][6][8]=conf['params']['Htilde']['k+ sb d0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][9]=conf['params']['Htilde']['k+ sb d1 2']['value']
-
-            conf['Htilde'].setup()
-
-        else:
-            if 'pi+ u N0 1' in conf['params']['Htilde']:
-                conf['Htilde'].widths0['pi+ fav'] = conf['params']['Htilde']['widths0 pi+ fav']['value']
-                conf['Htilde'].widths0['pi+ unfav'] = conf['params']['Htilde']['widths0 pi+ unfav']['value']
-
-                conf['Htilde'].shape1['pi+'][1][0] = conf['params']['Htilde']['pi+ u N0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][1] = conf['params']['Htilde']['pi+ u a0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][2] = conf['params']['Htilde']['pi+ u b0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][3] = conf['params']['Htilde']['pi+ u c0 1']['value']
-                conf['Htilde'].shape1['pi+'][1][4] = conf['params']['Htilde']['pi+ u d0 1']['value']
-
-                conf['Htilde'].shape1['pi+'][2][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][1] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][2] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][3] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][2][4] = conf['params']['Htilde']['pi+ d d0 1']['value']
-
-                conf['Htilde'].shape1['pi+'][3][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][1] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][2] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][3] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][3][4] = conf['params']['Htilde']['pi+ d d0 1']['value']
-
-                conf['Htilde'].shape1['pi+'][4][0] = conf['params']['Htilde']['pi+ u N0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][1] = conf['params']['Htilde']['pi+ u a0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][2] = conf['params']['Htilde']['pi+ u b0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][3] = conf['params']['Htilde']['pi+ u c0 1']['value']
-                conf['Htilde'].shape1['pi+'][4][4] = conf['params']['Htilde']['pi+ u d0 1']['value']
-
-                conf['Htilde'].shape1['pi+'][5][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][1] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][2] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][3] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][5][4] = conf['params']['Htilde']['pi+ d d0 1']['value']
-
-                conf['Htilde'].shape1['pi+'][6][0] = conf['params']['Htilde']['pi+ d N0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][1] = conf['params']['Htilde']['pi+ d a0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][2] = conf['params']['Htilde']['pi+ d b0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][3] = conf['params']['Htilde']['pi+ d c0 1']['value']
-                conf['Htilde'].shape1['pi+'][6][4] = conf['params']['Htilde']['pi+ d d0 1']['value']
-
-                # ------------------
-
-                #conf['Htilde'].shape2['pi+'][1][0]=conf['params']['Htilde']['pi+ u N0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][1]=conf['params']['Htilde']['pi+ u a0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][2]=conf['params']['Htilde']['pi+ u b0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][3]=conf['params']['Htilde']['pi+ u c0 2']['value']
-                #conf['Htilde'].shape2['pi+'][1][4]=conf['params']['Htilde']['pi+ u d0 2']['value']
-
-                #conf['Htilde'].shape2['pi+'][4][0]=conf['params']['Htilde']['pi+ u N0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][1]=conf['params']['Htilde']['pi+ u a0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][2]=conf['params']['Htilde']['pi+ u b0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][3]=conf['params']['Htilde']['pi+ u c0 2']['value']
-                #conf['Htilde'].shape2['pi+'][4][4]=conf['params']['Htilde']['pi+ u d0 2']['value']
-
-            if 'k+ u N0 1' in conf['params']['Htilde']:
-                conf['Htilde'].widths0['k+ fav'] = conf['params']['Htilde']['widths0 k+ fav']['value']
-                conf['Htilde'].widths0['k+ unfav'] = conf['params']['Htilde']['widths0 k+ unfav']['value']
-
-                conf['Htilde'].shape1['k+'][1][0] = conf['params']['Htilde']['k+ u N0 1']['value']
-                conf['Htilde'].shape1['k+'][1][1] = conf['params']['Htilde']['k+ u a0 1']['value']
-                conf['Htilde'].shape1['k+'][1][2] = conf['params']['Htilde']['k+ u b0 1']['value']
-                conf['Htilde'].shape1['k+'][1][3] = conf['params']['Htilde']['k+ u c0 1']['value']
-                conf['Htilde'].shape1['k+'][1][4] = conf['params']['Htilde']['k+ u d0 1']['value']
-
-                conf['Htilde'].shape1['k+'][2][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][2][1] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][2][2] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][2][3] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][2][4] = conf['params']['Htilde']['k+ d d0 1']['value']
-
-                conf['Htilde'].shape1['k+'][3][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][3][1] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][3][2] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][3][3] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][3][4] = conf['params']['Htilde']['k+ d d0 1']['value']
-
-                conf['Htilde'].shape1['k+'][4][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][4][1] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][4][2] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][4][3] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][4][4] = conf['params']['Htilde']['k+ d d0 1']['value']
-
-                conf['Htilde'].shape1['k+'][5][0] = conf['params']['Htilde']['k+ d N0 1']['value']
-                conf['Htilde'].shape1['k+'][5][1] = conf['params']['Htilde']['k+ d a0 1']['value']
-                conf['Htilde'].shape1['k+'][5][2] = conf['params']['Htilde']['k+ d b0 1']['value']
-                conf['Htilde'].shape1['k+'][5][3] = conf['params']['Htilde']['k+ d c0 1']['value']
-                conf['Htilde'].shape1['k+'][5][4] = conf['params']['Htilde']['k+ d d0 1']['value']
-
-                conf['Htilde'].shape1['k+'][6][0] = conf['params']['Htilde']['k+ sb N0 1']['value']
-                conf['Htilde'].shape1['k+'][6][1] = conf['params']['Htilde']['k+ sb a0 1']['value']
-                conf['Htilde'].shape1['k+'][6][2] = conf['params']['Htilde']['k+ sb b0 1']['value']
-                conf['Htilde'].shape1['k+'][6][3] = conf['params']['Htilde']['k+ sb c0 1']['value']
-                conf['Htilde'].shape1['k+'][6][4] = conf['params']['Htilde']['k+ sb d0 1']['value']
-
-                # ------------------
-
-                #conf['Htilde'].shape2['k+'][1][0]=conf['params']['Htilde']['k+ u N0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][1]=conf['params']['Htilde']['k+ u a0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][2]=conf['params']['Htilde']['k+ u b0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][3]=conf['params']['Htilde']['k+ u c0 2']['value']
-                #conf['Htilde'].shape2['k+'][1][4]=conf['params']['Htilde']['k+ u d0 2']['value']
-
-                #conf['Htilde'].shape2['k+'][6][0]=conf['params']['Htilde']['k+ sb N0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][1]=conf['params']['Htilde']['k+ sb a0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][2]=conf['params']['Htilde']['k+ sb b0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][3]=conf['params']['Htilde']['k+ sb c0 2']['value']
-                #conf['Htilde'].shape2['k+'][6][4]=conf['params']['Htilde']['k+ sb d0 2']['value']
-
-            conf['Htilde'].setup()
-
-    def set_soft_params(self):
-        for k in conf['params']['soft']:
-            conf['aux'].soft[k] = conf['params']['soft'][k]['value']

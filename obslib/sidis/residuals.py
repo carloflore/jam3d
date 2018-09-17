@@ -4,14 +4,18 @@ import os
 import numpy as np
 from tools.residuals import _RESIDUALS
 from tools.config import conf
+from obslib.sidis import upol0 as upol
+from obslib.sidis import collins0 as collins
+from obslib.sidis import sivers0 as sivers
+from obslib.sidis import boermulders0 as boermulders
+from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
 
 class RESIDUALS(_RESIDUALS):
 
     def __init__(self):
         self.reaction = 'sidis'
         self.tabs = conf['sidis tabs']
-        self.stfuncs = conf['sidis stfuncs']
-        self.dis_stfuncs = conf['dis stfuncs']
+        self.dis_stfuncs = DIS_STFUNCS()
         self.setup()
 
     def _get_theory(self, entry):
@@ -21,243 +25,51 @@ class RESIDUALS(_RESIDUALS):
         z = self.tabs[k]['z'][i]
         Q2 = self.tabs[k]['Q2'][i]
         pT = self.tabs[k]['pT'][i]
-        target = self.tabs[k]['target'][i]
-        hadron = self.tabs[k]['hadron'][i]
+        tar = self.tabs[k]['target'][i]
+        had = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
 
-        if obs == 'xsec':
-            phi_h = self.tabs[k]['phi'][i]
-            phi_S = 0
-            Sperp = 0
-            Spar = 0
-            le = 0
-            thy = self.stfuncs.get_xsec(
-                x, z, y, Q2, pT, phi_h, phi_S, Sperp, Spar, le, 'p', hadron)
+        if   tar=='proton':    tar='p'
+        elif tar=='neutron':   tar='n'
+        elif tar=='deuteron':  tar='d'
 
-        elif obs == 'FUU' and target == 'proton':
+        if obs == 'FUU':
 
-            FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-            thy = FUU
+            thy = upol.get_FUU(x,z,Q2,pT,tar,had)
 
-        elif obs == 'M_EIC' and target == 'proton':
+        elif obs == 'M':
 
-            FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-            thy = FUU
-
-        elif obs == 'M_Hermes' and target == 'proton':
-
-            FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-            F2 = self.dis_stfuncs.get_F2(x, Q2, 'p')
-            thy = 2 * np.pi * pT * FUU / F2
-
-        elif obs == 'M_Hermes' and target == 'deuteron':
-
-            FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)\
-                + self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-            F2 = self.dis_stfuncs.get_F2(x, Q2, 'p')\
-                + self.dis_stfuncs.get_F2(x, Q2, 'n')
-
-            thy = 2 * np.pi * pT * FUU / F2
+            FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
+            F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
+            thy = FUU / F2
+            if col=='HERMES': thy*=2*np.pi*pT
 
         elif obs == 'AUTcollins':
 
-            coeff = 1.
-            if col == 'HERMES':
-                coeff = 1   # hermes is sin(phi_s+phi_h)
-            if col == 'COMPASS':
-                coeff = -1   # compass is sin(phi_s+phi_h+pi)
-            if col == 'HERMES':
-                # add depolarization factor only for HERMES
-                coeff *= 2 * (1 - y) / (1 + (1 - y)**2)
+            # convention factor
+            coeff = 1 
+            if   col == 'HERMES':  coeff = 1  # hermes is sin(phi_s+phi_h)
+            elif col == 'COMPASS': coeff = -1 # compass is sin(phi_s+phi_h+pi)
 
+            # add depolarization factor
+            if col == 'HERMES': coeff *= 2 * (1 - y) / (1 + (1 - y)**2)
 
-            if target == 'proton':
-
-                FUT = self.stfuncs.get_FX(4, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-                thy = coeff * FUT / FUU
-
-            elif target == 'neutron':
-
-                FUT = self.stfuncs.get_FX(4, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-                thy = coeff * FUT / FUU
-
-            elif target == 'deuteron':
-
-                FUT = self.stfuncs.get_FX(4, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(4, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-                thy = coeff * FUT / FUU
+            FUT = collins.get_FUT(x,z,Q2,pT,tar,had)
+            FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
+            thy = coeff * FUT / FUU
 
         elif obs == 'AUTsivers':
 
+            # convention factor
+            coeff = 1 
 
-            if target == 'proton':
-
-                FUT = self.stfuncs.get_FX(5, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-                thy = FUT / FUU
-
-            elif target == 'neutron':
-
-                FUT = self.stfuncs.get_FX(5, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-                thy = FUT / FUU
-
-            elif target == 'deuteron':
-
-                FUT = self.stfuncs.get_FX(5, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(5, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-                thy = FUT / FUU
-
-        elif obs == 'AUUcos':
-
-
-            if target == 'proton':
-
-                FUUcos = self.stfuncs.get_FX(16, x, z, Q2, pT, 'p', hadron, obs) \
-                    + self.stfuncs.get_FX(17, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-
-            elif target == 'neutron':
-
-                FUUcos = self.stfuncs.get_FX(16, x, z, Q2, pT, 'n', hadron, obs) \
-                    + self.stfuncs.get_FX(17, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-            elif target == 'deuteron':
-
-                FUUcos = self.stfuncs.get_FX(16, x, z, Q2, pT, 'p', hadron, obs) \
-                    + self.stfuncs.get_FX(17, x, z, Q2, pT, 'p', hadron, obs) \
-                    + self.stfuncs.get_FX(16, x, z, Q2, pT, 'n', hadron, obs) \
-                    + self.stfuncs.get_FX(17, x, z, Q2, pT, 'n', hadron, obs)
-
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-            epsilon = (1 - y) / (1 - y + 0.5 * y**2)
-            coeff = 1.
-            if col == 'HERMES':
-                # add depolarization factor for HERMES
-                coeff = np.sqrt(2 * epsilon * (1 + epsilon))
-            if col == 'COMPASS':
-                coeff = 1.
-            if col == 'JLAB':
-                # add depolarization factor for CLAS
-                coeff = np.sqrt(2 * epsilon * (1 + epsilon))
-
-            thy = coeff * FUUcos / FUU
-
-        elif obs == 'AUUcos2':
-
-            if target == 'proton':
-                FUUcos2 = self.stfuncs.get_FX(
-                    7, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-
-            elif target == 'neutron':
-
-                FUUcos2 = self.stfuncs.get_FX(
-                    7, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-            elif target == 'deuteron':
-
-                FUUcos2 = self.stfuncs.get_FX(7, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(7, x, z, Q2, pT, 'n', hadron, obs)
-
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-            epsilon = (1 - y) / (1 - y + 0.5 * y**2)
-            coeff = 1.
-            if col == 'HERMES':
-                coeff = epsilon  # add depolarization factor for HERMES
-            if col == 'COMPASS':
-                coeff = 1.
-            if col == 'JLAB':
-                coeff = epsilon  # add depolarization factor for CLAS
-
-            thy = coeff * FUUcos2 / FUU
-
-        elif obs == 'A_pretzelosity':
-
-            if target == 'proton':
-                FUTsin3 = self.stfuncs.get_FX(
-                    8, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-
-            elif target == 'neutron':
-
-                FUTsin3 = self.stfuncs.get_FX(
-                    8, x, z, Q2, pT, 'n', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'n', hadron, obs)
-
-            elif target == 'deuteron':
-
-                FUTsin3 = self.stfuncs.get_FX(8, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(8, x, z, Q2, pT, 'n', hadron, obs)
-
-                FUU = self.stfuncs.get_FX(8, x, z, Q2, pT, 'p', hadron, obs)\
-                    + self.stfuncs.get_FX(8, x, z, Q2, pT, 'n', hadron, obs)
-
-            coeff = 1.
-            if col == 'HERMES':
-                # add depolarization factor for HERMES
-                coeff = 2 * (1 - y) / (1 + (1 - y)**2)
-            if col == 'COMPASS':
-                coeff = 1.
-            if col == 'JLAB':
-                # add depolarization factor for CLAS
-                coeff = 2 * (1 - y) / (1 + (1 - y)**2)
-
-            thy = coeff * FUTsin3 / FUU
-
-        elif obs == 'ALL':
-
-            if target == 'proton':
-                FLL = self.stfuncs.get_FX(3, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-
-            coeff = 1.
-            if col == 'HERMES':
-                # add depolarization factor for HERMES
-                coeff = y * (2 - y) / (1 + (1 - y)**2)
-            if col == 'COMPASS':
-                coeff = 1.
-            if col == 'CLAS':
-                # add depolarization factor for CLAS
-                coeff = y * (2 - y) / (1 + (1 - y)**2)
-
-            thy = coeff * FLL / FUU
-
-        elif obs == 'AUTsinphiS':  # This is for collinear!
-
-            if target == 'proton':
-                FUTsinphiS = self.stfuncs.get_FX(
-                    23, x, z, Q2, pT, 'p', hadron, obs)
-                FUU = self.stfuncs.get_FX(1, x, z, Q2, pT, 'p', hadron, obs)
-
-            coeff = 1.
-            if col == 'HERMES':
-                # add depolarization factor for HERMES
-                coeff = np.sqrt(1.0 - y) * (2 - y) / (1 - y + 0.5 * y**2)
-            if col == 'COMPASS':
-                coeff = 1.
-
-            thy = coeff * FUTsinphiS / FUU
+            FUT = sivers.get_FUT(x,z,Q2,pT,tar,had)
+            FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
+            thy = coeff * FUT / FUU
 
         else:
-            print 'ERR: exp=%d obs=%s and target=%s not implemented' % (
-                k, obs, target)
+            print 'ERR: exp=%d obs=%s and target=%s not implemented' % (k, obs, tar)
             sys.exit()
 
         return k, i, thy
@@ -374,55 +186,27 @@ class RESIDUALS(_RESIDUALS):
 if __name__ == '__main__':
 
     from qcdlib.interpolator import INTERPOLATOR
-    from stfuncs import STFUNCS
-    from qcdlib.tmdlib import PDF, PPDF, FF
-    from qcdlib.tmdlib import TRANSVERSITY
-    from qcdlib.tmdlib import BOERMULDERS
-    from qcdlib.tmdlib import SIVERS
-    from qcdlib.tmdlib import PRETZELOSITY
-    from qcdlib.tmdlib import COLLINS
-    from qcdlib.tmdlib import WORMGEARG
-    from qcdlib.tmdlib import WORMGEARH
+    from qcdlib import pdf0,ff0,pdf1,ff1
     from qcdlib.aux import AUX
-    from qcdlib.alphaS import ALPHAS
-    from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
     from reader import READER
 
     conf['aux']    = AUX()
-    conf['alphaSmode'] = 'backward'
-    conf['order'] = 'NLO'
-    conf['Q20'] = 1
-    conf['alphaS'] = ALPHAS()
 
-    conf['cpdf']   = INTERPOLATOR('CJ15lo_0000')
-    conf['cppdf']  = INTERPOLATOR('CJ15lo_0000')
-    conf['cpipff'] = INTERPOLATOR('dsspipLO_0000')
-    conf['cpimff'] = INTERPOLATOR('dsspimLO_0000')
-    conf['cKpff']  = INTERPOLATOR('dssKpLO_0000')
-    conf['cKmff']  = INTERPOLATOR('dssKmLO_0000')
-
-    conf['lam2'] = 0.4 
-    conf['Q02']  = 1.0
-    conf['pdf']          = PDF()
-    conf['ppdf']         = PPDF()
-    conf['ff']           = FF()
-    conf['transversity'] = TRANSVERSITY()
-    conf['sivers']       = SIVERS()
-    conf['boermulders']  = BOERMULDERS()
-    conf['pretzelosity'] = PRETZELOSITY()
-    conf['wormgearg']    = WORMGEARG()
-    conf['wormgearh']    = WORMGEARH()
-    conf['collins']      = COLLINS()
-
-
-    conf['sidis stfuncs'] = STFUNCS()
-    conf['dis stfuncs']   = DIS_STFUNCS()
+    conf['pdf']          = pdf0.PDF()
+    conf['transversity'] = pdf1.PDF()
+    conf['sivers']       = pdf1.PDF()
+    conf['ffpi'] = ff0.FF('pi')
+    conf['ffk']  = ff0.FF('k')
+    conf['collinspi'] = ff1.FF('pi')
+    conf['collinsk']  = ff1.FF('k')
 
 
     conf['datasets']={}
     conf['datasets']['sidis']={}
     
     conf['datasets']['sidis']['xlsx']={}
+
+    # upol
     conf['datasets']['sidis']['xlsx'][1000]='sidis/expdata/1000.xlsx'  # |  proton   | pi+   | M_Hermes | hermes 
     conf['datasets']['sidis']['xlsx'][1001]='sidis/expdata/1001.xlsx'  # |  proton   | pi-   | M_Hermes | hermes 
     conf['datasets']['sidis']['xlsx'][1004]='sidis/expdata/1004.xlsx'  # |  deuteron | pi+   | M_Hermes | hermes 
@@ -431,22 +215,120 @@ if __name__ == '__main__':
     conf['datasets']['sidis']['xlsx'][1003]='sidis/expdata/1003.xlsx'  # |  proton   | k-    | M_Hermes | hermes 
     conf['datasets']['sidis']['xlsx'][1006]='sidis/expdata/1006.xlsx'  # |  deuteron | k+    | M_Hermes | hermes 
     conf['datasets']['sidis']['xlsx'][1007]='sidis/expdata/1007.xlsx'  # |  deuteron | k-    | M_Hermes | hermes 
+
+    # sivers
+    conf['datasets']['sidis']['xlsx'][2000]='sidis/expdata/2000.xlsx' # | proton   | pi+    | AUTsivers        | hermes     | PT                   
+    conf['datasets']['sidis']['xlsx'][2001]='sidis/expdata/2001.xlsx' # | proton   | pi+    | AUTsivers        | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][2002]='sidis/expdata/2002.xlsx' # | proton   | pi+    | AUTsivers        | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][2003]='sidis/expdata/2003.xlsx' # | proton   | pi-    | AUTsivers        | hermes     | PT                   
+    conf['datasets']['sidis']['xlsx'][2004]='sidis/expdata/2004.xlsx' # | proton   | pi-    | AUTsivers        | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][2005]='sidis/expdata/2005.xlsx' # | proton   | pi-    | AUTsivers        | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][2006]='sidis/expdata/2006.xlsx' # | proton   | pi0    | AUTsivers        | hermes     | PT                   
+    conf['datasets']['sidis']['xlsx'][2007]='sidis/expdata/2007.xlsx' # | proton   | pi0    | AUTsivers        | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][2008]='sidis/expdata/2008.xlsx' # | proton   | pi0    | AUTsivers        | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][2009]='sidis/expdata/2009.xlsx' # | proton   | k+     | AUTsivers        | hermes     | PT                   
+    conf['datasets']['sidis']['xlsx'][2010]='sidis/expdata/2010.xlsx' # | proton   | k+     | AUTsivers        | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][2011]='sidis/expdata/2011.xlsx' # | proton   | k+     | AUTsivers        | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][2012]='sidis/expdata/2012.xlsx' # | proton   | k-     | AUTsivers        | hermes     | PT                   
+    conf['datasets']['sidis']['xlsx'][2013]='sidis/expdata/2013.xlsx' # | proton   | k-     | AUTsivers        | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][2014]='sidis/expdata/2014.xlsx' # | proton   | k-     | AUTsivers        | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][2015]='sidis/expdata/2015.xlsx' # | neutron  | pi+    | AUTsivers        | jlab       | x                    
+    conf['datasets']['sidis']['xlsx'][2016]='sidis/expdata/2016.xlsx' # | neutron  | pi-    | AUTsivers        | jlab       | x                    
+    conf['datasets']['sidis']['xlsx'][2017]='sidis/expdata/2017.xlsx' # | proton   | k0     | AUTsivers        | compass    | PT                   
+    conf['datasets']['sidis']['xlsx'][2018]='sidis/expdata/2018.xlsx' # | proton   | k0     | AUTsivers        | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][2019]='sidis/expdata/2019.xlsx' # | proton   | k0     | AUTsivers        | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][2026]='sidis/expdata/2026.xlsx' # | deuteron | pi+    | AUTsivers        | compass    | PT                   
+    conf['datasets']['sidis']['xlsx'][2027]='sidis/expdata/2027.xlsx' # | deuteron | pi+    | AUTsivers        | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][2028]='sidis/expdata/2028.xlsx' # | deuteron | pi+    | AUTsivers        | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][2029]='sidis/expdata/2029.xlsx' # | deuteron | pi-    | AUTsivers        | compass    | PT                   
+    conf['datasets']['sidis']['xlsx'][2030]='sidis/expdata/2030.xlsx' # | deuteron | pi-    | AUTsivers        | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][2031]='sidis/expdata/2031.xlsx' # | deuteron | pi-    | AUTsivers        | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][2032]='sidis/expdata/2032.xlsx' # | deuteron | k+     | AUTsivers        | compass    | PT                   
+    conf['datasets']['sidis']['xlsx'][2033]='sidis/expdata/2033.xlsx' # | deuteron | k+     | AUTsivers        | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][2034]='sidis/expdata/2034.xlsx' # | deuteron | k+     | AUTsivers        | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][2035]='sidis/expdata/2035.xlsx' # | deuteron | k-     | AUTsivers        | compass    | PT                   
+    conf['datasets']['sidis']['xlsx'][2036]='sidis/expdata/2036.xlsx' # | deuteron | k-     | AUTsivers        | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][2037]='sidis/expdata/2037.xlsx' # | deuteron | k-     | AUTsivers        | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][2038]='sidis/expdata/2038.xlsx' # | neutron  | k+     | AUTsivers        | jlab       | x                    
+    conf['datasets']['sidis']['xlsx'][2039]='sidis/expdata/2039.xlsx' # | neutron  | k-     | AUTsivers        | jlab       | x                    
+    conf['datasets']['sidis']['xlsx'][2500]='sidis/expdata/2500.xlsx' # | neutron  | pi+    | AUTsivers        | solid      | x                    
+    conf['datasets']['sidis']['xlsx'][2501]='sidis/expdata/2501.xlsx' # | neutron  | pi-    | AUTsivers        | solid      | x                    
+    conf['datasets']['sidis']['xlsx'][2502]='sidis/expdata/2502.xlsx' # | proton   | pi+    | AUTsivers        | solid      | x                    
+    conf['datasets']['sidis']['xlsx'][2503]='sidis/expdata/2503.xlsx' # | proton   | pi-    | AUTsivers        | solid      | x                    
+    conf['datasets']['sidis']['xlsx'][2504]='sidis/expdata/2504.xlsx' # | proton   | pi+    | AUTsivers        | clas12     | x                    
+    conf['datasets']['sidis']['xlsx'][2505]='sidis/expdata/2505.xlsx' # | proton   | pi-    | AUTsivers        | clas12     | x                    
+    conf['datasets']['sidis']['xlsx'][2506]='sidis/expdata/2506.xlsx' # | neutron  | pi+    | AUTsivers        | sbs        | x                    
+    conf['datasets']['sidis']['xlsx'][2507]='sidis/expdata/2507.xlsx' # | neutron  | pi-    | AUTsivers        | sbs        | x                    
+    conf['datasets']['sidis']['xlsx'][2508]='sidis/expdata/2508.xlsx' # | neutron  | pi+    | AUTsivers        | solid stat | x                    
+    conf['datasets']['sidis']['xlsx'][2509]='sidis/expdata/2509.xlsx' # | neutron  | pi-    | AUTsivers        | solid stat | x                    
+    conf['datasets']['sidis']['xlsx'][2510]='sidis/expdata/2510.xlsx' # | proton   | pi+    | AUTsivers        | solid stat | x                    
+    conf['datasets']['sidis']['xlsx'][2511]='sidis/expdata/2511.xlsx' # | proton   | pi-    | AUTsivers        | solid stat | x                    
+
+    # collins
+
+    conf['datasets']['sidis']['xlsx'][3000]='sidis/expdata/3000.xlsx' # | proton   | pi+    | AUTcollins       | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][3003]='sidis/expdata/3003.xlsx' # | proton   | pi+    | AUTcollins       | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][3026]='sidis/expdata/3026.xlsx' # | proton   | pi+    | AUTcollins       | hermes     | pt                   
+    conf['datasets']['sidis']['xlsx'][3004]='sidis/expdata/3004.xlsx' # | proton   | pi-    | AUTcollins       | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][3018]='sidis/expdata/3018.xlsx' # | proton   | pi-    | AUTcollins       | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][3016]='sidis/expdata/3016.xlsx' # | proton   | pi-    | AUTcollins       | hermes     | pt                   
+    conf['datasets']['sidis']['xlsx'][3006]='sidis/expdata/3006.xlsx' # | proton   | pi0    | AUTcollins       | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][3014]='sidis/expdata/3014.xlsx' # | proton   | pi0    | AUTcollins       | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][3015]='sidis/expdata/3015.xlsx' # | proton   | pi0    | AUTcollins       | hermes     | pt                   
+    conf['datasets']['sidis']['xlsx'][3007]='sidis/expdata/3007.xlsx' # | proton   | k+     | AUTcollins       | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][3008]='sidis/expdata/3008.xlsx' # | proton   | k+     | AUTcollins       | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][3024]='sidis/expdata/3024.xlsx' # | proton   | k+     | AUTcollins       | hermes     | pt                   
+    conf['datasets']['sidis']['xlsx'][3017]='sidis/expdata/3017.xlsx' # | proton   | k-     | AUTcollins       | hermes     | x                    
+    conf['datasets']['sidis']['xlsx'][3023]='sidis/expdata/3023.xlsx' # | proton   | k-     | AUTcollins       | hermes     | z                    
+    conf['datasets']['sidis']['xlsx'][3021]='sidis/expdata/3021.xlsx' # | proton   | k-     | AUTcollins       | hermes     | pt                   
+    conf['datasets']['sidis']['xlsx'][3025]='sidis/expdata/3025.xlsx' # | proton   | pi+    | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][3010]='sidis/expdata/3010.xlsx' # | proton   | pi+    | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][3027]='sidis/expdata/3027.xlsx' # | proton   | pi+    | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][3005]='sidis/expdata/3005.xlsx' # | proton   | pi-    | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][3013]='sidis/expdata/3013.xlsx' # | proton   | pi-    | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][3012]='sidis/expdata/3012.xlsx' # | proton   | pi-    | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][6000]='sidis/expdata/6000.xlsx' # | proton   | k-     | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][6001]='sidis/expdata/6001.xlsx' # | proton   | k-     | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][6002]='sidis/expdata/6002.xlsx' # | proton   | k-     | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][6003]='sidis/expdata/6003.xlsx' # | proton   | k+     | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][6004]='sidis/expdata/6004.xlsx' # | proton   | k+     | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][6005]='sidis/expdata/6005.xlsx' # | proton   | k+     | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][4000]='sidis/expdata/4000.xlsx' # | deuteron | pi+    | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][4002]='sidis/expdata/4002.xlsx' # | deuteron | pi+    | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][4001]='sidis/expdata/4001.xlsx' # | deuteron | pi+    | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][4003]='sidis/expdata/4003.xlsx' # | deuteron | pi-    | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][4005]='sidis/expdata/4005.xlsx' # | deuteron | pi-    | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][4004]='sidis/expdata/4004.xlsx' # | deuteron | pi-    | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][4006]='sidis/expdata/4006.xlsx' # | deuteron | k+     | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][4008]='sidis/expdata/4008.xlsx' # | deuteron | k+     | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][4007]='sidis/expdata/4007.xlsx' # | deuteron | k+     | AUTcollins       | compass    | pt                   
+    conf['datasets']['sidis']['xlsx'][4009]='sidis/expdata/4009.xlsx' # | deuteron | k-     | AUTcollins       | compass    | x                    
+    conf['datasets']['sidis']['xlsx'][4011]='sidis/expdata/4011.xlsx' # | deuteron | k-     | AUTcollins       | compass    | z                    
+    conf['datasets']['sidis']['xlsx'][4010]='sidis/expdata/4010.xlsx' # | deuteron | k-     | AUTcollins       | compass    | pt                   
+    #conf['datasets']['sidis']['xlsx'][3001]='sidis/expdata/3001.xlsx' # | neutron  | pi-    | AUTcollins       | jlab       | x                    
+    #conf['datasets']['sidis']['xlsx'][3002]='sidis/expdata/3002.xlsx' # | neutron  | pi+    | AUTcollins       | jlab       | x                  
+
+
     conf['datasets']['sidis']['norm']={}
     for k in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['norm'][k]={'value':1,'fixed':True,'min':0,'max':1} 
     conf['datasets']['sidis']['filters']={}
-    conf['datasets']['sidis']['filters'][1000]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1001]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1004]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1005]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1002]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1003]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1006]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
-    conf['datasets']['sidis']['filters'][1007]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
 
     conf['sidis tabs'] = READER().load_data_sets('sidis')
+
     conf['residuals']= RESIDUALS()
-    conf['residuals'].get_residuals()
-    conf['residuals'].gen_report(verb=1, level=1)
+    print conf['residuals'].get_residuals()
+    
+    #conf['residuals'].gen_report(verb=1, level=1)
+
+
+
+
+
+
+
+
+
+
 
 
 

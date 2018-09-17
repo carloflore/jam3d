@@ -12,6 +12,10 @@ from tools.config import conf
 class STFUNCS:
 
     def __init__(self):
+        conf['alphaSmode'] = 'backward'
+        conf['order'] = 'NLO'
+        conf['Q20'] = 1
+        conf['alphaS'] = ALPHAS()
         self.aux = conf['aux']
         self.CF = self.aux.CF
         self.TR = self.aux.TR
@@ -19,6 +23,7 @@ class STFUNCS:
         self.eU2 = 4.0 / 9.0
         self.eD2 = 1.0 / 9.0
         self.storage = {}
+        conf['cpdf'] = INTERPOLATOR('CJ15lo_0000')
 
     def integrator(self,f,xmin,xmax,method,n=200):
         f = np.vectorize(f)
@@ -54,7 +59,14 @@ class STFUNCS:
 
     def qplus(self,PDF):
 
-        if self.hadron == 'n':  PDF = self.p2n(PDF)
+        if self.hadron == 'n':  
+
+            PDF = self.p2n(PDF)
+
+        elif self.hadron=='d':
+      
+            PDF = 0.5*(PDF+self.p2n(PDF))
+
 
         out = self.eU2 * (PDF[1] + PDF[2])\
             + self.eD2 * (PDF[3] + PDF[4])\
@@ -82,10 +94,10 @@ class STFUNCS:
         if (x,Q2,hadron) not in self.storage:
             self.hadron = hadron
             self.Nf = conf['alphaS'].get_Nf(Q2)
-            alpi = conf['alphaS'].get_alphaS(Q2) / (2. * np.pi)
+            #alpi = conf['alphaS'].get_alphaS(Q2) / (2. * np.pi)
             self.get_PDFs = lambda xi: conf['cpdf'].get_f(xi,Q2)
             LO = self.qplus(self.get_PDFs(x))
-            integrand=lambda z:self.integrand(x,z,Q2)
+            #integrand=lambda z:self.integrand(x,z,Q2)
             #NLO=self.integrator(integrand,x,1,method,n=n)
             self.storage[(x,Q2,hadron)] = x * LO#(LO +alpi*NLO)
         return self.storage[(x,Q2,hadron)]
@@ -93,18 +105,14 @@ class STFUNCS:
 
 if __name__ == '__main__':
 
-    conf['alphaSmode'] = 'backward'
-    conf['order'] = 'NLO'
-    conf['Q20'] = 1
     conf['aux'] = AUX()
-    conf['alphaS'] = ALPHAS()
-    conf['cpdf'] = INTERPOLATOR('CJ15nlo_0000')
     stfuncs = STFUNCS()
 
     x = 0.5
     Q2 = 1000.
     print stfuncs.get_F2(x,Q2,'p',method='gauss')
     print stfuncs.get_F2(x,Q2,'n',method='gauss')
+    print stfuncs.get_F2(x,Q2,'d',method='gauss')
 
 
 
