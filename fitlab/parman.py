@@ -119,10 +119,10 @@ class PARMAN:
         conf['transversity']._widths2_sea = conf['params']['transversity']['widths2_sea']['value']
 
         iflav=0
-        for flav in ['u','d','s','ub','db','sb']:
+        for flav in ['u','ub','d','db','s','sb']:
             iflav+=1
             ipar=-1
-            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+            for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['transversity']:
                     conf['transversity'].shape1[iflav][ipar] = conf['params']['transversity']['%s %s 1'%(flav,par)]['value']
@@ -143,10 +143,10 @@ class PARMAN:
         conf['sivers']._widths2_sea = conf['params']['sivers']['widths2_sea']['value']
 
         iflav=0
-        for flav in ['u','d','s','ub','db','sb']:
+        for flav in ['u','ub','d','db','s','sb']:
             iflav+=1
             ipar=-1
-            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+            for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['sivers']:
                     conf['sivers'].shape1[iflav][ipar] = conf['params']['sivers']['%s %s 1'%(flav,par)]['value']
@@ -179,10 +179,10 @@ class PARMAN:
         conf['collinspi']._widths2_ufav = conf['params']['collinspi']['widths2_ufav']['value']
 
         iflav=0
-        for flav in ['u','d','s','ub','db','sb']:
+        for flav in ['u','ub','d','db','s','sb']:
             iflav+=1
             ipar=-1
-            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+            for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['collinspi']:
                     conf['collinspi'].shape1[iflav][ipar] = conf['params']['collinspi']['%s %s 1'%(flav,par)]['value']
@@ -197,10 +197,10 @@ class PARMAN:
         conf['collinsk']._widths2_fav   = conf['params']['collinsk']['widths2_fav']['value']
         conf['collinsk']._widths2_ufav  = conf['params']['collinsk']['widths2_ufav']['value']
         iflav=0
-        for flav in ['u','d','s','ub','db','sb']:
+        for flav in ['u','ub','d','db','s','sb']:
             iflav+=1
             ipar=-1
-            for par in ['N0','N1','a0','a1','b0','b1','c0','c1','d0','d1']:
+            for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['collinsk']:
                     conf['collinsk'].shape1[iflav][ipar] = conf['params']['collinsk']['%s %s 1'%(flav,par)]['value']
