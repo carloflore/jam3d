@@ -41,22 +41,22 @@ conf['params']['ffk']['widths2_ufav'] ={'value':    0.00000e+00,'min': 0,'max':1
 
 #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 conf['params']['transversity']={}
-conf['params']['transversity']['widths1_uv']  ={'value':    1.00000e-01,'min': 0,'max':1,'fixed':True}
-conf['params']['transversity']['widths1_dv']  ={'value':    1.00000e-01,'min': 0,'max':1,'fixed':'widths1_uv'}
-conf['params']['transversity']['widths1_sea'] ={'value':    1.00000e-01,'min': 0,'max':1,'fixed':'widths1_uv'}
+conf['params']['transversity']['widths1_uv']  ={'value':    7.16247e-01,'min': 0,'max':1,'fixed':False}
+conf['params']['transversity']['widths1_dv']  ={'value':    7.16247e-01,'min': 0,'max':1,'fixed':'widths1_uv'}
+conf['params']['transversity']['widths1_sea'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':False}
 conf['params']['transversity']['widths2_uv']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['transversity']['widths2_dv']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['transversity']['widths2_sea'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 
-conf['params']['transversity']['u N0 1']  ={'value':    2.21497e-03,'min': 0,'max':1,'fixed':False}
-conf['params']['transversity']['u a0 1']  ={'value':    1.76536e-01,'min': 0,'max':1,'fixed':False}
-conf['params']['transversity']['u b0 1']  ={'value':    3.00000e+00,'min': 0,'max':1,'fixed':True}
+conf['params']['transversity']['u N0 1']  ={'value':    2.57906e-01,'min': 0,'max':10,'fixed':False}
+conf['params']['transversity']['u a0 1']  ={'value':   -7.62366e-02,'min':-1,'max':5,'fixed':False}
+conf['params']['transversity']['u b0 1']  ={'value':    1.40636e+00,'min':-1,'max':5,'fixed':False}
 conf['params']['transversity']['u c0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['transversity']['u d0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 
-conf['params']['transversity']['d N0 1']  ={'value':   -3.43515e-03,'min': 0,'max':1,'fixed':False}
-conf['params']['transversity']['d a0 1']  ={'value':    4.36043e-01,'min': 0,'max':1,'fixed':False}
-conf['params']['transversity']['d b0 1']  ={'value':    3.00000e+00,'min': 0,'max':1,'fixed':True}
+conf['params']['transversity']['d N0 1']  ={'value':   -3.99037e-01,'min':-10,'max':1,'fixed':False}
+conf['params']['transversity']['d a0 1']  ={'value':    6.27674e-02,'min':-1,'max':5,'fixed':False}
+conf['params']['transversity']['d b0 1']  ={'value':    4.20148e-01,'min':-1,'max':5,'fixed':False}
 conf['params']['transversity']['d c0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['transversity']['d d0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 
@@ -87,46 +87,46 @@ conf['params']['transversity']['sb d0 1'] ={'value':    0.00000e+00,'min': 0,'ma
 
 #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 conf['params']['collinspi']={}
-conf['params']['collinspi']['widths1_fav']  ={'value':    1.73774e-01,'min': 0,'max':1,'fixed':False}
-conf['params']['collinspi']['widths1_ufav'] ={'value':    1.73774e-01,'min': 0,'max':1,'fixed':'widths1_fav'}
+conf['params']['collinspi']['widths1_fav']  ={'value':    3.78222e-02,'min': 0,'max':1,'fixed':False}
+conf['params']['collinspi']['widths1_ufav'] ={'value':    1.23700e-01,'min': 0,'max':1,'fixed':False}
 conf['params']['collinspi']['widths2_fav']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['collinspi']['widths2_ufav'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 
 # favored
-conf['params']['collinspi']['u N0 1']  ={'value':    1.57033e+03,'min': 0,'max':1,'fixed':False}
-conf['params']['collinspi']['u a0 1']  ={'value':   -5.00000e-01,'min': 0,'max':1,'fixed':True}
-conf['params']['collinspi']['u b0 1']  ={'value':    1.00000e+01,'min': 0,'max':1,'fixed':True}
+conf['params']['collinspi']['u N0 1']  ={'value':    1.36506e+00,'min': 0,'max':10,'fixed':False}
+conf['params']['collinspi']['u a0 1']  ={'value':   -5.62896e-01,'min':-1,'max':5,'fixed':False}
+conf['params']['collinspi']['u b0 1']  ={'value':    2.31378e+00,'min':-1,'max':5,'fixed':False}
 conf['params']['collinspi']['u c0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['collinspi']['u d0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 
-conf['params']['collinspi']['db N0 1'] ={'value':    1.57033e+03,'min': 0,'max':1,'fixed':'u N0 1'}
-conf['params']['collinspi']['db a0 1'] ={'value':   -5.00000e-01,'min': 0,'max':1,'fixed':'u a0 1'}
-conf['params']['collinspi']['db b0 1'] ={'value':    1.00000e+01,'min': 0,'max':1,'fixed':'u b0 1'}
+conf['params']['collinspi']['db N0 1'] ={'value':    1.36506e+00,'min': 0,'max':1,'fixed':'u N0 1'}
+conf['params']['collinspi']['db a0 1'] ={'value':   -5.62896e-01,'min': 0,'max':1,'fixed':'u a0 1'}
+conf['params']['collinspi']['db b0 1'] ={'value':    2.31378e+00,'min': 0,'max':1,'fixed':'u b0 1'}
 conf['params']['collinspi']['db c0 1'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'u c0 1'}
 conf['params']['collinspi']['db d0 1'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'u d0 1'}
 
 # unfavored
-conf['params']['collinspi']['d N0 1']  ={'value':   -6.70692e+01,'min': 0,'max':1,'fixed':False}
-conf['params']['collinspi']['d a0 1']  ={'value':    2.20680e+00,'min': 0,'max':1,'fixed':True}
-conf['params']['collinspi']['d b0 1']  ={'value':    1.00000e+01,'min': 0,'max':1,'fixed':True}
+conf['params']['collinspi']['d N0 1']  ={'value':   -1.76183e+00,'min':-10,'max':5,'fixed':False}
+conf['params']['collinspi']['d a0 1']  ={'value':   -4.14970e-01,'min':-1,'max':5,'fixed':False}
+conf['params']['collinspi']['d b0 1']  ={'value':    2.72143e+00,'min':-1,'max':5,'fixed':False}
 conf['params']['collinspi']['d c0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 conf['params']['collinspi']['d d0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':True}
 
-conf['params']['collinspi']['ub N0 1'] ={'value':   -6.70692e+01,'min': 0,'max':1,'fixed':'d N0 1'}
-conf['params']['collinspi']['ub a0 1'] ={'value':    2.20680e+00,'min': 0,'max':1,'fixed':'d a0 1'}
-conf['params']['collinspi']['ub b0 1'] ={'value':    1.00000e+01,'min': 0,'max':1,'fixed':'d b0 1'}
+conf['params']['collinspi']['ub N0 1'] ={'value':   -1.76183e+00,'min': 0,'max':1,'fixed':'d N0 1'}
+conf['params']['collinspi']['ub a0 1'] ={'value':   -4.14970e-01,'min': 0,'max':1,'fixed':'d a0 1'}
+conf['params']['collinspi']['ub b0 1'] ={'value':    2.72143e+00,'min': 0,'max':1,'fixed':'d b0 1'}
 conf['params']['collinspi']['ub c0 1'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'d c0 1'}
 conf['params']['collinspi']['ub d0 1'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'d d0 1'}
 
-conf['params']['collinspi']['s N0 1']  ={'value':   -6.70692e+01,'min': 0,'max':1,'fixed':'d N0 1'}
-conf['params']['collinspi']['s a0 1']  ={'value':    2.20680e+00,'min': 0,'max':1,'fixed':'d a0 1'}
-conf['params']['collinspi']['s b0 1']  ={'value':    1.00000e+01,'min': 0,'max':1,'fixed':'d b0 1'}
+conf['params']['collinspi']['s N0 1']  ={'value':   -1.76183e+00,'min': 0,'max':1,'fixed':'d N0 1'}
+conf['params']['collinspi']['s a0 1']  ={'value':   -4.14970e-01,'min': 0,'max':1,'fixed':'d a0 1'}
+conf['params']['collinspi']['s b0 1']  ={'value':    2.72143e+00,'min': 0,'max':1,'fixed':'d b0 1'}
 conf['params']['collinspi']['s c0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'d c0 1'}
 conf['params']['collinspi']['s d0 1']  ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'d d0 1'}
 
-conf['params']['collinspi']['sb N0 1'] ={'value':   -6.70692e+01,'min': 0,'max':1,'fixed':'d N0 1'}
-conf['params']['collinspi']['sb a0 1'] ={'value':    2.20680e+00,'min': 0,'max':1,'fixed':'d a0 1'}
-conf['params']['collinspi']['sb b0 1'] ={'value':    1.00000e+01,'min': 0,'max':1,'fixed':'d b0 1'}
+conf['params']['collinspi']['sb N0 1'] ={'value':   -1.76183e+00,'min': 0,'max':1,'fixed':'d N0 1'}
+conf['params']['collinspi']['sb a0 1'] ={'value':   -4.14970e-01,'min': 0,'max':1,'fixed':'d a0 1'}
+conf['params']['collinspi']['sb b0 1'] ={'value':    2.72143e+00,'min': 0,'max':1,'fixed':'d b0 1'}
 conf['params']['collinspi']['sb c0 1'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'d c0 1'}
 conf['params']['collinspi']['sb d0 1'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':'d d0 1'}
 
