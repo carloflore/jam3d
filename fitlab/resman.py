@@ -45,7 +45,6 @@ class RESMAN:
         conf['aux'] = qcdlib.aux.AUX()
         self.setup_tmds()
         conf['parman'] = PARMAN()
-        conf['moments'] = obslib.moments.moments.MOMENTS()
 
         if 'datasets' in conf:
 
