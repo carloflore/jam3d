@@ -8,7 +8,6 @@ import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
 from reader import READER
-from moments import MOMENTS
 from qcdlib.tmdlib import PDF, PPDF, FF
 from qcdlib.tmdlib import TRANSVERSITY
 from qcdlib.tmdlib import BOERMULDERS
@@ -28,28 +27,47 @@ class RESIDUALS(_RESIDUALS):
     def __init__(self):
         self.reaction = 'moments'
         self.tabs = conf['moments tabs']
-        self.moments = conf['moments']
+        #self.moments = conf['moments']
         self.setup()
 
     def _get_theory(self, entry):
         k, i = entry
         obs = self.tabs[k]['obs'][i].strip()
-
+        Q2=1.0
         if obs == 'gT':
-            thy = self.moments.get_gT()
+            u  =conf['transversity'].get_mom(Q2,1,1)
+            ub =conf['transversity'].get_mom(Q2,2,1)
+            d  =conf['transversity'].get_mom(Q2,3,1)
+            db =conf['transversity'].get_mom(Q2,4,1)
+            thy = (u-ub)-(d-db)
         elif obs == 'gTu':
-            thy = self.moments.get_flav('u')
+            u  =conf['transversity'].get_mom(Q2,1,1)
+            ub =conf['transversity'].get_mom(Q2,2,1)
+            thy = u-ub
         elif obs == 'gTd':
-            thy = self.moments.get_flav('d')
+            d  =conf['transversity'].get_mom(Q2,3,1)
+            db =conf['transversity'].get_mom(Q2,4,1)
+            thy = d-db
         elif obs == 'gTs':
-            thy = self.moments.get_flav('s')
+            s  =conf['transversity'].get_mom(Q2,5,1)
+            sb =conf['transversity'].get_mom(Q2,6,1)
+            thy = s-sb
         elif obs == 'gTc':
-            thy = self.moments.get_flav('c')
+            c  =conf['transversity'].get_mom(Q2,7,1)
+            cb =conf['transversity'].get_mom(Q2,8,1)
+            thy = c-cb
         elif obs == 'gT(u-d)':
-            thy = self.moments.get_gT()
+            u  =conf['transversity'].get_mom(Q2,1,1)
+            ub =conf['transversity'].get_mom(Q2,2,1)
+            d  =conf['transversity'].get_mom(Q2,3,1)
+            db =conf['transversity'].get_mom(Q2,4,1)
+            thy = (u-ub)-(d-db)
         elif obs == 'gT(u+d)':
-            thy = self.moments.get_flav('u') + self.moments.get_flav('d')
-
+            u  =conf['transversity'].get_mom(Q2,1,1)
+            ub =conf['transversity'].get_mom(Q2,2,1)
+            d  =conf['transversity'].get_mom(Q2,3,1)
+            db =conf['transversity'].get_mom(Q2,4,1)
+            thy = (u-ub)+(d-db)
         return k, i, thy
 
     def gen_report(self, verb=1, level=1):
@@ -114,49 +132,3 @@ class RESIDUALS(_RESIDUALS):
                 print l
 
 
-if __name__ == '__main__':
-
-    conf['datasets'] = {}
-    conf['datasets']['lattice'] = {}
-    conf['datasets']['lattice']['xlsx'] = {}
-    conf['datasets']['lattice']['norm'] = {}
-    # lattice gT(u-d)
-    conf['datasets']['lattice']['xlsx'][1000] = '../../database/lattice/1000.xlsx'
-    conf['datasets']['lattice']['norm'][1000] = {
-        'value': 1, 'fixed': True, 'min': 0, 'max': 2}
-    conf['lattice tabs'] = READER(conf).load_data_sets('lattice')
-
-    #####################################################
-    conf['path2CJ'] = '../../external/CJLIB'
-    conf['path2LSS'] = '../../external/LSSLIB'
-    conf['path2DSS'] = '../../external/DSSLIB'
-
-    # setup for inclusive dis
-    conf['alphaSmode'] = 'backward'
-    conf['Q20'] = 1
-    conf['order'] = 'LO'
-    conf['aux'] = AUX()
-    conf['alphaS'] = ALPHAS(conf)
-    conf['pdf-NLO'] = CJ(conf)
-    conf['dis stfuncs'] = DIS_STFUNCS(conf)
-
-    # setup tmd sidis
-    conf['order'] = 'LO'
-    conf['_pdf'] = CJ(conf)
-    conf['_ppdf'] = LSS(conf)
-    conf['_ff'] = DSS(conf)
-    conf['pdf'] = PDF(conf)
-    conf['ppdf'] = PPDF(conf)
-    conf['ff'] = FF(conf)
-    conf['transversity'] = TRANSVERSITY(conf)
-    conf['sivers'] = SIVERS(conf)
-    conf['boermulders'] = BOERMULDERS(conf)
-    conf['pretzelosity'] = PRETZELOSITY(conf)
-    conf['wormgearg'] = WORMGEARG(conf)
-    conf['wormgearh'] = WORMGEARH(conf)
-    conf['collins'] = COLLINS(conf)
-    conf['moments'] = MOMENTS(conf)
-    #####################################################
-    conf['residuals'] = RESIDUALS(conf)
-    conf['residuals'].get_residuals()
-    conf['residuals'].gen_report(verb=1, level=1)

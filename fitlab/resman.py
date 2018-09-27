@@ -15,7 +15,6 @@ import obslib.sia.stfuncs
 import obslib.sia.residuals
 import obslib.sia.reader
 import obslib.moments.reader
-import obslib.moments.moments
 import obslib.moments.residuals
 import obslib.AN_pp.AN_theory
 import obslib.AN_pp.residuals
@@ -94,7 +93,6 @@ class RESMAN:
 
     def setup_moments(self):
         conf['moments tabs'] = obslib.moments.reader.READER().load_data_sets('moments')
-        conf['moments']      = obslib.moments.moments.MOMENTS()
         self.momres = obslib.moments.residuals.RESIDUALS()
 
         if (self.slave):
