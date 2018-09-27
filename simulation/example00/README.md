@@ -5,8 +5,6 @@
 - Use the template.xlsx to define the kinematics and setup the relative uncertainties 
 - Run the script simulation.py. It will output a file simulation.xlsx
 - Add the dataset into input.py 
-- Proceed with the likelihood analysis as in example00
-
 
 ## additional comments
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>simulator &mdash; JAM3D 1.0.0 documentation</title>
+  <title>Simulator &mdash; JAM3D 1.0.0 documentation</title>
   
 
   
@@ -82,12 +82,17 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">JAM3D</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extraction/index.html">TMD extraction tool</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">simulator</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#basic-workflow">basic workflow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#workflow">workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comments">comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#available-examples">available examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="physics/physics.html">Physics</a></li>
@@ -138,7 +143,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>simulator</li>
+      <li>Simulator</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -158,16 +163,40 @@
            <div itemprop="articleBody">
             
   <div class="section" id="simulator">
-<h1>simulator<a class="headerlink" href="#simulator" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="basic-workflow">
-<h2>basic workflow<a class="headerlink" href="#basic-workflow" title="Permalink to this headline">¶</a></h2>
+<h1>Simulator<a class="headerlink" href="#simulator" title="Permalink to this headline">¶</a></h1>
+<p>Examples of how to perform a simulation is provided in the folder</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jam3d</span><span class="o">/</span><span class="n">simulation</span>
+</pre></div>
+</div>
+<div class="section" id="workflow">
+<h2>workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Prepare an input file (e.g.  input.py)</li>
-<li>Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
-for more info</li>
-<li>Use a jupyer notebook to study the results</li>
+<li>Use the template.xlsx to define the kinematics and setup the relative uncertainties</li>
+<li>Run the script simulation.py. It will output a file simulation.xlsx</li>
 </ol>
-<p>Note: for MC runs, there are additional scripts to help to understand intermediate results.</p>
+</div>
+<div class="section" id="comments">
+<h2>comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">The script simulation.py is generic and can be modified easily. It should be viewed as
+an example. So the naming for the input  and output xlsx files can be changed if desired.
+This is useful if there are more than one kind of data sets to be simulated</p>
+</li>
+<li><p class="first">In the example the simulated data coincides with the theory. One can add gaussian noise
+if desired via</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alpha2</span><span class="o">=</span><span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;stat_u&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;syst_u&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">alpha</span><span class="o">=</span><span class="n">alpha2</span><span class="o">**</span><span class="mf">0.5</span>
+<span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">+=</span><span class="n">alpha</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="available-examples">
+<h2>available examples<a class="headerlink" href="#available-examples" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>example00: unpolarized FUU in SIDIS</li>
+</ul>
 </div>
 </div>
 

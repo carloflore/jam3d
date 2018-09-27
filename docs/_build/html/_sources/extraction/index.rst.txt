@@ -1,8 +1,8 @@
 TMD extraction tool
 ===================
 
-basic workflow
---------------
+workflow
+--------
 
 1) Prepare an input file (e.g.  input.py)   
 

@@ -1,16 +1,34 @@
 Simulator
 =========
 
-basic workflow
---------------
+Examples of how to perform a simulation is provided in the folder ::
 
-1) Prepare an input file (e.g.  input.py)   
+  jam3d/simulation
 
-2) Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
-   for more info
+workflow
+--------
 
-3) Use a jupyer notebook to study the results
+1) Use the template.xlsx to define the kinematics and setup the relative uncertainties 
+2) Run the script simulation.py. It will output a file simulation.xlsx
 
-Note: for MC runs, there are additional scripts to help to understand intermediate results.
+comments
+--------
+
+- The script simulation.py is generic and can be modified easily. It should be viewed as 
+  an example. So the naming for the input  and output xlsx files can be changed if desired. 
+  This is useful if there are more than one kind of data sets to be simulated
+
+- In the example the simulated data coincides with the theory. One can add gaussian noise 
+  if desired via ::
+
+    alpha2=simdata['stat_u']**2 + simdata['syst_u']**2
+    alpha=alpha2**0.5
+    simdata['value']+=alpha*np.random(len(alpha)) 
+  
+available examples
+------------------
+
+- example00: unpolarized FUU in SIDIS
+
 
 
