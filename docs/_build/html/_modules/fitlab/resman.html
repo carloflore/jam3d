@@ -83,7 +83,8 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extraction/index.html">TMD extraction tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">simulator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../physics/physics.html">Physics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
@@ -156,12 +157,11 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">fitlab.parallel</span> <span class="k">as</span> <span class="nn">parallel</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">qcdlib.tmdlib</span>
+<span class="kn">import</span> <span class="nn">qcdlib</span>
+<span class="kn">from</span> <span class="nn">qcdlib</span> <span class="k">import</span> <span class="n">pdf0</span><span class="p">,</span><span class="n">ff0</span><span class="p">,</span><span class="n">pdf1</span><span class="p">,</span><span class="n">ff1</span>
 <span class="kn">import</span> <span class="nn">qcdlib.aux</span>
 <span class="kn">import</span> <span class="nn">qcdlib.alphaS</span>
 <span class="kn">import</span> <span class="nn">qcdlib.interpolator</span>
-<span class="kn">import</span> <span class="nn">obslib.idis.stfuncs</span>
-<span class="kn">import</span> <span class="nn">obslib.sidis.stfuncs</span>
 <span class="kn">import</span> <span class="nn">obslib.sidis.residuals</span>
 <span class="kn">import</span> <span class="nn">obslib.sidis.reader</span>
 <span class="kn">import</span> <span class="nn">obslib.sia.stfuncs</span>
@@ -175,7 +175,6 @@
 <span class="kn">import</span> <span class="nn">obslib.AN_pp.reader</span>
 <span class="kn">from</span> <span class="nn">parman</span> <span class="k">import</span> <span class="n">PARMAN</span>
 <span class="kn">from</span> <span class="nn">tools.config</span> <span class="k">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">conf</span>
-
 
 <div class="viewcode-block" id="RESMAN"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN">[docs]</a><span class="k">class</span> <span class="nc">RESMAN</span><span class="p">:</span>
 
@@ -198,73 +197,35 @@
 
         <span class="c1"># theory setups</span>
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;aux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">aux</span><span class="o">.</span><span class="n">AUX</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_collinear_distributions</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_alphaS</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_tmds</span><span class="p">()</span>
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PARMAN</span><span class="p">()</span>
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;moments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">MOMENTS</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s1">&#39;datasets&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
 
-            <span class="k">if</span> <span class="s1">&#39;sidis&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setup_idis</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setup_sidis</span><span class="p">()</span>
-
-            <span class="k">if</span> <span class="s1">&#39;sia&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setup_sia</span><span class="p">()</span>
-
-            <span class="k">if</span> <span class="s1">&#39;moments&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setup_moments</span><span class="p">()</span>
-
-            <span class="k">if</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setup_AN</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;sidis&#39;</span>   <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_sidis</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;sia&#39;</span>     <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_sia</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;moments&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_moments</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;AN&#39;</span>      <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_AN</span><span class="p">()</span>
 
         <span class="c1"># final setups for paralleization</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;parallel&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">broker</span><span class="o">.</span><span class="n">run_subprocess</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slave</span><span class="o">.</span><span class="n">run_subprocess</span><span class="p">()</span>
 
-<div class="viewcode-block" id="RESMAN.set_alphaS"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN.set_alphaS">[docs]</a>    <span class="k">def</span> <span class="nf">set_alphaS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;alphaSmode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;backward&#39;</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;Q20&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;NLO&#39;</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;alphaS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">alphaS</span><span class="o">.</span><span class="n">ALPHAS</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="RESMAN.load_collinear_distributions"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN.load_collinear_distributions">[docs]</a>    <span class="k">def</span> <span class="nf">load_collinear_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="n">defaults</span><span class="o">=</span><span class="p">{}</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;cpdf&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="s1">&#39;CJ15lo_0000&#39;</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;cppdf&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="s1">&#39;CJ15lo_0000&#39;</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;cpipff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dsspipLO_0000&#39;</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;cpimff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dsspimLO_0000&#39;</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;cKpff&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="s1">&#39;dssKpNLO_0000&#39;</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;cKmff&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="s1">&#39;dssKmNLO_0000&#39;</span>
-
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
-            <span class="n">conf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">INTERPOLATOR</span><span class="p">(</span><span class="n">defaults</span><span class="p">[</span><span class="n">k</span><span class="p">])</span></div>
-
-<div class="viewcode-block" id="RESMAN.setup_idis"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN.setup_idis">[docs]</a>    <span class="k">def</span> <span class="nf">setup_idis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;dis stfuncs&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">idis</span><span class="o">.</span><span class="n">stfuncs</span><span class="o">.</span><span class="n">STFUNCS</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="RESMAN.setup_tmds"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN.setup_tmds">[docs]</a>    <span class="k">def</span> <span class="nf">setup_tmds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;lam2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.4</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;Q02&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="k">if</span> <span class="s1">&#39;pdf&#39;</span>          <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>          <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;ppdf&#39;</span>         <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ppdf&#39;</span><span class="p">]</span>         <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">PPDF</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;ff&#39;</span>           <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ff&#39;</span><span class="p">]</span>           <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">FF</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;transversity&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">TRANSVERSITY</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;sivers&#39;</span>       <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">SIVERS</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;boermulders&#39;</span>  <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">BOERMULDERS</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;pretzelosity&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pretzelosity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">PRETZELOSITY</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;wormgearg&#39;</span>    <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;wormgearg&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">WORMGEARG</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;wormgearh&#39;</span>    <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;wormgearh&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">WORMGEARH</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;collins&#39;</span>      <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collins&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">COLLINS</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;Htilde&#39;</span>       <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;Htilde&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">tmdlib</span><span class="o">.</span><span class="n">HTILDE</span><span class="p">()</span></div>
+
+        <span class="k">if</span> <span class="s1">&#39;pdf&#39;</span>          <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>          <span class="o">=</span> <span class="n">pdf0</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;transversity&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf1</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;sivers&#39;</span>       <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">pdf1</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;ffpi&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ff0</span><span class="o">.</span><span class="n">FF</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;ffk&#39;</span>  <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">ff0</span><span class="o">.</span><span class="n">FF</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;collinspi&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ff1</span><span class="o">.</span><span class="n">FF</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;collinsk&#39;</span>  <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">ff1</span><span class="o">.</span><span class="n">FF</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RESMAN.setup_sidis"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN.setup_sidis">[docs]</a>    <span class="k">def</span> <span class="nf">setup_sidis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sidis tabs&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">sidis</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">READER</span><span class="p">()</span><span class="o">.</span><span class="n">load_data_sets</span><span class="p">(</span><span class="s1">&#39;sidis&#39;</span><span class="p">)</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sidis stfuncs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">sidis</span><span class="o">.</span><span class="n">stfuncs</span><span class="o">.</span><span class="n">STFUNCS</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sidisres</span> <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">sidis</span><span class="o">.</span><span class="n">residuals</span><span class="o">.</span><span class="n">RESIDUALS</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slave</span><span class="p">):</span>

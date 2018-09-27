@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bin/jam3d &mdash; JAM3D 1.0.0 documentation</title>
+  <title>simulator &mdash; JAM3D 1.0.0 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="fitlab.maxlike" href="fitlab_maxlike.html" />
-    <link rel="prev" title="API" href="api.html" /> 
+    <link rel="next" title="Physics" href="physics/physics.html" />
+    <link rel="prev" title="example00: unpolarized TMDs" href="extraction/example00/workbook.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -85,22 +85,14 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="physics/physics.html">Physics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">bin/jam3d</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fitlab_maxlike.html">fitlab.maxlike</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fitlab_parman.html">fitlab.parman</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fitlab_resman.html">fitlab.resman</a></li>
-<li class="toctree-l2"><a class="reference internal" href="qcdlib_alphaS.html">qcdlib.alphaS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="qcdlib_aux.html">qcdlib.aux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="qcdlib_interpolator.html">qcdlib.interpolator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="qcdlib_tmdlib.html">qcdlib.tmdlib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools_config.html">tools.config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools_tools.html">tools.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extraction/index.html">TMD extraction tool</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">simulator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-workflow">basic workflow</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="physics/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
             
@@ -146,15 +138,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-          <li><a href="api.html">API</a> &raquo;</li>
-        
-      <li>bin/jam3d</li>
+      <li>simulator</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/bin_jam3d.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/simulation.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -167,8 +157,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="bin-jam3d">
-<h1>bin/jam3d<a class="headerlink" href="#bin-jam3d" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="simulator">
+<h1>simulator<a class="headerlink" href="#simulator" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-workflow">
+<h2>basic workflow<a class="headerlink" href="#basic-workflow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Prepare an input file (e.g.  input.py)</li>
+<li>Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
+for more info</li>
+<li>Use a jupyer notebook to study the results</li>
+</ol>
+<p>Note: for MC runs, there are additional scripts to help to understand intermediate results.</p>
+</div>
 </div>
 
 
@@ -179,10 +179,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fitlab_maxlike.html" class="btn btn-neutral float-right" title="fitlab.maxlike" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="physics/physics.html" class="btn btn-neutral float-right" title="Physics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="api.html" class="btn btn-neutral" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="extraction/example00/workbook.html" class="btn btn-neutral" title="example00: unpolarized TMDs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

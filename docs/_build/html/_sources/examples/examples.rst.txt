@@ -1,5 +1,5 @@
-Examples
-========
+TMD extraction examples
+=======================
 
 .. toctree::
    :maxdepth: 1

@@ -15,7 +15,8 @@ electron-positron or proton-proton scattering.
    :caption: Contents:
 
    tutorial
-   examples/examples
+   extraction/index
+   simulation
    physics/physics
    publications
    api

@@ -30,14 +30,14 @@ anywhere in your system. In other words, there is no need to work within
 the same code folder. As a good practice, create dedicated folders for a
 given analysis. 
 
-basic workflow
---------------
+how to use the code
+-------------------
 
-1) Prepare an input file (e.g.  input.py)   
+There are two ways to use the code:
 
-2) Run the executable jam3d (python script) to make a fit or to run an MC analysis. See jam3d -h
-   for more info
+1) As a TMD extraction tool
 
-3) Use a jupyer notebook to study the results
+2) As a simulator for TMD observables
 
-Note: for MC runs, there are additional scripts to help to understand intermediate results.
+
+

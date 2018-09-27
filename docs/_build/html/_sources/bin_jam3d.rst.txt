@@ -1,6 +1,0 @@
-bin/jam3d
-=========
-
-.. automodule:: jam3d
-   :members:
-   :undoc-members:

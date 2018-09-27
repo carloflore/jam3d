@@ -83,7 +83,8 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extraction/index.html">TMD extraction tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">simulator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../physics/physics.html">Physics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
@@ -152,6 +153,7 @@
   <h1>Source code for qcdlib.aux</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mpmath</span> <span class="k">import</span> <span class="n">fp</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="k">import</span> <span class="n">gamma</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="k">import</span> <span class="n">quad</span>
@@ -164,6 +166,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_constants</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_masses</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_couplings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_evolution</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AUX.set_constants"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.set_constants">[docs]</a>    <span class="k">def</span> <span class="nf">set_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -211,7 +214,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">s2w</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">c2w</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s2wMZ</span> <span class="o">=</span> <span class="mf">0.23116</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alfa</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">137.036</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">alphaSMZ</span> <span class="o">=</span> <span class="mf">0.118</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alphaSMZ</span> <span class="o">=</span> <span class="mf">0.118</span></div>
+
+<div class="viewcode-block" id="AUX.set_evolution"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.set_evolution">[docs]</a>    <span class="k">def</span> <span class="nf">set_evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q02</span><span class="o">=</span><span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lam2</span><span class="o">=</span><span class="mf">0.4</span></div>
+
+<div class="viewcode-block" id="AUX.p2n"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.p2n">[docs]</a>    <span class="k">def</span> <span class="nf">p2n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="AUX.charge_conj"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.charge_conj">[docs]</a>    <span class="k">def</span> <span class="nf">charge_conj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="AUX.pip2piz"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.pip2piz">[docs]</a>    <span class="k">def</span> <span class="nf">pip2piz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pip</span><span class="p">):</span>
+        <span class="n">piz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pip</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">piz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">+</span> <span class="n">ub</span><span class="p">)</span>
+        <span class="n">piz</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">+</span> <span class="n">ub</span><span class="p">)</span>
+        <span class="n">piz</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">db</span><span class="p">)</span>
+        <span class="n">piz</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">db</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">piz</span></div></div>
+
+
+
+
 </pre></div>
 
            </div>
