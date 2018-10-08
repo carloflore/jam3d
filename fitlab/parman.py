@@ -84,6 +84,7 @@ class PARMAN:
         if 'pdf'          in semaphore and semaphore['pdf']          == 1: self.set_pdf_params()
         if 'transversity' in semaphore and semaphore['transversity'] == 1: self.set_transversity_params()
         if 'sivers'       in semaphore and semaphore['sivers']       == 1: self.set_sivers_params()
+        if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params()
         if 'ffpi'         in semaphore and semaphore['ffpi']         == 1: self.set_ffpi_params()
         if 'ffk'          in semaphore and semaphore['ffk']          == 1: self.set_ffk_params()
         if 'collinspi'    in semaphore and semaphore['collinspi']    == 1: self.set_collinspi_params()
@@ -154,6 +155,30 @@ class PARMAN:
                     conf['sivers'].shape2[iflav][ipar] = conf['params']['sivers']['%s %s 2'%(flav,par)]['value']
 
         conf['sivers'].setup()
+
+    def set_boermulders_params(self):
+        self.set_constraits('boermulders')
+
+        conf['boermulders']._widths1_uv  = conf['params']['boermulders']['widths1_uv']['value']
+        conf['boermulders']._widths1_dv  = conf['params']['boermulders']['widths1_dv']['value']
+        conf['boermulders']._widths1_sea = conf['params']['boermulders']['widths1_sea']['value']
+
+        conf['boermulders']._widths2_uv  = conf['params']['boermulders']['widths2_uv']['value']
+        conf['boermulders']._widths2_dv  = conf['params']['boermulders']['widths2_dv']['value']
+        conf['boermulders']._widths2_sea = conf['params']['boermulders']['widths2_sea']['value']
+
+        iflav=0
+        for flav in ['u','ub','d','db','s','sb']:
+            iflav+=1
+            ipar=-1
+            for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
+                ipar+=1
+                if '%s %s 1'%(flav,par) in conf['params']['boermulders']:
+                    conf['boermulders'].shape1[iflav][ipar] = conf['params']['boermulders']['%s %s 1'%(flav,par)]['value']
+                if '%s %s 2'%(flav,par) in conf['params']['boermulders']:
+                    conf['boermulders'].shape2[iflav][ipar] = conf['params']['boermulders']['%s %s 2'%(flav,par)]['value']
+
+        conf['boermulders'].setup()
 
     def set_ffpi_params(self):
         self.set_constraits('ffpi')

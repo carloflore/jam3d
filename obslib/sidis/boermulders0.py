@@ -64,13 +64,13 @@ def _get_FUU(x,z,Q2,pT,tar,had,F,D,w_tar,w_had):
 def get_FUU(x,z,Q2,pT,tar,had):
 
     # get collinear parts (proton and positive hadrons)
-    F = conf['boer-mulders'].get_C(x, Q2)
+    F = conf['boermulders'].get_C(x, Q2)
     if   'pi' in had:  D = conf['collinspi'].get_C(z, Q2)
     elif  'k' in had:  D = conf['collinsk'].get_C(z, Q2)
     F[0],D[0]=0,0  # set glue to zero
 
     # get widths (proton and positive hadrons)
-    w_tar=conf['boer-mulders'].get_widths(Q2)
+    w_tar=conf['boermulders'].get_widths(Q2)
     if   'pi' in had: w_had=np.abs(conf['collinspi'].get_widths(Q2))
     elif 'k'  in had: w_had=np.abs(conf['collinsk'].get_widths(Q2))
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     from qcdlib.pdf1 import PDF
     from qcdlib.ff1 import FF
     conf['aux']= AUX()
-    conf['boer-mulders']=PDF()
+    conf['boermulders']=PDF()
     conf['collinspi']=FF('pi')
     conf['collinsk']=FF('k')
 

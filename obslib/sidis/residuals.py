@@ -68,7 +68,23 @@ class RESIDUALS(_RESIDUALS):
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
             thy = coeff * FUT / FUU
 
-        else:
+	elif obs == 'AUUcos2':
+
+            epsilon = (1 - y) / (1 - y + 0.5 * y**2)
+            coeff = 1.
+            if col == 'HERMES':
+                coeff = epsilon  # add depolarization factor for HERMES
+            if col == 'COMPASS':
+                coeff = 1.
+            if col == 'JLAB':
+                coeff = epsilon  # add depolarization factor for CLAS
+
+            FUUcos2 = boermulders.get_FUU(x,z,Q2,pT,tar,had)
+            FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
+            thy = coeff * FUUcos2 / FUU
+	
+
+	else:
             print 'ERR: exp=%d obs=%s and target=%s not implemented' % (k, obs, tar)
             sys.exit()
 

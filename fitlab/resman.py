@@ -63,6 +63,7 @@ class RESMAN:
         if 'pdf'          in conf['params']: conf['pdf']          = pdf0.PDF()
         if 'transversity' in conf['params']: conf['transversity'] = pdf1.PDF()
         if 'sivers'       in conf['params']: conf['sivers']       = pdf1.PDF()
+        if 'boermulders'  in conf['params']: conf['boermulders']  = pdf1.PDF()
 
         if 'ffpi' in conf['params']: conf['ffpi'] = ff0.FF('pi')
         if 'ffk'  in conf['params']: conf['ffk']  = ff0.FF('k')
