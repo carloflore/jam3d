@@ -8,14 +8,6 @@ import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
 from reader import READER
-from qcdlib.tmdlib import PDF, PPDF, FF
-from qcdlib.tmdlib import TRANSVERSITY
-from qcdlib.tmdlib import BOERMULDERS
-from qcdlib.tmdlib import SIVERS
-from qcdlib.tmdlib import PRETZELOSITY
-from qcdlib.tmdlib import COLLINS
-from qcdlib.tmdlib import WORMGEARG
-from qcdlib.tmdlib import WORMGEARH
 from qcdlib.aux import AUX
 from qcdlib.alphaS import ALPHAS
 from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS

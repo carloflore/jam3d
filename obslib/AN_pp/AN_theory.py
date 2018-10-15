@@ -7,10 +7,6 @@ import pandas as pd
 import math
 import time
 from tools.tools import load_config
-from qcdlib.tmdlib import PDF, PPDF, FF
-from qcdlib.tmdlib import TRANSVERSITY
-from qcdlib.tmdlib import COLLINS
-from qcdlib.tmdlib import HTILDE
 from qcdlib.aux import AUX
 from tools.config import conf
 from scipy.integrate import quad, dblquad, fixed_quad
