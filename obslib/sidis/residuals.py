@@ -25,6 +25,7 @@ class RESIDUALS(_RESIDUALS):
         z = self.tabs[k]['z'][i]
         Q2 = self.tabs[k]['Q2'][i]
         pT = self.tabs[k]['pT'][i]
+        exp = self.tabs[k]['value'][i]
         tar = self.tabs[k]['target'][i]
         had = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
@@ -68,7 +69,7 @@ class RESIDUALS(_RESIDUALS):
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
             thy = coeff * FUT / FUU
 
-	elif obs == 'AUUcos2':
+        elif obs == 'AUUcos2':
 
             epsilon = (1 - y) / (1 - y + 0.5 * y**2)
             coeff = 1.
@@ -82,9 +83,8 @@ class RESIDUALS(_RESIDUALS):
             FUUcos2 = boermulders.get_FUU(x,z,Q2,pT,tar,had)
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
             thy = coeff * FUUcos2 / FUU
-	
 
-	else:
+        else:
             print 'ERR: exp=%d obs=%s and target=%s not implemented' % (k, obs, tar)
             sys.exit()
 

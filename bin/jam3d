@@ -67,5 +67,6 @@ if mode == 'slave':
 if   args.task == 1: ML().run_minimize()
 elif args.task == 2: ML().run_leastsq()
 elif args.task == 3: MCSAMP().run()
+elif args.task == 4: ML().run_leastsq2()
 
 resman.shutdown()

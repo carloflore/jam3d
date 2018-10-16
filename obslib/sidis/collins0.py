@@ -34,7 +34,6 @@ def _get_FUT(x,z,Q2,pT,tar,had,F,D,w_tar,w_had):
         return np.sum(e2*K*F*D*gauss)
 
     elif had.endswith('-'):
-
         D=conf['aux'].charge_conj(D)
         w_had=conf['aux'].charge_conj(w_had)
         wq = z**2 * np.abs(w_tar) + np.abs(w_had)

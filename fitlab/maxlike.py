@@ -10,6 +10,7 @@ import itertools as it
 import pandas as pd
 from IPython.display import clear_output
 from tools.inputmod import INPUTMOD
+from scipy.optimize import least_squares
 
 class ML:
 
@@ -198,6 +199,48 @@ class ML:
     else:
       fit=leastsq(self.get_residuals,guess,full_output = 1)
     res=self.get_residuals(fit[0],delay=True)
+
+  def run_leastsq2(self):
+
+    if 'flat par' in conf and conf['flat par']==True:
+      guess=conf['parman'].gen_flat()
+    else:
+      guess=conf['parman'].par
+
+    order=conf['parman'].order
+    #conf['screen mode']='plain'
+
+    bounds_min=[]
+    bounds_max=[]
+    for entry in order:
+      i,k,kk=entry
+      if i==1:
+        p=conf['params'][k][kk]['value']
+        pmin=conf['params'][k][kk]['min']
+        pmax=conf['params'][k][kk]['max']
+        if p<pmin or p>pmax: 
+            raise ValueError('%s/%s outsize the limits'%(k,kk))
+        bounds_min.append(conf['params'][k][kk]['min'])
+        bounds_max.append(conf['params'][k][kk]['max'])
+      elif i==2:
+        bounds_min.append(conf['datasets'][k]['norm'][kk]['min'])
+        bounds_max.append(conf['datasets'][k]['norm'][kk]['max'])
+
+    self.chi2tot=1e1000
+    self.dchi2=0
+    self.t0 = time.time()
+    self.cnt=0
+    fit = least_squares(self.get_residuals, guess,bounds=(bounds_min,bounds_max),method='trf',ftol=conf['ftol'])
+    res=self.get_residuals(fit.x,delay=True)
+
+    if 'bootstrap' in conf and conf['bootstrap']:
+      fname='%s.mcr'%id_generator(size=12)
+      save(fit.x,fname)
+      if 'cmd' in conf:
+        try:
+          os.system(conf['cmd'].replace('<<fname>>',fname))
+        except:
+          print 'could not execute %s'%cmd
 
   def run_test(self):
 
