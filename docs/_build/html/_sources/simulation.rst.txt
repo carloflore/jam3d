@@ -9,7 +9,7 @@ workflow
 --------
 
 1) Use the template.xlsx to define the kinematics and setup the relative uncertainties 
-2) Run the script simulation.py. It will output a file simulation.xlsx
+2) Run the script simulation.py (./simulation.py). It will output a file simulation.xlsx
 
 comments
 --------

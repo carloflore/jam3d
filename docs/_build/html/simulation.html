@@ -165,14 +165,14 @@
   <div class="section" id="simulator">
 <h1>Simulator<a class="headerlink" href="#simulator" title="Permalink to this headline">¶</a></h1>
 <p>Examples of how to perform a simulation is provided in the folder</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jam3d</span><span class="o">/</span><span class="n">simulation</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">jam3d</span><span class="o">/</span><span class="n">simulation</span>
 </pre></div>
 </div>
 <div class="section" id="workflow">
 <h2>workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>Use the template.xlsx to define the kinematics and setup the relative uncertainties</li>
-<li>Run the script simulation.py. It will output a file simulation.xlsx</li>
+<li>Run the script simulation.py (./simulation.py). It will output a file simulation.xlsx</li>
 </ol>
 </div>
 <div class="section" id="comments">
@@ -184,7 +184,7 @@ This is useful if there are more than one kind of data sets to be simulated</p>
 </li>
 <li><p class="first">In the example the simulated data coincides with the theory. One can add gaussian noise
 if desired via</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alpha2</span><span class="o">=</span><span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;stat_u&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;syst_u&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">alpha2</span><span class="o">=</span><span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;stat_u&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;syst_u&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">alpha</span><span class="o">=</span><span class="n">alpha2</span><span class="o">**</span><span class="mf">0.5</span>
 <span class="n">simdata</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">+=</span><span class="n">alpha</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
 </pre></div>
@@ -253,7 +253,7 @@ if desired via</p>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

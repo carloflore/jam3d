@@ -171,7 +171,6 @@
 <span class="kn">import</span> <span class="nn">obslib.sia.residuals</span>
 <span class="kn">import</span> <span class="nn">obslib.sia.reader</span>
 <span class="kn">import</span> <span class="nn">obslib.moments.reader</span>
-<span class="kn">import</span> <span class="nn">obslib.moments.moments</span>
 <span class="kn">import</span> <span class="nn">obslib.moments.residuals</span>
 <span class="kn">import</span> <span class="nn">obslib.AN_pp.AN_theory</span>
 <span class="kn">import</span> <span class="nn">obslib.AN_pp.residuals</span>
@@ -202,7 +201,6 @@
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;aux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qcdlib</span><span class="o">.</span><span class="n">aux</span><span class="o">.</span><span class="n">AUX</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_tmds</span><span class="p">()</span>
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PARMAN</span><span class="p">()</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;moments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">MOMENTS</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s1">&#39;datasets&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
 
@@ -221,6 +219,7 @@
         <span class="k">if</span> <span class="s1">&#39;pdf&#39;</span>          <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>          <span class="o">=</span> <span class="n">pdf0</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
         <span class="k">if</span> <span class="s1">&#39;transversity&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf1</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
         <span class="k">if</span> <span class="s1">&#39;sivers&#39;</span>       <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">pdf1</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;boermulders&#39;</span>  <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">pdf1</span><span class="o">.</span><span class="n">PDF</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s1">&#39;ffpi&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ff0</span><span class="o">.</span><span class="n">FF</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;ffk&#39;</span>  <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">ff0</span><span class="o">.</span><span class="n">FF</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
@@ -250,7 +249,6 @@
 
 <div class="viewcode-block" id="RESMAN.setup_moments"><a class="viewcode-back" href="../../fitlab_resman.html#fitlab.resman.RESMAN.setup_moments">[docs]</a>    <span class="k">def</span> <span class="nf">setup_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;moments tabs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">READER</span><span class="p">()</span><span class="o">.</span><span class="n">load_data_sets</span><span class="p">(</span><span class="s1">&#39;moments&#39;</span><span class="p">)</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;moments&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">MOMENTS</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">momres</span> <span class="o">=</span> <span class="n">obslib</span><span class="o">.</span><span class="n">moments</span><span class="o">.</span><span class="n">residuals</span><span class="o">.</span><span class="n">RESIDUALS</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slave</span><span class="p">):</span>
@@ -384,7 +382,7 @@
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
