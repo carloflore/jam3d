@@ -1,35 +1,35 @@
 example00: unpolarized TMDs
 ---------------------------
 
-In this example we will extract TMD PDFs and FFs using HERMES SIDIS unpolarized multiplicities. 
+In this example we will extract TMD PDFs and FFs using HERMES SIDIS unpolarized multiplicities.
 
 
 Input file
 ==========
 Lets examine the input.py provided at ::
 
-  examples/examples00/input.py
+  extraction/examples00/input.py
 
 
-At the top we have 
+At the top we have
 
 .. code-block:: python
 
   conf={}
 
-This dictionary serves as a common block in the sense of fortran programming with 
+This dictionary serves as a common block in the sense of fortran programming with
 the difference that we will be able to add not just numbers but also class objects
 
 We next specify the number of CPU (logical-cores) to be used
 
 .. code-block:: python
-  
+
   conf['ncpu']=2
 
-The next part is only relevant for MC runs (we will use this later) 
+The next part is only relevant for MC runs (we will use this later)
 
 .. code-block:: python
-  
+
   conf['nruns']=1
   conf['factor']=4.0
   conf['kappa']=1.5
@@ -42,10 +42,10 @@ The next part is only relevant for MC runs (we will use this later)
 We proceed to specify the parameters to be fitted
 
 .. code-block:: python
-  
-  
+
+
   conf['params']={}
-  
+
   conf['params']['pdf']={}
   conf['params']['pdf']['widths1 uv']  ={'value':    3.90812e-01,'min':0,'max':1,'fixed':False}
   conf['params']['pdf']['widths1 dv']  ={'value':    3.90812e-01,'min':0,'max':1,'fixed':'widths1 uv'}
@@ -53,8 +53,8 @@ We proceed to specify the parameters to be fitted
   conf['params']['pdf']['widths2 uv']  ={'value':    1.72798e-01,'min':0,'max':1,'fixed':False}
   conf['params']['pdf']['widths2 dv']  ={'value':    3.90812e-01,'min':0,'max':1,'fixed':'widths1 uv'}
   conf['params']['pdf']['widths2 sea'] ={'value':   -3.44763e-01,'min':0,'max':1,'fixed':False}
-  
-  
+
+
   conf['params']['ff']={}
   conf['params']['ff']['widths1 pi+ fav']   ={'value':    1.50893e-01,'min':0,'max':1,'fixed':False}
   conf['params']['ff']['widths1 pi+ unfav'] ={'value':    1.22787e-01,'min':0,'max':1,'fixed':False}
@@ -64,49 +64,49 @@ We proceed to specify the parameters to be fitted
   conf['params']['ff']['widths1 k+ unfav']  ={'value':    1.87915e-01,'min':0,'max':1,'fixed':True}
   conf['params']['ff']['widths2 k+ fav']    ={'value':    0.00000e+00,'min':0,'max':1,'fixed':True}
   conf['params']['ff']['widths2 k+ unfav']  ={'value':    0.00000e+00,'min':0,'max':1,'fixed':True}
-  
-The data strucure for the parameters is 
+
+The data strucure for the parameters is
 
 .. code-block:: python
 
   conf['params'][<<TMD function>>][<<parameter name>>]={'value':float,'min':float,'max':float,'fixed':bool/string}
 
-Here :code:`value` set the numerical value for the parameter. :code:`min, max` specifies the allowed 
-range for the parameter and  :code:`fixed` controls whether or not the parameter should be fixed using 
-:code:`False,True`. Alternatively the parameter can be set equal to another parameter using the string 
+Here :code:`value` set the numerical value for the parameter. :code:`min, max` specifies the allowed
+range for the parameter and  :code:`fixed` controls whether or not the parameter should be fixed using
+:code:`False,True`. Alternatively the parameter can be set equal to another parameter using the string
 name :code:`<<parameter name>>`.
 
 
 Finally we setup the data sets to be include in the analysis
 
 .. code-block:: python
-  
+
   conf['datasets']={}
   conf['datasets']['sidis']={}
-  
+
   conf['datasets']['sidis']['xlsx']={}
-  conf['datasets']['sidis']['xlsx'][1000]='sidis/expdata/1000.xlsx'  # |  proton   | pi+   | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1001]='sidis/expdata/1001.xlsx'  # |  proton   | pi-   | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1004]='sidis/expdata/1004.xlsx'  # |  deuteron | pi+   | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1005]='sidis/expdata/1005.xlsx'  # |  deuteron | pi-   | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1002]='sidis/expdata/1002.xlsx'  # |  proton   | k+    | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1003]='sidis/expdata/1003.xlsx'  # |  proton   | k-    | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1006]='sidis/expdata/1006.xlsx'  # |  deuteron | k+    | M_Hermes | hermes 
-  conf['datasets']['sidis']['xlsx'][1007]='sidis/expdata/1007.xlsx'  # |  deuteron | k-    | M_Hermes | hermes 
-  
+  conf['datasets']['sidis']['xlsx'][1000]='sidis/expdata/1000.xlsx'  # |  proton   | pi+   | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1001]='sidis/expdata/1001.xlsx'  # |  proton   | pi-   | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1004]='sidis/expdata/1004.xlsx'  # |  deuteron | pi+   | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1005]='sidis/expdata/1005.xlsx'  # |  deuteron | pi-   | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1002]='sidis/expdata/1002.xlsx'  # |  proton   | k+    | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1003]='sidis/expdata/1003.xlsx'  # |  proton   | k-    | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1006]='sidis/expdata/1006.xlsx'  # |  deuteron | k+    | M_Hermes | hermes
+  conf['datasets']['sidis']['xlsx'][1007]='sidis/expdata/1007.xlsx'  # |  deuteron | k-    | M_Hermes | hermes
+
   conf['datasets']['sidis']['norm']={}
-  for idx in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['norm'][idx]={'value':1,'fixed':True,'min':0,'max':1} 
-  
+  for idx in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['norm'][idx]={'value':1,'fixed':True,'min':0,'max':1}
+
   conf['datasets']['sidis']['filters']={}
   for idx in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['filters'][idx]="z<0.6 and Q2>1.69 and pT>0.2 and pT<0.9"
 
 
-The directory :code:`jam3d/database` contains a collection of datasets sorted by observables e.g SIDIS.  In the 
-example above we are specifing the SIDIS datasets. The data sets are stored as :code:`<<idx>>.xlsx` where 
-:code:`<<idx>>` is a unique integer identifier within the observable. 
+The directory :code:`jam3d/database` contains a collection of datasets sorted by observables e.g SIDIS.  In the
+example above we are specifing the SIDIS datasets. The data sets are stored as :code:`<<idx>>.xlsx` where
+:code:`<<idx>>` is a unique integer identifier within the observable.
 
-Some experimental data sets comes with an overall normalization uncertaninty. Such normalization is 
-considered to be a nuisance parameter to be constrained in the analysis and can be set to be a free 
+Some experimental data sets comes with an overall normalization uncertaninty. Such normalization is
+considered to be a nuisance parameter to be constrained in the analysis and can be set to be a free
 parameter at :code:`conf['datasets']['sidis']['norm']`.
 
 Finally filters can be applied at :code:`conf['datasets']['sidis']['filters']` as shown above.
@@ -119,8 +119,8 @@ We next proceed to perform a single fit ::
 
   jam3d -t 1 input.py
 
-:code:`-t=1` uses a minimizer that respects the boundaries while  :code:`-t=2` uses a minimizer that 
-does not respect the boundaries. There are pros/cons but this is mostly case by case dependent. We 
+:code:`-t=1` uses a minimizer that respects the boundaries while  :code:`-t=2` uses a minimizer that
+does not respect the boundaries. There are pros/cons but this is mostly case by case dependent. We
 suggest to try both. The program upon completion should print results as follow:
 
 .. code-block:: python
@@ -133,36 +133,36 @@ suggest to try both. The program upon completion should print results as follow:
   chi2    = 1169.042354                                                                                                     | ff          widths1 pi+ unfav      1.22787e-01
   rchi2   = 0.000000                                                                                                        | ff          widths2 pi+ fav       -3.99747e-02
   nchi2   = 0.000000                                                                                                        | ff          widths2 pi+ unfav      1.42020e-02
-  chi2tot = 1169.042354                                                                                                     | 
-  dchi2(iter)  = 0.000001                                                                                                   | 
-  dchi2(local) = -0.000001                                                                                                  | 
-                                                                                                                            | 
-  reaction: sidis                                                                                                           | 
-      idx        tar        had        col        obs  npts       chi2      rchi2      nchi2                                | 
-     1000     proton        pi+     hermes   M_Hermes   127     325.10       0.00       0.00                                | 
-     1001     proton        pi-     hermes   M_Hermes   124     163.97       0.00       0.00                                | 
-     1002     proton         k+     hermes   M_Hermes   122      72.73       0.00       0.00                                | 
-     1003     proton         k-     hermes   M_Hermes   115      42.49       0.00       0.00                                | 
-     1004   deuteron        pi+     hermes   M_Hermes   124     159.11       0.00       0.00                                | 
-     1005   deuteron        pi-     hermes   M_Hermes   122     158.07       0.00       0.00                                | 
-     1006   deuteron         k+     hermes   M_Hermes   122      78.11       0.00       0.00                                | 
-     1007   deuteron         k-     hermes   M_Hermes   122     169.47       0.00       0.00                                | 
+  chi2tot = 1169.042354                                                                                                     |
+  dchi2(iter)  = 0.000001                                                                                                   |
+  dchi2(local) = -0.000001                                                                                                  |
+                                                                                                                            |
+  reaction: sidis                                                                                                           |
+      idx        tar        had        col        obs  npts       chi2      rchi2      nchi2                                |
+     1000     proton        pi+     hermes   M_Hermes   127     325.10       0.00       0.00                                |
+     1001     proton        pi-     hermes   M_Hermes   124     163.97       0.00       0.00                                |
+     1002     proton         k+     hermes   M_Hermes   122      72.73       0.00       0.00                                |
+     1003     proton         k-     hermes   M_Hermes   115      42.49       0.00       0.00                                |
+     1004   deuteron        pi+     hermes   M_Hermes   124     159.11       0.00       0.00                                |
+     1005   deuteron        pi-     hermes   M_Hermes   122     158.07       0.00       0.00                                |
+     1006   deuteron         k+     hermes   M_Hermes   122      78.11       0.00       0.00                                |
+     1007   deuteron         k-     hermes   M_Hermes   122     169.47       0.00       0.00                                |
 
-The results are automatically written in the :code:`input.py`. We can check consistency between the screen output and the :code:`input.py` 
-At this point one can study the results to make plots etc. However the uncertainties infered from a single fit is not supported in JAM3D 
-(i.e. Hessian error propagation). Instead, the uncertainties will be infered by performing a likelihood analysis using MC sampling. 
+The results are automatically written in the :code:`input.py`. We can check consistency between the screen output and the :code:`input.py`
+At this point one can study the results to make plots etc. However the uncertainties infered from a single fit is not supported in JAM3D
+(i.e. Hessian error propagation). Instead, the uncertainties will be infered by performing a likelihood analysis using MC sampling.
 
-MC sampling 
+MC sampling
 ===========
 
 Samples generation
 ::::::::::::::::::
 
-The MC sampling is performed via a technique known as Nested Sampling (NS).  
-The setups for NS are in code-block of  :code:`input.py` 
+The MC sampling is performed via a technique known as Nested Sampling (NS).
+The setups for NS are in code-block of  :code:`input.py`
 
 .. code-block:: python
-  
+
   conf['nruns']=1
   conf['factor']=4.0
   conf['kappa']=1.5
@@ -171,7 +171,7 @@ The setups for NS are in code-block of  :code:`input.py`
   conf['block size']=10
   conf['nll shift']=0
 
-:code:`conf['factor']`  and :code:`conf['kappa']`  are the most relevant parameters in NS. 
+:code:`conf['factor']`  and :code:`conf['kappa']`  are the most relevant parameters in NS.
 :code:`conf['factor']` controls the number of active points in NS:
 
 .. math::
@@ -180,17 +180,17 @@ The setups for NS are in code-block of  :code:`input.py`
 The sampling is more dense with increasing values of :code:`factor`
 
 With the MC setup, the sampling can be started using ::
-  
+
   jam3d -t 3 input.py
 
-optionally one can add the flag :code:`-p` to parallelize the likelihood evaluation. 
+optionally one can add the flag :code:`-p` to parallelize the likelihood evaluation.
 
 
-Analysis 
+Analysis
 ::::::::
 
-The example00 comes with a jupyter notebook  to guide the analysis. The relevant 
-code lines are shown below. 
+The example00 comes with a jupyter notebook  to guide the analysis. The relevant
+code lines are shown below.
 
 
 .. code:: python
@@ -239,7 +239,7 @@ Chi2 profile for each run
 
     nrows,ncols=1,1
     fig = py.figure(figsize=(ncols*5,nrows*3))
-    
+
     ax=py.subplot(nrows,ncols,1)
     R=(0,600)
     for k in runs:
@@ -260,35 +260,35 @@ distribution of parameters
 .. code:: python
 
     class parhist:
-    
+
         def __init__(self,runs,inputmod=None):
-    
-            self.inputmod=inputmod 
+
+            self.inputmod=inputmod
             self.order=self.get_ordered_free_params()
             self.tabs,self.tabs_a=self.get_tabs(runs)
-    
+
             self.kind1=[]
             self.kind2=[]
-    
+
             for _ in conf['params']:   self.kind1.append(_)
-            for _ in conf['datasets']: self.kind2.append(_)    
-    
+            for _ in conf['datasets']: self.kind2.append(_)
+
         def get_ordered_free_params(self):
             order=[]
-    
+
             for k in conf['params']:
                 for kk in conf['params'][k]:
                     if conf['params'][k][kk]['fixed']==False:
                         order.append([1,k,kk])
-    
+
             if 'datasets' in conf:
                 for k in conf['datasets']:
                     for kk in conf['datasets'][k]['norm']:
                         if conf['datasets'][k]['norm'][kk]['fixed']==False:
                           order.append([2,k,kk])
-    
+
             return order
-    
+
         def get_tabs(self,runs):
             """
             create pandas data frame for the samples
@@ -308,53 +308,53 @@ distribution of parameters
                 tabs[k]=pd.DataFrame(tab)
                 tabs_a[k]=pd.DataFrame(tab_a)
             return tabs,tabs_a
-    
+
         def plot(self,tabs,tabs_a,entries,kind1,kind2,iRange=0):
-    
+
             for i in range(len(entries)):
                 self.cnt+=1
                 if entries[i]==None: continue
                 ax=py.subplot(self.nrows,self.ncols,self.cnt)
                 kind,par=entries[i].split(':')
-                for _ in kind1: 
+                for _ in kind1:
                     if kind==_:
                         vmin=conf['params'][_][par]['min']
                         vmax=conf['params'][_][par]['max']
                         R=(vmin,vmax)
                         E0=conf['params'][_][par]['value']
-                for _ in kind2: 
+                for _ in kind2:
                     if kind==_:
                         vmin=conf['datasets'][_]['norm'][int(par)]['min']
                         vmax=conf['datasets'][_]['norm'][int(par)]['max']
                         R=(vmin,vmax)
                         E0=conf['datasets'][_]['norm'][int(par)]['value']
                 if iRange==0:pass
-                else: R=None         
-    
+                else: R=None
+
                 for _ in tabs:
                     if _=='all': continue
                     tab=tabs[_]
                     ax.hist(tab[entries[i]],range=R,bins=50,weights=tab['weights'],\
-                            histtype='step',label=str(_))   
-    
+                            histtype='step',label=str(_))
+
                 ax.hist(tabs['all'][entries[i]],range=R,bins=50,\
                         edgecolor='k',hatch='...',\
                         weights=tabs['all']['weights'],histtype='step',label='all')
-                
+
                 ax.axvline(E0)
                 #ax.plot(tabs_a['all'][entries[i]],np.zeros(tabs_a['all'][entries[i]].size),'ro')
                 ax.set_title('%s:%s'%(kind,par))
-    
+
         def hist_widths(self):
-    
+
             entries=[]
             for kind in self.kind1:
                 for par in conf['params'][kind]:
                     for _ in ['widths1','widths2']:
                         if _ in par and conf['params'][kind][par]['fixed']==False:
                             entries.append('%s:%s'%(kind,par))
-    
-            if len(entries)==0: return 
+
+            if len(entries)==0: return
             self.ncols=3
             self.nrows=len(entries)/self.ncols
             if len(entries)%self.ncols!=0: self.nrows+=1
@@ -362,7 +362,7 @@ distribution of parameters
             self.cnt=0
             self.plot(self.tabs,self.tabs_a,entries,self.kind1,self.kind2,iRange=0)
             py.tight_layout()
-    
+
     ph=parhist(runs)
     ph.hist_widths()
 
@@ -383,18 +383,18 @@ purge the samples
         cdf0.append(np.sum(weights[:i+1]))
     cdf=[cdf0[i]  for i in range(weights.size)  if cdf0[i]>cdfcut]
     idx=[i  for i in range(weights.size)  if cdf0[i]>cdfcut]
-    
+
     print 'initial size=',len(weights)
-    weights,samples= impose_cdf_cut(runs['all'],cdfcut) 
+    weights,samples= impose_cdf_cut(runs['all'],cdfcut)
     print 'final   size=',len(weights)
-    
+
     nrows,ncols=1,1
     fig = py.figure(figsize=(ncols*5,nrows*3))
-    
+
     ax=py.subplot(nrows,ncols,1)
     ax.plot(range(len(cdf0)),cdf0)
     ax.plot(idx,cdf)
-    
+
     ax.set_ylabel('CDF')
     ax.set_xlabel('number of samples')
     py.tight_layout()
@@ -418,16 +418,16 @@ compute theory
     data={'weights':weights}
     cnt=0
     for s in samples:
-        cnt+=1    
-        lprint('%d/%d'%(cnt,len(samples)))  
+        cnt+=1
+        lprint('%d/%d'%(cnt,len(samples)))
         conf['resman'].get_residuals(s);
         for k in conf['resman'].sidisres.tabs:
             if k  not in data: data[k]=[]
-            thy=conf['resman'].sidisres.tabs[k]['thy']    
+            thy=conf['resman'].sidisres.tabs[k]['thy']
             norm=conf['datasets']['sidis']['norm'][k]['value']
-            shift=conf['resman'].sidisres.tabs[k]['shift']        
+            shift=conf['resman'].sidisres.tabs[k]['shift']
             data[k].append(shift+thy/norm)
-    save(data,'results/%s'%('sidis.dat'))   
+    save(data,'results/%s'%('sidis.dat'))
 
 
 .. parsed-literal::
@@ -439,14 +439,14 @@ compute averages
 
 .. code:: python
 
-    data=load('results/%s'%('sidis.dat'))   
+    data=load('results/%s'%('sidis.dat'))
     for k in data: data[k]=np.array(data[k])
     thy,dthy={},{}
     for k in data:
         if k=='weights': continue
         thy[k]=np.einsum('i,ik->k',data['weights'],data[k])
         dthy[k]=np.einsum('i,ik->k',data['weights'],(data[k]-thy[k])**2)**0.5
-    for k in thy: 
+    for k in thy:
         conf['resman'].sidisres.tabs[k]['thy']=copy.copy(thy[k])
         conf['resman'].sidisres.tabs[k]['dthy']=copy.copy(dthy[k])
 
@@ -454,9 +454,9 @@ compute averages
 
     report=conf['resman'].gen_report(verb=0,level=1)
     delimiters=[]
-    for i in range(len(report)): 
-        if 'reaction:' in report[i]: delimiters.append(i) 
-    
+    for i in range(len(report)):
+        if 'reaction:' in report[i]: delimiters.append(i)
+
     data={}
     nlines=len(report)
     for i in range(len(delimiters)):
@@ -465,31 +465,31 @@ compute averages
         else: fin=delimiters[i+1]
         reaction=report[ini].replace('reaction:','').strip()
         data[reaction]={'raw data':report[ini:fin]}
-        
+
     for k in data:
         print k
         block=data[k]['raw data']
         isep=[i for i in range(len(block)) if '--------' in block[i]][0]
         data[k]['summary']=[block[i] for i in range(isep)]
         data[k]['tables']=[block[i] for i in range(isep+1,len(block))]
-    
+
         tabs={}
         for l in data[k]['tables']:
             info=l.split(',')
             col=[s for s in info if 'col' in s][0].split('=')[1].strip()
             if col not in tabs: tabs[col]={}
             info=[[ss.strip() for ss in s.split('=')] for s in info if 'col' not in info  if s.strip()!='']
-            
+
             for s in info:
                 if s[0] not in tabs[col]: tabs[col][s[0]]=[]
-            
+
             for s in info:
                 try:
                     value=float(s[1])
                 except:
                     value=s[1]
-                tabs[col][s[0]].append(value)        
-    
+                tabs[col][s[0]].append(value)
+
         data[k]['tabs']=tabs
     save(data,'results/data_and_thy.dat')
 
@@ -510,7 +510,7 @@ compute averages
 
 .. parsed-literal::
 
-    
+
     reaction: sidis
         idx        tar        had        col        obs  npts       chi2      rchi2      nchi2
        1000     proton        pi+     hermes   M_Hermes   127     322.28       0.00       0.00
@@ -538,7 +538,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1000')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -566,7 +566,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -582,7 +582,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1001')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -610,7 +610,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -626,7 +626,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1004')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -654,7 +654,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -669,7 +669,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1005')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -697,7 +697,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -712,7 +712,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1002')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -740,7 +740,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -755,7 +755,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1003')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -783,7 +783,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -798,7 +798,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1006')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -826,7 +826,7 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
@@ -841,7 +841,7 @@ plot data and theory
     tab=pd.DataFrame(data['sidis']['tabs']['hermes']).query('idx==1007')
     tab['xr']=[np.round(x,2) for x in tab.x]
     ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
-    
+
     nrows,ncols=1,2
     fig = py.figure(figsize=(ncols*3,nrows*3))
     ax=py.subplot(nrows,ncols,1)
@@ -869,15 +869,9 @@ plot data and theory
             ax=py.subplot(nrows,ncols,cnt)
             ax.errorbar(tabz['pT'],tabz['exp'],yerr=tabz['alpha'],fmt='k.')
             ax.fill_between(tabz['pT'],tabz['thy']-tabz['dthy'],tabz['thy']+tabz['dthy'])
-            
+
     py.tight_layout()
 
 
 
 .. image:: output_41_0.png
-
-
-
-
-
-
