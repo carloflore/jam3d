@@ -174,7 +174,7 @@ tools used to analyze the output.
     sys.stdout.flush()
   %matplotlib inline
 
-The next block loads the data files based on the given input file (:code: `input.py`). As the files are loaded, the notebook
+The next block loads the data files based on the given input file (:code:`input.py`). As the files are loaded, the notebook
 writes out which file has been loaded and how many total data points are being considered.
 
 .. code-block:: python
@@ -213,7 +213,7 @@ collaborations, observables, and the number of points considered.
 Once the data has been organized, it can be plotted using the following code. This code will take any one of the data files
 from the ones considered, and if the observed hadron is positive, plots the curve red, and plots the curve blue if negative.
 Because different collaborations have binned x and z differently, specific functions must be defined to consider the correct
-regions. These plots show the observable :code: `M` vs the transverse momentum, :code: `pT`.
+regions. These plots show the observable :code:`M` vs the transverse momentum, :code:`pT`.
 
 .. code-block:: python
 

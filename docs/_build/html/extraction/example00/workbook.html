@@ -316,7 +316,7 @@ tools used to analyze the output.</p>
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 </div>
-<p>The next block loads the data files based on the given input file (:code: <cite>input.py</cite>). As the files are loaded, the notebook
+<p>The next block loads the data files based on the given input file (<code class="code docutils literal notranslate"><span class="pre">input.py</span></code>). As the files are loaded, the notebook
 writes out which file has been loaded and how many total data points are being considered.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;./input.py&#39;</span><span class="p">)</span>
 <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RESMAN</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;solo&#39;</span><span class="p">,</span><span class="n">ip</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nworkers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -350,7 +350,7 @@ collaborations, observables, and the number of points considered.</p>
 <p>Once the data has been organized, it can be plotted using the following code. This code will take any one of the data files
 from the ones considered, and if the observed hadron is positive, plots the curve red, and plots the curve blue if negative.
 Because different collaborations have binned x and z differently, specific functions must be defined to consider the correct
-regions. These plots show the observable :code: <cite>M</cite> vs the transverse momentum, :code: <cite>pT</cite>.</p>
+regions. These plots show the observable <code class="code docutils literal notranslate"><span class="pre">M</span></code> vs the transverse momentum, <code class="code docutils literal notranslate"><span class="pre">pT</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sidisres</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
