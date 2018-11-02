@@ -149,8 +149,124 @@ suggest to try both. The program upon completion should print results as follow:
      1007   deuteron         k-     hermes   M_Hermes   122     169.47       0.00       0.00                                |
 
 The results are automatically written in the :code:`input.py`. We can check consistency between the screen output and the :code:`input.py`
-At this point one can study the results to make plots etc. However the uncertainties infered from a single fit is not supported in JAM3D
-(i.e. Hessian error propagation). Instead, the uncertainties will be infered by performing a likelihood analysis using MC sampling.
+At this point one can study the results to make plots etc. An example jupyter notebook is shown below. The first block lists the various external
+tools used to analyze the output.
+
+.. code-block:: python
+
+  import sys,os
+  from fitlab.resman import RESMAN
+  from fitlab.mcsamp import MCSAMP
+  from tools.config import load_config,conf
+  from tools.tools import load, save,checkdir
+  from tools.mcstat import chi2hist, parhist
+  from tools.mcproc import impose_cdf_cut
+  import pylab as py
+  import numpy as np
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  from  matplotlib import rc
+  from matplotlib.colors import LogNorm
+  import copy
+  def lprint(msg):
+    sys.stdout.write('\r')
+    sys.stdout.write('%s' %msg)
+    sys.stdout.flush()
+  %matplotlib inline
+
+The next block loads the data files based on the given input file (:code: `input.py`). As the files are loaded, the notebook
+writes out which file has been loaded and how many total data points are being considered.
+
+.. code-block:: python
+
+  load_config('./input.py')
+  conf['resman'] = RESMAN(mode='solo',ip=None,nworkers=5)
+  res=conf['resman'].get_residuals(conf['parman'].par)
+  npts=len(res[0])
+  print '\nnumber of data points = ',npts
+
+The next two sections read through the files and organize the data into tables, printing the column labels and a summary of which
+collaborations, observables, and the number of points considered.
+
+.. code-block:: python
+
+  ALL=pd.concat([pd.DataFrame(conf['resman'].sidisres.tabs[idx]) \
+            for idx in conf['resman'].sidisres.tabs.keys()])
+
+  ALL.columns
+
+.. code-block:: python
+
+  data = {}
+  collaborations = np.unique(ALL.col)
+
+  for collab in collaborations:
+      data[collab] = {}
+
+      data_subset = ALL[ALL.col == collab]
+      observables = np.unique(data_subset.obs)
+
+      for observable in observables:
+          data[collab][observable] = data_subset[data_subset.obs == observable]
+          print('Collaboration: %s, Observerable: %s, Points: %d' % (collab, observable, len(data[collab][observable])))
+
+Once the data has been organized, it can be plotted using the following code. This code will take any one of the data files
+from the ones considered, and if the observed hadron is positive, plots the curve red, and plots the curve blue if negative.
+Because different collaborations have binned x and z differently, specific functions must be defined to consider the correct
+regions. These plots show the observable :code: `M` vs the transverse momentum, :code: `pT`.
+
+.. code-block:: python
+
+  data = {}
+
+  for key, value in conf['resman'].sidisres.tabs.iteritems():
+    data[key] = pd.DataFrame(value)
+
+  plt.rc('font', family='serif')
+  plt.rc('font', size=16)
+  ALL=pd.concat([pd.DataFrame(conf['resman'].sidisres.tabs[idx]) \
+              for idx in conf['resman'].sidisres.tabs.keys()])
+
+  ALL.columns
+
+  def plotHERMES(dat,label1='dataset 1'):
+
+    if (dat % 2 == 0):
+        col = 'red'
+    if (dat % 2 == 1):
+        col = 'blue'
+    data1=data[dat]
+    data1['xr']=[np.round(x,2) for x in data1.x]
+    ZR=[[0.1,0.2],[0.2,0.25],[0.25,0.3],[0.3,0.4],[0.4,0.5],[0.5,1]]
+
+    nrows,ncols=6,6
+    fig = py.figure(figsize=(ncols*3,nrows*2))
+    cnt=0
+    for xr in np.unique(data1['xr']):
+        tabx=data1.query('xr==%f'%xr)
+        for zr in ZR:
+            tabz=tabx.query('z>%f and z<%f'%(zr[0],zr[1]))
+            cnt+=1
+            ax=py.subplot(nrows,ncols,cnt)
+
+            ax.errorbar(tabz['pT'],tabz['value'],yerr=tabz['alpha'],fmt='k.', label=label1, color = col)
+            ax.plot(tabz['pT'], tabz['thy'], linestyle='-', color=col)
+
+    py.tight_layout()
+
+After the plot function has been defined, the function can be called. For example, the data from the HERMES collaboration
+for a proton target and an observed pi+ can be plotted by calling the function for the 1000 data file.
+
+.. code-block:: python
+
+  plotHERMES(1000, 'M')
+
+This will produce the following plots.
+
+.. image:: output_45_0.png
+
+For further examples of plotting for different experimental conditions, see the workbook for MC sampling below. However the uncertainties inferred from a single fit is not supported in JAM3D
+(i.e. Hessian error propagation). Instead, the uncertainties will be inferred by performing a likelihood analysis using MC sampling.
 
 MC sampling
 ===========

@@ -293,8 +293,111 @@ suggest to try both. The program upon completion should print results as follow:
 </pre></div>
 </div>
 <p>The results are automatically written in the <code class="code docutils literal notranslate"><span class="pre">input.py</span></code>. We can check consistency between the screen output and the <code class="code docutils literal notranslate"><span class="pre">input.py</span></code>
-At this point one can study the results to make plots etc. However the uncertainties infered from a single fit is not supported in JAM3D
-(i.e. Hessian error propagation). Instead, the uncertainties will be infered by performing a likelihood analysis using MC sampling.</p>
+At this point one can study the results to make plots etc. An example jupyter notebook is shown below. The first block lists the various external
+tools used to analyze the output.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">fitlab.resman</span> <span class="kn">import</span> <span class="n">RESMAN</span>
+<span class="kn">from</span> <span class="nn">fitlab.mcsamp</span> <span class="kn">import</span> <span class="n">MCSAMP</span>
+<span class="kn">from</span> <span class="nn">tools.config</span> <span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span><span class="n">conf</span>
+<span class="kn">from</span> <span class="nn">tools.tools</span> <span class="kn">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span><span class="n">checkdir</span>
+<span class="kn">from</span> <span class="nn">tools.mcstat</span> <span class="kn">import</span> <span class="n">chi2hist</span><span class="p">,</span> <span class="n">parhist</span>
+<span class="kn">from</span> <span class="nn">tools.mcproc</span> <span class="kn">import</span> <span class="n">impose_cdf_cut</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span>  <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="k">def</span> <span class="nf">lprint</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="n">msg</span><span class="p">)</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+<p>The next block loads the data files based on the given input file (:code: <cite>input.py</cite>). As the files are loaded, the notebook
+writes out which file has been loaded and how many total data points are being considered.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;./input.py&#39;</span><span class="p">)</span>
+<span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RESMAN</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;solo&#39;</span><span class="p">,</span><span class="n">ip</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nworkers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">res</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span><span class="p">)</span>
+<span class="n">npts</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">number of data points = &#39;</span><span class="p">,</span><span class="n">npts</span>
+</pre></div>
+</div>
+<p>The next two sections read through the files and organize the data into tables, printing the column labels and a summary of which
+collaborations, observables, and the number of points considered.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ALL</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sidisres</span><span class="o">.</span><span class="n">tabs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> \
+          <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sidisres</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+<span class="n">ALL</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">collaborations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ALL</span><span class="o">.</span><span class="n">col</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">collab</span> <span class="ow">in</span> <span class="n">collaborations</span><span class="p">:</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">collab</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">data_subset</span> <span class="o">=</span> <span class="n">ALL</span><span class="p">[</span><span class="n">ALL</span><span class="o">.</span><span class="n">col</span> <span class="o">==</span> <span class="n">collab</span><span class="p">]</span>
+    <span class="n">observables</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_subset</span><span class="o">.</span><span class="n">obs</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">observable</span> <span class="ow">in</span> <span class="n">observables</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">collab</span><span class="p">][</span><span class="n">observable</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_subset</span><span class="p">[</span><span class="n">data_subset</span><span class="o">.</span><span class="n">obs</span> <span class="o">==</span> <span class="n">observable</span><span class="p">]</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Collaboration: </span><span class="si">%s</span><span class="s1">, Observerable: </span><span class="si">%s</span><span class="s1">, Points: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collab</span><span class="p">,</span> <span class="n">observable</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">collab</span><span class="p">][</span><span class="n">observable</span><span class="p">])))</span>
+</pre></div>
+</div>
+<p>Once the data has been organized, it can be plotted using the following code. This code will take any one of the data files
+from the ones considered, and if the observed hadron is positive, plots the curve red, and plots the curve blue if negative.
+Because different collaborations have binned x and z differently, specific functions must be defined to consider the correct
+regions. These plots show the observable :code: <cite>M</cite> vs the transverse momentum, :code: <cite>pT</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sidisres</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+  <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ALL</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sidisres</span><span class="o">.</span><span class="n">tabs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> \
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sidisres</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+<span class="n">ALL</span><span class="o">.</span><span class="n">columns</span>
+
+<span class="k">def</span> <span class="nf">plotHERMES</span><span class="p">(</span><span class="n">dat</span><span class="p">,</span><span class="n">label1</span><span class="o">=</span><span class="s1">&#39;dataset 1&#39;</span><span class="p">):</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">dat</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">dat</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+      <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+  <span class="n">data1</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">dat</span><span class="p">]</span>
+  <span class="n">data1</span><span class="p">[</span><span class="s1">&#39;xr&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data1</span><span class="o">.</span><span class="n">x</span><span class="p">]</span>
+  <span class="n">ZR</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">],[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.3</span><span class="p">],[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">],[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+
+  <span class="n">nrows</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span>
+  <span class="n">fig</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">ncols</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span><span class="n">nrows</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+  <span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+  <span class="k">for</span> <span class="n">xr</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data1</span><span class="p">[</span><span class="s1">&#39;xr&#39;</span><span class="p">]):</span>
+      <span class="n">tabx</span><span class="o">=</span><span class="n">data1</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;xr==</span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">xr</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">zr</span> <span class="ow">in</span> <span class="n">ZR</span><span class="p">:</span>
+          <span class="n">tabz</span><span class="o">=</span><span class="n">tabx</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;z&gt;</span><span class="si">%f</span><span class="s1"> and z&lt;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">zr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">zr</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+          <span class="n">cnt</span><span class="o">+=</span><span class="mi">1</span>
+          <span class="n">ax</span><span class="o">=</span><span class="n">py</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span><span class="n">ncols</span><span class="p">,</span><span class="n">cnt</span><span class="p">)</span>
+
+          <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">tabz</span><span class="p">[</span><span class="s1">&#39;pT&#39;</span><span class="p">],</span><span class="n">tabz</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="n">yerr</span><span class="o">=</span><span class="n">tabz</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;k.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">col</span><span class="p">)</span>
+          <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tabz</span><span class="p">[</span><span class="s1">&#39;pT&#39;</span><span class="p">],</span> <span class="n">tabz</span><span class="p">[</span><span class="s1">&#39;thy&#39;</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+
+  <span class="n">py</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After the plot function has been defined, the function can be called. For example, the data from the HERMES collaboration
+for a proton target and an observed pi+ can be plotted by calling the function for the 1000 data file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plotHERMES</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will produce the following plots.</p>
+<img alt="../../_images/output_45_0.png" src="../../_images/output_45_0.png" />
+<p>For further examples of plotting for different experimental conditions, see the workbook for MC sampling below. However the uncertainties inferred from a single fit is not supported in JAM3D
+(i.e. Hessian error propagation). Instead, the uncertainties will be inferred by performing a likelihood analysis using MC sampling.</p>
 </div>
 <div class="section" id="mc-sampling">
 <h2>MC sampling<a class="headerlink" href="#mc-sampling" title="Permalink to this headline">¶</a></h2>
