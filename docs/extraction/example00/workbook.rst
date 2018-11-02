@@ -211,9 +211,9 @@ collaborations, observables, and the number of points considered.
           print('Collaboration: %s, Observerable: %s, Points: %d' % (collab, observable, len(data[collab][observable])))
 
 Once the data has been organized, it can be plotted using the following code. This code will take any one of the data files
-from the ones considered, and if the observed hadron is positive, plots the curve red, and plots the curve blue if negative.
+from the ones considered, and if the observed hadron is positive, plots the curve red, and plots the curve blue if the hadron is negative.
 Because different collaborations have binned x and z differently, specific functions must be defined to consider the correct
-regions. These plots show the observable :code:`M` vs the transverse momentum, :code:`pT`.
+regions. These plots show the observable :code:`M` vs the transverse momentum :code:`pT`.
 
 .. code-block:: python
 
@@ -265,7 +265,7 @@ This will produce the following plots.
 
 .. image:: output_45_0.png
 
-For further examples of plotting for different experimental conditions, see the workbook for MC sampling below. However the uncertainties inferred from a single fit is not supported in JAM3D
+For further examples of plotting for different experimental kinematics, see the workbook for MC sampling below. We note that the uncertainties inferred from a single fit is not supported in JAM3D
 (i.e. Hessian error propagation). Instead, the uncertainties will be inferred by performing a likelihood analysis using MC sampling.
 
 MC sampling
