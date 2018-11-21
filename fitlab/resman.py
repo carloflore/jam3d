@@ -5,7 +5,7 @@ import logging
 import fitlab.parallel as parallel
 import numpy as np
 import qcdlib
-from qcdlib import pdf0,ff0,pdf1,ff1
+from qcdlib import pdf0,ff0,pdf1,ff1,gk0
 import qcdlib.aux
 import qcdlib.alphaS
 import qcdlib.interpolator
@@ -61,6 +61,7 @@ class RESMAN:
     def setup_tmds(self):
 
         if 'pdf'          in conf['params']: conf['pdf']          = pdf0.PDF()
+        if 'gk'           in conf['params']: conf['gk']           = gk0.GK()
         if 'transversity' in conf['params']: conf['transversity'] = pdf1.PDF()
         if 'sivers'       in conf['params']: conf['sivers']       = pdf1.PDF()
         if 'boermulders'  in conf['params']: conf['boermulders']  = pdf1.PDF()

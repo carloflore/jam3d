@@ -4,7 +4,8 @@ import os
 import numpy as np
 from tools.residuals import _RESIDUALS
 from tools.config import conf
-from obslib.sidis import upol0 as upol
+#from obslib.sidis import upol0 as upol
+from obslib.sidis import upol1 as upol # Let us use an approximate TMD evolution
 from obslib.sidis import collins0 as collins
 from obslib.sidis import sivers0 as sivers
 from obslib.sidis import boermulders0 as boermulders
@@ -202,13 +203,14 @@ class RESIDUALS(_RESIDUALS):
 if __name__ == '__main__':
 
     from qcdlib.interpolator import INTERPOLATOR
-    from qcdlib import pdf0,ff0,pdf1,ff1
+    from qcdlib import pdf0,ff0,pdf1,ff1,gk0
     from qcdlib.aux import AUX
     from reader import READER
 
     conf['aux']    = AUX()
 
     conf['pdf']          = pdf0.PDF()
+    conf['gk']          = gk0.GK()
     conf['transversity'] = pdf1.PDF()
     conf['sivers']       = pdf1.PDF()
     conf['ffpi'] = ff0.FF('pi')

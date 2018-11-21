@@ -82,6 +82,7 @@ class PARMAN:
 
     def propagate_params(self, semaphore):
         if 'pdf'          in semaphore and semaphore['pdf']          == 1: self.set_pdf_params()
+        if 'gk'           in semaphore and semaphore['gk']           == 1: self.set_gk_params()
         if 'transversity' in semaphore and semaphore['transversity'] == 1: self.set_transversity_params()
         if 'sivers'       in semaphore and semaphore['sivers']       == 1: self.set_sivers_params()
         if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params()
@@ -108,6 +109,13 @@ class PARMAN:
         conf['pdf']._widths2_sea = conf['params']['pdf']['widths2_sea']['value']
         conf['pdf'].setup()
 
+    def set_gk_params(self):
+        self.set_constraits('gk')
+        conf['gk'].gk  = conf['params']['gk']['gk0']['value']
+        conf['gk'].Q0   = conf['params']['gk']['Q0']['value']
+        conf['gk'].setup()
+
+        
     def set_transversity_params(self):
         self.set_constraits('transversity')
 

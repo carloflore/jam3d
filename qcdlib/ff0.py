@@ -48,7 +48,7 @@ class FF(CORE):
         return self.ff.get_f(z, Q2)
 
     def get_state(self):
-        return self.widths1,self.widths2
+        return (self.widths1,self.widths2)
 
     def set_state(self, state):
         self.widths1 = state[0]
