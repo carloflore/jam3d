@@ -37,15 +37,17 @@ class CORE:
 
     def get_collinear(self,x,Q2):
         N = np.zeros(11)
-        for i in range(11): 
+        for i in range(11):
             N[i] = self.get_shape(x,Q2,self.shape1[i],self.shape2[i])
         return N
+
+    # shape differentials
 
     def __get_dshape(self,x,p):
         return p[0]*x**p[1]*(1-x)**p[2]*(p[3]+2*p[4]*x+(1+p[3]*x+p[4]*x**2)*(p[1]/x-p[2]/(1-x)))
 
     def _get_dshape(self,x,p,s):
-        # NS: needs to check normalization 
+        # NS: needs to check normalization
         N=p[0] + p[5] * s
         a=p[1] + p[6] * s
         b=p[2] + p[7] * s
@@ -53,6 +55,18 @@ class CORE:
         d=p[4] + p[9] * s
         n= self.beta(1+a,b+1) + c*self.beta(1+a+1,b + 1) + d*self.beta(1+a+1,b + 1)
         return self.__get_dshape(x,[N/n,a,b,c,d])
+
+    def get_dshape(self,x,Q2,p1,p2):
+        s=self.get_s(Q2)
+        dshape=self._get_dshape(x,p1,s)
+        if p2[0]!=0: dshape+=self._get_dshape(x,p2,s)
+        return dshape
+
+    def get_dcollinear(self,x,Q2):
+        N = np.zeros(11)
+        for i in range(11):
+            N[i] = self.get_dshape(x,Q2,self.shape1[i],self.shape2[i])
+        return N
 
     # moments
 
@@ -80,5 +94,3 @@ class CORE:
     def get_widths(self,Q2):
         s=np.log(Q2/conf['aux'].Q02 )
         return np.abs(self.widths1+s*self.widths2)
-
-

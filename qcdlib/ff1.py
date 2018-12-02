@@ -48,6 +48,9 @@ class FF(CORE):
     def get_C(self, z, Q2):
         return self.get_collinear(z,Q2)
 
+    def get_dC(self, z, Q2):
+        return self.get_dcollinear(z,Q2)
+
     def get_state(self):
         return (self.widths1,self.widths2,self.shape1, self.shape2)
 
@@ -69,18 +72,3 @@ if __name__ == '__main__':
     Q2 = 2.4
     print conf['ffpi'].get_C(z, Q2)
     print conf['ffk'].get_C(z, Q2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

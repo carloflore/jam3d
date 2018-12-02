@@ -89,6 +89,8 @@ class PARMAN:
         if 'ffk'          in semaphore and semaphore['ffk']          == 1: self.set_ffk_params()
         if 'collinspi'    in semaphore and semaphore['collinspi']    == 1: self.set_collinspi_params()
         if 'collinsk'     in semaphore and semaphore['collinsk']     == 1: self.set_collinsk_params()
+        if 'Htildepi'    in semaphore and semaphore['Htildepi']    == 1: self.set_Htildepi_params()
+        if 'Htildek'     in semaphore and semaphore['Htildek']     == 1: self.set_Htildek_params()
 
     def set_constraits(self, parkind):
 
@@ -233,4 +235,39 @@ class PARMAN:
                     conf['collinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
         conf['collinsk'].setup()
 
+        def set_Htildepi_params(self):
+            self.set_constraits('Htildepi')
+            #conf['Htildepi']._widths1_fav  = conf['params']['Htildepi']['widths1_fav']['value']
+            #conf['Htildepi']._widths1_ufav = conf['params']['collinspi']['widths1_ufav']['value']
+            #conf['Htildepi']._widths2_fav  = conf['params']['Htildepi']['widths2_fav']['value']
+            #conf['Htildepi']._widths2_ufav = conf['params']['Htildepi']['widths2_ufav']['value']
 
+            iflav=0
+            for flav in ['u','ub','d','db','s','sb']:
+                iflav+=1
+                ipar=-1
+                for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
+                    ipar+=1
+                    if '%s %s 1'%(flav,par) in conf['params']['Htildepi']:
+                        conf['Htildepi'].shape1[iflav][ipar] = conf['params']['Htildepi']['%s %s 1'%(flav,par)]['value']
+                    #if '%s %s 2'%(flav,par) in conf['params']['Htildepi']:
+                    #    conf['Htildepi'].shape2[iflav][ipar] = conf['params']['Htidlepi']['%s %s 2'%(flav,par)]['value']
+            conf['Htildepi'].setup()
+
+        def set_Htildek_params(self):
+            self.set_constraits('Htildek')
+            #conf['Htildek']._widths1_fav   = conf['params']['Htildek']['widths1_fav']['value']
+            #conf['Htildek']._widths1_ufav  = conf['params']['Htildek']['widths1_ufav']['value']
+            #conf['Htildek']._widths2_fav   = conf['params']['Htildek']['widths2_fav']['value']
+            #conf['Htildek']._widths2_ufav  = conf['params']['Htildek']['widths2_ufav']['value']
+            iflav=0
+            for flav in ['u','ub','d','db','s','sb']:
+                iflav+=1
+                ipar=-1
+                for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
+                    ipar+=1
+                    if '%s %s 1'%(flav,par) in conf['params']['Htildek']:
+                        conf['Htildek'].shape1[iflav][ipar] = conf['params']['Htildek']['%s %s 1'%(flav,par)]['value']
+                    #if '%s %s 2'%(flav,par) in conf['params']['Htildek']:
+                    #    conf['Htildek'].shape2[iflav][ipar] = conf['params']['Htildek']['%s %s 2'%(flav,par)]['value']
+            conf['Htildek'].setup()

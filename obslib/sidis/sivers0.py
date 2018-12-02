@@ -24,7 +24,7 @@ e2 = np.array(e2)
 def _get_FUT(x,z,Q2,pT,tar,had,F,D,w_tar,w_had):
 
     M=conf['aux'].M
- 
+
     if had.endswith('+'):
 
         wq = z**2 * np.abs(w_tar) + np.abs(w_had)
@@ -83,7 +83,7 @@ def get_FUT(x,z,Q2,pT,tar,had):
         F=conf['aux'].p2n(F)
         w_tar=conf['aux'].p2n(w_tar)
         return  _get_FUT(x,z,Q2,pT,tar,had,F,D,w_tar,w_had)
-  
+
     elif tar=='d':
 
       return 0.5*(get_FUT(x,z,Q2,pT,'p',had)+get_FUT(x,z,Q2,pT,'n',had))
@@ -117,8 +117,3 @@ if __name__ == '__main__':
     print get_FUT(x,z,Q2,pT,'d','pi+')
     print get_FUT(x,z,Q2,pT,'d','pi-')
     print get_FUT(x,z,Q2,pT,'d','pi0')
-
-
-
-
-

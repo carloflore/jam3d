@@ -21,10 +21,11 @@ e2.append(0)    # b
 e2.append(0)    # bb
 e2 = np.array(e2)
 
+
 def _get_FUU(x,z,Q2,pT,tar,had,F,D,w_tar,w_had):
 
     K = x
- 
+
     if had.endswith('+'):
 
         wq = z**2 * np.abs(w_tar) + np.abs(w_had)
@@ -61,12 +62,14 @@ def get_FUU(x,z,Q2,pT,tar,had):
     F = conf['pdf'].get_C(x, Q2)
     if   'pi' in had:  D = conf['ffpi'].get_C(z, Q2)
     elif  'k' in had:  D = conf['ffk'].get_C(z, Q2)
+    elif 'h' in had:   D = conf['ffpi'].get_C(z,Q2)
     F[0],D[0]=0,0  # set glue to zero
 
     # get widths (proton and positive hadrons)
     w_tar=conf['pdf'].get_widths(Q2)
     if   'pi' in had: w_had=np.abs(conf['ffpi'].get_widths(Q2))
     elif 'k'  in had: w_had=np.abs(conf['ffk'].get_widths(Q2))
+    elif   'h' in had: w_had=np.abs(conf['ffpi'].get_widths(Q2))
 
     # build structure function
 
@@ -79,7 +82,7 @@ def get_FUU(x,z,Q2,pT,tar,had):
         F=conf['aux'].p2n(F)
         w_tar=conf['aux'].p2n(w_tar)
         return  _get_FUU(x,z,Q2,pT,tar,had,F,D,w_tar,w_had)
-  
+
     elif tar=='d':
 
       return 0.5*(get_FUU(x,z,Q2,pT,'p',had)+get_FUU(x,z,Q2,pT,'n',had))
@@ -113,8 +116,3 @@ if __name__ == '__main__':
     print get_FUU(x,z,Q2,pT,'d','pi+')
     print get_FUU(x,z,Q2,pT,'d','pi-')
     print get_FUU(x,z,Q2,pT,'d','pi0')
-
-
-
-
-

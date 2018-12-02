@@ -46,6 +46,9 @@ class PDF(CORE):
     def get_C(self, x, Q2):
         return self.get_collinear(x, Q2)
 
+    def get_dC(self, x, Q2):
+        return self.get_dcollinear(x,Q2)
+
     def get_state(self):
         return (self.widths1,self.widths2, self.shape1,self.shape2)
 
@@ -65,9 +68,3 @@ if __name__ == '__main__':
     x = 0.15
     Q2 = 2.4
     print conf['pdf'].get_C(x, Q2)
-
-
-
-
-
-

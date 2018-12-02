@@ -3,12 +3,12 @@ conf={}
 ############################################################################
 #mcsamp
 conf['ncpu']=10
-#conf['nruns']=1
-#conf['factor']=3.0
-#conf['kappa']=1.5
-#conf['tol']=1e-10
-#conf['itmax']=int(1e7)
-#conf['block size']=10
+conf['nruns']=1
+conf['factor']=3.0
+conf['kappa']=1.5
+conf['tol']=1e-10
+conf['itmax']=int(1e7)
+conf['block size']=10
 
 ############################################################################
 # params
@@ -16,23 +16,23 @@ conf['params']={}
 # Parameters in gaussian approximation, parton model:
 # TMD PDF:
 conf['params']['pdf']={}
-conf['params']['pdf']['widths1_uv']  ={'value':    2.67660e-01,'min': 0,'max':1,'fixed':False}
-conf['params']['pdf']['widths2_uv']  ={'value':   -1.60506e-01,'min':-1,'max':1,'fixed':False}
-conf['params']['pdf']['widths1_dv']  ={'value':    2.67660e-01,'min': 0,'max':1,'fixed':'widths1_uv'}
-conf['params']['pdf']['widths2_dv']  ={'value':   -1.60506e-01,'min':-1,'max':1,'fixed':'widths2_uv'}
-conf['params']['pdf']['widths1_sea'] ={'value':    0.00000e+00,'min': 0,'max':1,'fixed':False}
+conf['params']['pdf']['widths1_uv']  ={'value':    0.57e+00,'min': 0,'max':1,'fixed':False}
+conf['params']['pdf']['widths2_uv']  ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
+conf['params']['pdf']['widths1_dv']  ={'value':    0.57e+00,'min': 0,'max':1,'fixed':'widths1_uv'}
+conf['params']['pdf']['widths2_dv']  ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':'widths2_uv'}
+conf['params']['pdf']['widths1_sea'] ={'value':    0.57e+00,'min': 0,'max':1,'fixed':False}
 conf['params']['pdf']['widths2_sea'] ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
 
 # TMD FF:
 conf['params']['ffpi']={}
-conf['params']['ffpi']['widths1_fav']   ={'value':    1.69862e-01,'min': 0,'max':1,'fixed':False}
+conf['params']['ffpi']['widths1_fav']   ={'value':    1.78766e-01,'min': 0,'max':1,'fixed':False}
 conf['params']['ffpi']['widths2_fav']   ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
-conf['params']['ffpi']['widths1_ufav'] ={'value':    1.88921e-01,'min': 0,'max':1,'fixed':False}
+conf['params']['ffpi']['widths1_ufav'] ={'value':    1.85290e-01,'min': 0,'max':1,'fixed':False}
 conf['params']['ffpi']['widths2_ufav'] ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
 conf['params']['ffk']={}
-conf['params']['ffk']['widths1_fav']    ={'value':    1.32732e-01,'min': 0,'max':1,'fixed':False}
+conf['params']['ffk']['widths1_fav']    ={'value':    1.32339e-01,'min': 0,'max':1,'fixed':True}
 conf['params']['ffk']['widths2_fav']    ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
-conf['params']['ffk']['widths1_ufav']  ={'value':    1.89326e-01,'min': 0,'max':1,'fixed':False}
+conf['params']['ffk']['widths1_ufav']  ={'value':    1.85629e-01,'min': 0,'max':1,'fixed':True}
 conf['params']['ffk']['widths2_ufav']  ={'value':    0.00000e+00,'min':-1,'max':1,'fixed':True}
 conf['params']['ffh']={}
 conf['params']['ffh']['widths1_fav']    ={'value':    1.32925e-01,'min': 0,'max':1,'fixed':True}
@@ -57,6 +57,7 @@ conf['datasets']['sidis']['xlsx']={}
 #conf['datasets']['sidis']['xlsx'][1007]='sidis/expdata/1007.xlsx'  # |  deuteron | k-    | M_Hermes | hermes
 conf['datasets']['sidis']['xlsx'][1008]='sidis/expdata/1008.xlsx'  # |  deuteron | h+    | M_Compass| compass
 conf['datasets']['sidis']['xlsx'][1009]='sidis/expdata/1009.xlsx'  # |  deuteron | h-    | M_Compass| compass
+
 
 conf['datasets']['sidis']['norm']={}
 for idx in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['norm'][idx]={'value':1,'fixed':True,'min':0,'max':1}

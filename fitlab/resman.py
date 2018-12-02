@@ -69,6 +69,8 @@ class RESMAN:
         if 'ffk'  in conf['params']: conf['ffk']  = ff0.FF('k')
         if 'collinspi' in conf['params']: conf['collinspi'] = ff1.FF('pi')
         if 'collinsk'  in conf['params']: conf['collinsk']  = ff1.FF('k')
+        if 'Htildepi' in conf['params']: conf['Htildepi'] = ff1.FF('pi')
+        if 'Htildek'  in conf['params']: conf['Htildek']  = ff1.FF('k')
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')

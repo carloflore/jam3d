@@ -19,7 +19,6 @@ class ANTHEORY():
     """
 
     def __init__(self):
-
         self.aux = conf['aux']
 
         self.Mh = {}
@@ -48,6 +47,7 @@ class ANTHEORY():
         self.d = {}
         self.h = {}
         self.H1p = {}
+        self.F1p = {}
         self.H = {}
         self.HTffa = np.zeros(13)
         self.HTffb = np.zeros(13)
@@ -95,6 +95,12 @@ class ANTHEORY():
             elif 'k' in had:
                 self.H[(z, Q2, had)] = -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
         return self.H[(z, Q2, had)]
+
+# (F_1^{\perp(1)}(x) - x*dF_1^{\perp(1)}(x)/dx) Check this for correct sivers implementation
+    def get_F1p(self, x, Q2, had):
+        if (x, Q2, had) not in self.F1p:
+            self.F1p[(x, Q2, had)] = conf['sivers'].get_C(x, Q2) - x * conf['sivers'].get_dC(x, Q2)
+        return self.F1p[(x, Q2, had)]
 
     def get_mandelstam(self, s, t, u):
         # Convenient combinations of the partonic Mandelstam variables
@@ -369,6 +375,133 @@ class ANTHEORY():
 
         return denfac * upol
 
+    def get_dsigP(self, x, z, xF, pT, rs, tar, had):
+            if pT < 1.:
+                Q = pT
+            else:
+                Q = 1.
+
+            Q2 = Q * Q
+
+            xT = 2. * pT / rs
+            xT2 = xT * xT
+            xF2 = xF * xF
+
+            # Mandelstam variables at the hadron level
+            ss = rs * rs
+            tt = -0.5 * ss * (np.sqrt(xF2 + xT2) - xF)
+            uu = -0.5 * ss * (np.sqrt(xF2 + xT2) + xF)
+
+            oz = 1. / z
+
+            xp = -x * tt / (z * x * ss + uu)
+
+            # Mandelstam variables at the parton level
+            s = x * xp * ss
+            t = x * tt * oz
+            u = xp * uu * oz
+
+            self.get_mandelstam(s, t, u)
+
+            # Prefactor
+            denfac = 1. / ((z * z * x * ss + uu * z) * x * xp)
+
+            #Mandelstam combinations
+            fsi = 1. + self.m['ut']
+            sig1 = -self.m['ou']*(2.+fsi)*(self.m['st2']+self.m['ut2'])*self.c['r18']
+
+            sig2 = -self.m['ou']*(2.-7.*fsi)*(self.m['su2']+self.m['tu2'])*self.c['r18']
+            sig3 = -self.m['ou']*(-10.-fsi)*self.m['st']*self.m['su']*self.c['r27']
+
+            sig4 = -self.m['ou']*(7.+fsi)*(self.m['st2']+self.m['ut2'])*self.c['r18']
+            sig5 = -self.m['ou']*(-1. -7.*fsi)*(self.m['us2']+self.m['ts2'])*self.c['r18']
+
+            sig6 = -self.m['ou']*(-1.-fsi)*self.m['us']*self.m['ut']*self.c['r27']
+
+            sig7 = -self.m['ou']*(7.-2.*fsi)*(self.m['su2']+self.m['tu2'])*self.c['r18']
+            sig8 = -self.m['ou']*(-1. -2.*fsi)*(self.m['us2']+self.m['ts2'])*self.c['r18']
+            sig9 = -self.m['ou']*(-1. -fsi)*self.m['ts']*self.m['tu']*self.c['r27']
+
+            sig10 = -self.m['ou']*self.c['r6']*self.c['r9']*(self.m['tu']+self.m['ut'])*(1.+18.*self.m['ts']*self.m['us'])-self.m['ou']*fsi*self.c['r6']* \
+            (self.m['tu']+self.m['ut'])*(1.-9.*(self.m['us'])*(self.m['us']))
+
+            sig11 = -self.m['ou']*self.c['r4']*self.c['r4']*(self.m['su']+self.m['us'])*(1.-9.*self.m['ut']*self.m['ut'])-self.m['ou']*fsi*self.c['r8']* \
+            self.c['r18']*(self.m['su']+self.m['us'])*(1.+18.*self.m['st']*self.m['ut'])
+
+            sig12 = -self.m['ou']*self.c['r4']*self.c['r4']*(self.m['ts']+self.m['st'])*(1.-9.*self.m['tu']*self.m['tu']) + self.m['ou']*fsi*self.c['r4']* \
+            self.c['r4']*(self.m['ts']+self.m['st'])*(1.-9.*self.m['su']*self.m['su'])
+
+            #Arrays of pdfs and ffs
+            f = self.get_f(x, Q2, tar)
+            ft = self.get_ft(xp, Q2, tar)
+            d = self.get_d(z, Q2, had)
+
+            fg = f[0]
+            fu = f[1]
+            fub = f[2]
+            fd = f[3]
+            fdb = f[4]
+            fs = f[5]
+            fsb = f[6]
+
+            ftg = ft[0]
+            ftu = ft[1]
+            ftub = ft[2]
+            ftd = ft[3]
+            ftdb = ft[4]
+            fts = ft[5]
+            ftsb = ft[6]
+
+            dg = d[0]
+            du = d[1]
+            dub = d[2]
+            dd = d[3]
+            ddb = d[4]
+            ds = d[5]
+            dsb = d[6]
+
+            F1p = self.get_F1p(x, Q2, had)
+
+            gsgp = -2./np.pi * F1p[0]
+            usgp = -2./np.pi * F1p[1]
+            ubsgp = -2./np.pi * F1p[2]
+            dsgp = -2./np.pi * F1p[3]
+            dbsgp = -2./np.pi * F1p[4]
+            ssgp = -2./np.pi * F1p[5]
+            sbsgp = -2./np.pi * F1p[6]
+
+            sigma1 = (usgp*du +dsgp*dd +ssgp*ds)*(fu+fd+fs)*sig1 + (usgp + dsgp +ssgp)*(fu*du+fd*dd+fs*ds)*sig2+(usgp*fu*du+dsgp*fd*dd+ssgp*fs*ds)*sig3
+
+            sigma1b = (ubsgp*dub + dbsgp* ddb + sbsgp*dsb)*(fub+fdb+fsb)*sig1 +(ubsgp+dbsgp+sbsgp)*(fub*dub+fdb*ddb+fsb*dsb)*sig2+(ubsgp*fub*dub+dbsgp*fdb*ddb+sbsgp*fsb*dsb)*sig3
+
+            sigma2 = (usgp*du + dsgp*dd+ ssgp*ds)*(fub + fdb +fsb)*sig4 + (usgp*fub+dsgp*dd+ssgp*ds)*(du+dd+ds)*sig5+(usgp*fub*du+dsgp*fdb*dd+ssgp*fsb*ds)*sig6
+
+            sigma2b = (ubsgp*dub + dbsgp*ddb+sbsgp*dsb)*(fu+fd+fs)*sig4 + (ubsgp*fu + dbsgp*fd + sbsgp*fs)*(dub + ddb +dsb)*sig5+(ubsgp*fu*dub+dbsgp*fd*ddb+sbsgp*fs*dsb)*sig6
+
+            sigma3 = (usgp +dsgp +ssgp)*(fub*dub + fdb*ddb + fsb*dsb)*sig7 + (usgp*fub + dsgp*fdb+ssgp*fsb)*(dub + ddb + dsb)*sig8 + (usgp*fub*dub+dsgp*fdb*ddb+ssgp*fsb*dsb)*sig9
+
+            sigma3b = (ubsgp +dsgp + sbsgp)*(fu*du+fdb*ddb+fsb*dsb)*sig7 + (ubsgp*fu+dbsgp*fd+sbsgp*fs)*(du+dd+ds)*sig8 +(ubsgp*fu*du+dbsgp*fd*dd+sbsgp*fs*ds)*sig9
+
+            sigma4 = (usgp*fub+dsgp*fdb +ssgp*fsb)*dg*sig10
+
+            sigma4b = (ubsgp*fu + dbsgp*fd + sbsgp*fs)*dg*sig10
+
+            sigma5 = (usgp*du + dsgp*dd + ssgp*ds)*fg*sig11
+
+            sigma5b = (ubsgp*dub + dbsgp*ddb +sbsgp*dsb)*fg*sig11
+
+            sigma6 = (usgp + dsgp +ssgp) *fg *dg*sig12
+
+            sigma6b = (ubsgp+dbsgp+sbsgp)*fg*dg*sig12
+
+            sgpcs= sigma1 + sigma2 + sigma3 + sigma4 + sigma5 + sigma6 + sigma1b + sigma2b + sigma3b + sigma4b + sigma5b + sigma6b
+
+            return denfac*oz*sgpcs
+
+
+
+
+
 #    @profile
     # Calculation of the fragmentation term in the transversely polarized cross section
     def get_dsigST(self, x, z, xF, pT, rs, tar, had):
@@ -520,6 +653,32 @@ class ANTHEORY():
                 x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
         return sig
 
+    def get_sigP(self, xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100):
+        xT = 2. * pT / rs
+        xF2 = xF * xF
+        xT2 = xT * xT
+
+        # Mandelstam variables at the hadron level
+        ss = rs * rs
+        tt = -0.5 * ss * (np.sqrt(xF2 + xT2) - xF)
+        uu = -0.5 * ss * (np.sqrt(xF2 + xT2) + xF)
+
+        # Lower limits of the z and x integrations
+        zmin = np.sqrt(xF2 + xT2)
+
+        def xmin(z): return -uu / (z * ss + tt)
+
+        if mode == 'gauss':
+            dsigdzdx = np.vectorize(
+                lambda x, z: self.get_dsigP( x, z, xF, pT, rs, tar, had))
+            dsigdz = np.vectorize(lambda z: fixed_quad(
+                lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
+            sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
+        elif mode == 'quad':
+            sig = dblquad(lambda x, z: self.get_dsigP(
+                x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
+        return sig
+
     def get_sigST(self, xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100):
         xT = 2. * pT / rs
         xF2 = xF * xF
@@ -549,7 +708,6 @@ class ANTHEORY():
 
 if __name__ == '__main__':
 
-
     from qcdlib.ff0 import FF as FF0
     from qcdlib.ff1 import FF as FF1
     from qcdlib.pdf0 import PDF as PDF0
@@ -563,6 +721,7 @@ if __name__ == '__main__':
     conf['transversity']=PDF1()
     conf['ffpi']=FF0('pi')
     conf['ffk']=FF0('k')
+    conf['sivers']=PDF1()
 
     rs = 200.
     tar = 'p'
@@ -589,8 +748,10 @@ if __name__ == '__main__':
         den = anthy.get_sig(xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100)
         num = anthy.get_sigST(xF, pT, rs, tar, had,
                               mode='gauss', nx=100, nz=100)
+        num2 = anthy.get_sigP(xF, pT, rs, tar, had,
+                              mode='gauss', nx=100, nz=100)
 
-        AN = num / den
+        AN = (num + num2) / den
         print AN
 
 #  from timeit import Timer
