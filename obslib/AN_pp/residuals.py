@@ -8,7 +8,7 @@ import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
 from reader import READER
-from AN_theory import ANTHEORY
+from obslib.AN_pp import AN_theory0 as AN_theory
 from qcdlib.aux import AUX
 from qcdlib.alphaS import ALPHAS
 from tools.config import conf
@@ -19,7 +19,6 @@ class RESIDUALS(_RESIDUALS):
     def __init__(self):
         self.reaction = 'AN'
         self.tabs = conf['AN tabs']
-        self.AN_theory = conf['AN theory']
         self.setup()
 
     def _get_theory(self, entry):
@@ -33,9 +32,9 @@ class RESIDUALS(_RESIDUALS):
         col = self.tabs[k]['col'][i].strip().upper()
 
         if obs == 'AN':
-            sigST = self.AN_theory.get_sigST(
+            sigST = AN_theory.get_sigST(
                 xF, pT, rs, target, hadron, mode='gauss', nx=10, nz=10)
-            sig = self.AN_theory.get_sig(
+            sig = AN_theory.get_sig(
                 xF, pT, rs, target, hadron, mode='gauss', nx=10, nz=10)
             thy = sigST / sig
 

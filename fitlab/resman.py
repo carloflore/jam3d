@@ -16,7 +16,7 @@ import obslib.sia.residuals
 import obslib.sia.reader
 import obslib.moments.reader
 import obslib.moments.residuals
-import obslib.AN_pp.AN_theory
+import obslib.AN_pp.AN_theory0
 import obslib.AN_pp.residuals
 import obslib.AN_pp.reader
 from parman import PARMAN
@@ -105,7 +105,7 @@ class RESMAN:
 
     def setup_AN(self):
         conf['AN tabs']   = obslib.AN_pp.reader.READER().load_data_sets('AN')
-        conf['AN theory'] = obslib.AN_pp.AN_theory.ANTHEORY()
+        #conf['AN theory'] = obslib.AN_pp.AN_theory.ANTHEORY()
         self.ANres = obslib.AN_pp.residuals.RESIDUALS()
 
         if (self.slave):

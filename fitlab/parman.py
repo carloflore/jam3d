@@ -235,7 +235,7 @@ class PARMAN:
                     conf['collinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
         conf['collinsk'].setup()
 
-        def set_Htildepi_params(self):
+    def set_Htildepi_params(self):
             self.set_constraits('Htildepi')
             #conf['Htildepi']._widths1_fav  = conf['params']['Htildepi']['widths1_fav']['value']
             #conf['Htildepi']._widths1_ufav = conf['params']['collinspi']['widths1_ufav']['value']
@@ -254,7 +254,7 @@ class PARMAN:
                     #    conf['Htildepi'].shape2[iflav][ipar] = conf['params']['Htidlepi']['%s %s 2'%(flav,par)]['value']
             conf['Htildepi'].setup()
 
-        def set_Htildek_params(self):
+    def set_Htildek_params(self):
             self.set_constraits('Htildek')
             #conf['Htildek']._widths1_fav   = conf['params']['Htildek']['widths1_fav']['value']
             #conf['Htildek']._widths1_ufav  = conf['params']['Htildek']['widths1_ufav']['value']

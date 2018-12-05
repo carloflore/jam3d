@@ -12,10 +12,9 @@ from tools.config import conf
 from scipy.integrate import quad, dblquad, fixed_quad
 
 
-"""
-AN_theory.py - program to calculate A_N in pp -> hX
-This only includes the fragmentation term (see 1701.09170
-"""
+#AN_theory.py - program to calculate A_N in pp -> hX
+#This only includes the fragmentation term (see 1701.09170
+
 
 flavor = ['g','u','ub','d','db','s','sb']
     #  0  1  2  3  4  5  6
