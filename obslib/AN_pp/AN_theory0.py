@@ -13,7 +13,7 @@ from scipy.integrate import quad, dblquad, fixed_quad
 
 
 #AN_theory.py - program to calculate A_N in pp -> hX
-#This only includes the fragmentation term (see 1701.09170
+#This only includes the fragmentation term (see 1701.09170)
 
 
 flavor = ['g','u','ub','d','db','s','sb']
@@ -84,35 +84,35 @@ def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
 
 def get_mandelstam(s, t, u):
 # Convenient combinations of the partonic Mandelstam variables
- m['s2'] = s * s
- m['s3'] = s**3.
- m['t2'] = t * t
- m['t3'] = t**3.
- m['u2'] = u * u
- m['u3'] = u**3.
- m['ostu'] = 1. / (s * t * u)
- m['os'] = 1. / s
- m['ot'] = 1. / t
- m['ou'] = 1. / u
- m['st'] = s / t
- m['su'] = s / u
- m['ts'] = t / s
- m['tu'] = t / u
- m['us'] = u / s
- m['ut'] = u / t
- m['st2'] = s**2. / t**2.
- m['su2'] = s**2. / u**2.
- m['ts2'] = t**2. / s**2.
- m['tu2'] = t**2. / u**2.
- m['us2'] = u**2. / s**2.
- m['ut2'] = u**2. / t**2.
- m['os2'] = 1. / s**2.
- m['ot2'] = 1. / t**2.
- m['ou2'] = 1. / u**2.
- m['os3'] = 1. / s**3.
- m['ot3'] = 1. / t**3.
- m['ou3'] = 1. / u**3.
- return m
+   m['s2'] = s * s
+   m['s3'] = s**3.
+   m['t2'] = t * t
+   m['t3'] = t**3.
+   m['u2'] = u * u
+   m['u3'] = u**3.
+   m['ostu'] = 1. / (s * t * u)
+   m['os'] = 1. / s
+   m['ot'] = 1. / t
+   m['ou'] = 1. / u
+   m['st'] = s / t
+   m['su'] = s / u
+   m['ts'] = t / s
+   m['tu'] = t / u
+   m['us'] = u / s
+   m['ut'] = u / t
+   m['st2'] = s**2. / t**2.
+   m['su2'] = s**2. / u**2.
+   m['ts2'] = t**2. / s**2.
+   m['tu2'] = t**2. / u**2.
+   m['us2'] = u**2. / s**2.
+   m['ut2'] = u**2. / t**2.
+   m['os2'] = 1. / s**2.
+   m['ot2'] = 1. / t**2.
+   m['ou2'] = 1. / u**2.
+   m['os3'] = 1. / s**3.
+   m['ot3'] = 1. / t**3.
+   m['ou3'] = 1. / u**3.
+   return m
 
 def get_Hupol():
   # Hard parts for the unpolarized cross section
