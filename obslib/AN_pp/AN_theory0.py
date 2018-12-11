@@ -42,45 +42,33 @@ Hxxpz = np.zeros((13, 7))
 if 'basis' not in conf:
   conf['basis'] = 'default'
 
-def get_f(x, Q2, tar): # Collinear unpolarized PDF
-  if (x, Q2, tar) not in f:
-    f[(x, Q2, tar)] = conf['pdf'].get_C(x, Q2)
-  return f[(x, Q2, tar)]
+def get_f(x, Q2): # Collinear unpolarized PDF
+  return conf['pdf'].get_C(x, Q2)
 
-def get_ft(x, Q2, tar): # Collinear unpolarized PDF
-  if (x, Q2, tar) not in ft:
-     ft[(x, Q2, tar)] = conf['pdf'].get_C(x, Q2)
-  return ft[(x, Q2, tar)]
+def get_ft(x, Q2): # Collinear unpolarized PDF
+  return conf['pdf'].get_C(x, Q2)
 
 def get_d(z, Q2, had): # Collinear unpolarized FF
-  if (z, Q2, had) not in d:
-    if 'pi' in had:
-       d[(z, Q2, had)] = conf['ffpi'].get_C(z, Q2)
-    elif 'k' in had:
-       d[(z, Q2, had)] = conf['ffk'].get_C(z, Q2)
-  return d[(z, Q2, had)]
+  if 'pi' in had:
+      return conf['ffpi'].get_C(z, Q2)
+  elif 'k' in had:
+      return conf['ffk'].get_C(z, Q2)
 
-def get_h(x, Q2, tar): # Collinear transversity
-  if (x, Q2, tar) not in h:
-     h[(x, Q2, tar)] = conf['transversity'].get_C(x, Q2)
-  return h[(x, Q2, tar)]
+def get_h(x, Q2): # Collinear transversity
+  return conf['transversity'].get_C(x, Q2)
 
 # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
-  if (z, Q2, had) not in H1p:
-    if 'pi' in had:
-       H1p[(z, Q2, had)] = conf['collinspi'].get_C(z, Q2) - z * conf['collinspi'].get_dC(z, Q2)
-    elif 'k' in had:
-       H1p[(z, Q2, had)] = conf['collinsk'].get_C(z, Q2) - z * conf['collinsk'].get_dC(z, Q2)
-  return H1p[(z, Q2, had)]
+  if 'pi' in had:
+      return conf['collinspi'].get_C(z, Q2) - z * conf['collinspi'].get_dC(z, Q2)
+  elif 'k' in had:
+      return conf['collinsk'].get_C(z, Q2) - z * conf['collinsk'].get_dC(z, Q2)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
-  if (z, Q2, had) not in H:
-    if 'pi' in had:
-      H[(z, Q2, had)] = -2. * z * conf['collinspi'].get_C(z,Q2) + conf['Htildepi'].get_C(z, Q2)
-    elif 'k' in had:
-      H[(z, Q2, had)] = -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
-  return H[(z, Q2, had)]
+  if 'pi' in had:
+      return -2. * z * conf['collinspi'].get_C(z,Q2) + conf['Htildepi'].get_C(z, Q2)
+  elif 'k' in had:
+      return -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
 
 def get_mandelstam(s, t, u):
 # Convenient combinations of the partonic Mandelstam variables
@@ -186,10 +174,28 @@ def get_HTffb(s, t, u):
 def get_Hxxpz(z, Q2, had, s, t, u):
   HTffa = get_HTffa(s, t, u)
   HTffb = get_HTffb(s, t, u)
-  H1p = get_H1p(z, Q2, had)
-  H = get_H(z, Q2, had)
+
+  H1p = get_H1p(z, Q2, 'pi+')
+  H = get_H(z, Q2, 'pi+')
+
+  if had.endswith('-'):
+      H1p = conf['aux'].charge_conj(H1p)
+      H = conf['aux'].charge_conj(H)
+
+  elif had.endswith('0'):
+      H1pp=H1p
+      H1pm=conf['aux'].charge_conj(H1p)
+      Hp=H
+      Hm=conf['aux'].charge_conj(H)
+
+      H1p=0.5*(H1pp+H1pm)
+      #print z,2.0*z**2*0.135*H1pp,2.0*z**2*0.135*H1pm,2.0*z**2*0.135*H1p
+      #sys.exit()
+      H=0.5*(Hp+Hm)
+
   Hxxpz = np.einsum('i,j->ij', HTffa, H1p) + np.einsum('i,j->ij', HTffb, H) / z
   return Hxxpz
+  
 #  @profile
 # Calculation of the unpolarized cross section
 def get_dsig(x, z, xF, pT, rs, tar, had):
@@ -202,7 +208,7 @@ def get_dsig(x, z, xF, pT, rs, tar, had):
   Mh['k-'] = conf['aux'].Mk
 
 
-  if pT < 1.:
+  if pT > 1.:
     Q = pT
   else:
     Q = 1.
@@ -249,9 +255,18 @@ def get_dsig(x, z, xF, pT, rs, tar, had):
   Hupol14 = Hupol[14]
 
   # Get arrays of the nonperturbative functions
-  f = get_f(x, Q2, tar)
-  ft = get_ft(xp, Q2, tar)
-  d = get_d(z, Q2, had)
+  f = get_f(x, Q2)
+  ft = get_ft(xp, Q2)
+  d = get_d(z, Q2, 'pi+')
+
+  if had.endswith('-'):
+      d = conf['aux'].charge_conj(d)
+
+  elif had.endswith('0'):
+      dp=d
+      dm=conf['aux'].charge_conj(d)
+      d=0.5*(dp+dm)
+      #print z,z*dp,z*dm,z*d
 
   fg = f[0]
   fu = f[1]
@@ -332,7 +347,7 @@ def get_dsig(x, z, xF, pT, rs, tar, had):
   return denfac * upol
 
 #  @profile
-  # Calculation of the fragmentation term in the transversely polarized cross section
+# Calculation of the fragmentation term in the transversely polarized cross section
 def get_dsigST(x, z, xF, pT, rs, tar, had):
 
   Mh = {}
@@ -344,7 +359,7 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
 
   Mh = Mh[had]
 
-  if pT < 1.:
+  if pT > 1.:
     Q = pT
   else:
     Q = 1.
@@ -375,8 +390,8 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   get_mandelstam(s, t, u)
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, Q2, tar)
-  h = get_h(x, Q2, tar)
+  ft = get_ft(xp, Q2)
+  h = get_h(x, Q2)
   Hxxpz = get_Hxxpz(z, Q2, had, s, t, u)
 
   hg = h[0]
@@ -463,7 +478,7 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
 
   return ffcs
 
-def get_sig(xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100):
+def get_sig(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
     xT = 2. * pT / rs
     xF2 = xF * xF
     xT2 = xT * xT
@@ -489,7 +504,7 @@ def get_sig(xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100):
             x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
     return sig
 
-def get_sigST(xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100):
+def get_sigST(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
     xT = 2. * pT / rs
     xF2 = xF * xF
     xT2 = xT * xT
@@ -535,8 +550,8 @@ if __name__ == '__main__':
 
   rs = 200.
   tar = 'p'
-  had = 'pi0'
-  pT = 1.10
+  had = 'pi-'
+  pT = 3.0
   xF = 0.2375
   xT = 2. * pT / rs
   xF2 = xF * xF

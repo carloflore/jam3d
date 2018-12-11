@@ -38,6 +38,8 @@ class RESIDUALS(_RESIDUALS):
                 xF, pT, rs, target, hadron, mode='gauss', nx=10, nz=10)
             thy = sigST / sig
 
+            #print hadron,xF,thy
+
         return k, i, thy
 
     def gen_report(self, verb=1, level=1):
