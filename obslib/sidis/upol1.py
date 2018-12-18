@@ -28,7 +28,7 @@ def _get_FUU(x,z,Q2,pT,tar,had,F,D,w_tar,w_had):
 
     K = x
 
-    evolution=conf['gk'].get_gk(Q2)
+    evolution=conf['gk'].get_gk(Q2)*np.exp(-conf['gk'].get_pertsud(Q2))
 
     
     if had.endswith('+'):
@@ -71,12 +71,14 @@ def get_FUU(x,z,Q2,pT,tar,had):
     F = conf['pdf'].get_C(x, Q0**2)
     if   'pi' in had:  D = conf['ffpi'].get_C(z, Q0**2)
     elif  'k' in had:  D = conf['ffk'].get_C(z, Q0**2)
+    elif  'h' in had:  D = conf['ffpi'].get_C(z, Q0**2)
     F[0],D[0]=0,0  # set glue to zero
 
     # get widths (proton and positive hadrons)
     w_tar=conf['pdf'].get_widths(Q2)
     if   'pi' in had: w_had=np.abs(conf['ffpi'].get_widths(Q2))
     elif 'k'  in had: w_had=np.abs(conf['ffk'].get_widths(Q2))
+    elif 'h'  in had: w_had=np.abs(conf['ffpi'].get_widths(Q2))
 
     # build structure function
 

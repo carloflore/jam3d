@@ -35,13 +35,14 @@ class RESIDUALS(_RESIDUALS):
         if   tar=='proton':    tar='p'
         elif tar=='neutron':   tar='n'
         elif tar=='deuteron':  tar='d'
+        
 
         if obs == 'FUU':
-
+            
             thy = upol.get_FUU(x,z,Q2,pT,tar,had)
 
-        elif obs == 'M':
-
+        elif obs == 'M' or obs == 'M_Compass':
+            
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
             F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
             thy = FUU / F2

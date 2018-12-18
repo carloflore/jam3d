@@ -40,9 +40,21 @@ class READER(_READER):
                     - Q / (xn * M) * np.sqrt(zh**2 * (Q2 - xn**2 * M2)**2 / (4 * xn**2 * M2 * MhT**2) - 1))
         dy = yp - yh
 
+        MiT = 0.5
+        MfT = 0.5
+        
+        yi = np.log(Q/MiT)
+        yf = -np.log(Q/MfT)
+
+        R = np.sqrt( (MfT/MiT * (np.exp(yf-yh) + np.exp(yh-yf))/(np.exp(yi-yh)-np.exp(yh-yi)))**2 )
+
         tab['yh'] = pd.Series(yh, index=tab.index)
         tab['yp'] = pd.Series(yp, index=tab.index)
+        tab['yi'] = pd.Series(yi, index=tab.index)
+        tab['yf'] = pd.Series(yf, index=tab.index)
         tab['dy'] = pd.Series(yp - yh, index=tab.index)
+        tab['R'] = pd.Series(R,index=tab.index)
+        tab['lnR'] = pd.Series(np.log(R),index=tab.index)
         return tab
 
     def modify_table(self, tab, k):
