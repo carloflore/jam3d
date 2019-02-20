@@ -102,7 +102,7 @@ def get_mandelstam(s, t, u):
    m['ou3'] = 1. / u**3.
    return m
 
-def get_Hupol():
+def get_Hupol(m):
   # Hard parts for the unpolarized cross section
    Hupol[1] = 4. * (m['st2'] + m['ut2']) * c['r9']
    Hupol[2] = 4. * (m['su2'] + m['tu2']) * c['r9']
@@ -126,7 +126,7 @@ def get_Hupol():
               m['st'] * m['ut'] - m['su'] * m['tu'])
    return Hupol
 
-def get_HTffa(s, t, u):
+def get_HTffa(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffa[0] = 0
    HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * \
@@ -147,7 +147,7 @@ def get_HTffa(s, t, u):
    HTffa[12] = HTffa[6]
    return HTffa
 
-def get_HTffb(s, t, u):
+def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
    HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * \
@@ -171,9 +171,9 @@ def get_HTffb(s, t, u):
    HTffb[12] = HTffb[6]
    return HTffb
 
-def get_Hxxpz(z, Q2, had, s, t, u):
-  HTffa = get_HTffa(s, t, u)
-  HTffb = get_HTffb(s, t, u)
+def get_Hxxpz(z, Q2, had, m, s, t, u):
+  HTffa = get_HTffa(m, s, t, u)
+  HTffb = get_HTffb(m, s, t, u)
 
   H1p = get_H1p(z, Q2, 'pi+')
   H = get_H(z, Q2, 'pi+')
@@ -195,7 +195,7 @@ def get_Hxxpz(z, Q2, had, s, t, u):
 
   Hxxpz = np.einsum('i,j->ij', HTffa, H1p) + np.einsum('i,j->ij', HTffb, H) / z
   return Hxxpz
-  
+
 #  @profile
 # Calculation of the unpolarized cross section
 def get_dsig(x, z, xF, pT, rs, tar, had):
@@ -236,8 +236,8 @@ def get_dsig(x, z, xF, pT, rs, tar, had):
   # Prefactor
   denfac = 1. / ((z * z * x * ss + uu * z) * x * xp)
 
-  get_mandelstam(s, t, u)
-  get_Hupol()
+  m=get_mandelstam(s, t, u)
+  get_Hupol(m)
 
   Hupol1 = Hupol[1]
   Hupol2 = Hupol[2]
@@ -387,12 +387,12 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   # Prefactor
   numfac = oz * (1. / ((z * z * x * ss + uu * z) * x * xp))
 
-  get_mandelstam(s, t, u)
+  m=get_mandelstam(s, t, u)
 
   # Get arrays of the nonperturbative functions
   ft = get_ft(xp, Q2)
   h = get_h(x, Q2)
-  Hxxpz = get_Hxxpz(z, Q2, had, s, t, u)
+  Hxxpz = get_Hxxpz(z, Q2, had, m, s, t, u)
 
   hg = h[0]
   hu = h[1]

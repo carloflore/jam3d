@@ -246,7 +246,7 @@ class ANTHEORY():
     # Calculation of the unpolarized cross section
     def get_dsig(self, x, z, xF, pT, rs, tar, had):
 
-        if pT < 1.:
+        if pT > 1.:
             Q = pT
         else:
             Q = 1.
@@ -376,7 +376,7 @@ class ANTHEORY():
         return denfac * upol
 
     def get_dsigP(self, x, z, xF, pT, rs, tar, had):
-            if pT < 1.:
+            if pT > 1.:
                 Q = pT
             else:
                 Q = 1.
@@ -508,7 +508,7 @@ class ANTHEORY():
 
         Mh = self.Mh[had]
 
-        if pT < 1.:
+        if pT > 1.:
             Q = pT
         else:
             Q = 1.

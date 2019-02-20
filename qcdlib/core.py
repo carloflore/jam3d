@@ -26,7 +26,7 @@ class CORE:
         b=p[2] + p[7] * s
         c=p[3] + p[8] * s
         d=p[4] + p[9] * s
-        n= self.beta(1+p[1],p[2]+1) + p[3]*self.beta(1+p[1]+1,p[2] + 1) + p[4]*self.beta(1+p[1]+2,p[2] + 1)
+        n= 1. #self.beta(1+p[1],p[2]+1) + p[3]*self.beta(1+p[1]+1,p[2] + 1) + p[4]*self.beta(1+p[1]+2,p[2] + 1)
         return self.__get_shape(x,[N/n,a,b,c,d])
 
     def get_shape(self,x,Q2,p1,p2):
@@ -53,7 +53,7 @@ class CORE:
         b=p[2] + p[7] * s
         c=p[3] + p[8] * s
         d=p[4] + p[9] * s
-        n= self.beta(1+a,b+1) + c*self.beta(1+a+1,b + 1) + d*self.beta(1+a+1,b + 1)
+        n= 1.0 #self.beta(1+a,b+1) + c*self.beta(1+a+1,b + 1) + d*self.beta(1+a+1,b + 1)
         return self.__get_dshape(x,[N/n,a,b,c,d])
 
     def get_dshape(self,x,Q2,p1,p2):
