@@ -250,8 +250,8 @@ class PARMAN:
                     ipar+=1
                     if '%s %s 1'%(flav,par) in conf['params']['Htildepi']:
                         conf['Htildepi'].shape1[iflav][ipar] = conf['params']['Htildepi']['%s %s 1'%(flav,par)]['value']
-                    #if '%s %s 2'%(flav,par) in conf['params']['Htildepi']:
-                    #    conf['Htildepi'].shape2[iflav][ipar] = conf['params']['Htidlepi']['%s %s 2'%(flav,par)]['value']
+                    if '%s %s 2'%(flav,par) in conf['params']['Htildepi']:
+                        conf['Htildepi'].shape2[iflav][ipar] = conf['params']['Htildepi']['%s %s 2'%(flav,par)]['value']
             conf['Htildepi'].setup()
 
     def set_Htildek_params(self):
@@ -268,6 +268,6 @@ class PARMAN:
                     ipar+=1
                     if '%s %s 1'%(flav,par) in conf['params']['Htildek']:
                         conf['Htildek'].shape1[iflav][ipar] = conf['params']['Htildek']['%s %s 1'%(flav,par)]['value']
-                    #if '%s %s 2'%(flav,par) in conf['params']['Htildek']:
-                    #    conf['Htildek'].shape2[iflav][ipar] = conf['params']['Htildek']['%s %s 2'%(flav,par)]['value']
+                    if '%s %s 2'%(flav,par) in conf['params']['Htildek']:
+                        conf['Htildek'].shape2[iflav][ipar] = conf['params']['Htildek']['%s %s 2'%(flav,par)]['value']
             conf['Htildek'].setup()
