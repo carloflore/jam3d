@@ -63,40 +63,40 @@ def get_Wq(i, z1, z2, hadron1, hadron2):
     if i==1:
         if 'pi' in hadron1:
             if 'pi' in hadron2:
-                return (z1**2 *  get_cc(conf['ffpi'].widths1)
-                    + z2**2 * conf['ffpi'].widths1
+                return (z1**2 *  get_cc(conf['ffpi'].get_widths(Q2))
+                    + z2**2 * conf['ffpi'].get_widths(Q2)
                     ) / z2**2
             if 'k' in hadron2:
-                return (z1**2 *  get_cc(conf['ffk'].widths1)
-                    + z2**2 * conf['ffpi'].widths1
+                return (z1**2 *  get_cc(conf['ffk'].get_widths(Q2))
+                    + z2**2 * conf['ffpi'].get_widths(Q2)
                     ) / z2**2
         if 'k' in hadron1:
             if 'pi' in hadron2:
-                return (z1**2 *  get_cc(conf['ffpi'].widths1)
-                    + z2**2 * conf['ffk'].widths1
+                return (z1**2 *  get_cc(conf['ffpi'].get_widths(Q2))
+                    + z2**2 * conf['ffk'].get_widths(Q2)
                     ) / z2**2
             if 'k' in hadron2:
-                return (z1**2 *  get_cc(conf['ffk'].widths1)
-                    + z2**2 * conf['ffk'].widths1
+                return (z1**2 *  get_cc(conf['ffk'].get_widths(Q2))
+                    + z2**2 * conf['ffk'].get_widths(Q2)
                     ) / z2**2
     if i==2:
         if 'pi' in hadron1:
             if 'pi' in hadron2:
-                return (z1**2 *  get_cc(conf['collinspi'].widths1)
-                    + z2**2 * conf['collinspi'].widths1
+                return (z1**2 *  get_cc(conf['collinspi'].get_widths(Q2))
+                    + z2**2 * conf['collinspi'].get_widths(Q2)
                     ) / z2**2
             if 'k' in hadron2:
-                return (z1**2 *  get_cc(conf['collinsk'].widths1)
-                    + z2**2 * conf['collinspi'].widths1
+                return (z1**2 *  get_cc(conf['collinsk'].get_widths(Q2))
+                    + z2**2 * conf['collinspi'].get_widths(Q2)
                     ) / z2**2
         if 'k' in hadron1:
             if 'pi' in hadron2:
-                return (z1**2 *  get_cc(conf['collinspi'].widths1)
-                    + z2**2 * conf['collinsk'].widths1
+                return (z1**2 *  get_cc(conf['collinspi'].get_widths(Q2))
+                    + z2**2 * conf['collinsk'].get_widths(Q2)
                     ) / z2**2
             if 'k' in hadron2:
-                return (z1**2 *  get_cc(conf['collinsk'].widths1)
-                    + z2**2 * conf['collinsk'].widths1
+                return (z1**2 *  get_cc(conf['collinsk'].get_widths(Q2))
+                    + z2**2 * conf['collinsk'].get_widths(Q2)
                     ) / z2**2
 
 def get_gauss(z1, z2, pT, wq):
@@ -174,7 +174,7 @@ if __name__ == '__main__':
     conf['Q02']  = 1.0
     conf['ffpi']  = FF0('pi')
     conf['ffpi']  = FF0('k')
-    conf['collinspi'] = FF1('k')
+    conf['collinspi'] = FF1('pi')
     conf['collinsk'] = FF1('k')
 
     z1 = 0.5
