@@ -4,6 +4,8 @@ import os
 import numpy as np
 from tools.config import conf
 
+# Update from class structure, copy into new file stfuncs0.py
+
 class STFUNCS:
 
     def __init__(self):
@@ -103,7 +105,7 @@ if __name__ == '__main__':
     conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
     conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
 
-    conf['lam2'] = 0.4 
+    conf['lam2'] = 0.4
     conf['Q02']  = 1.0
     conf['ff']      = FF()
     conf['collins'] = COLLINS()
