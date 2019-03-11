@@ -11,7 +11,7 @@ import qcdlib.alphaS
 import qcdlib.interpolator
 import obslib.sidis.residuals
 import obslib.sidis.reader
-import obslib.sia.stfuncs
+import obslib.sia.stfuncs0
 import obslib.sia.residuals
 import obslib.sia.reader
 import obslib.moments.reader
@@ -84,7 +84,7 @@ class RESMAN:
 
     def setup_sia(self):
         conf['sia tabs']    = obslib.sia.reader.READER().load_data_sets('sia')
-        conf['sia stfuncs'] = obslib.sia.stfuncs.STFUNCS()
+        #conf['sia stfuncs'] = obslib.sia.stfuncs.STFUNCS()
         self.siares = obslib.sia.residuals.RESIDUALS()
 
         if (self.slave):

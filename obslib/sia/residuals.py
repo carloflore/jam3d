@@ -5,7 +5,7 @@ import numpy as np
 from scipy.integrate import quad
 from tools.residuals import _RESIDUALS
 from reader import READER
-from stfuncs import STFUNCS
+from obslib.sia import stfuncs0 as stfuncs
 from tools.config import conf
 
 class RESIDUALS(_RESIDUALS):
@@ -13,7 +13,6 @@ class RESIDUALS(_RESIDUALS):
     def __init__(self):
         self.reaction = 'sia'
         self.tabs = conf['sia tabs']
-        self.stfuncs = conf['sia stfuncs']
         self.setup()
 
     def _get_theory(self, entry):
@@ -29,27 +28,27 @@ class RESIDUALS(_RESIDUALS):
             pT = self.tabs[k]['pT'][i]
             h1 = self.tabs[k]['hadron1'][i]
             h2 = self.tabs[k]['hadron2'][i]
-            ZUuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
-            ZUcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
             thy = factor * (ZUcol / ZUuu - ZLcol / ZLuu)
         elif obs == 'AUC-0-PT':
             pT = self.tabs[k]['pT'][i]
             h1 = self.tabs[k]['hadron1'][i]
             h2 = self.tabs[k]['hadron2'][i]
-            ZUuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
-            ZUcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
             ZCuu = ZUuu + ZLuu
             ZCcol = ZUcol + ZLcol
             thy = factor * (ZUcol / ZUuu - ZCcol / ZCuu)
@@ -59,14 +58,14 @@ class RESIDUALS(_RESIDUALS):
             pT = None
             h1 = self.tabs[k]['hadron1'][i]
             h2 = self.tabs[k]['hadron2'][i]
-            ZUuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
-            ZUcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
             thy = factor * (ZUcol / ZUuu - ZLcol / ZLuu)
         elif obs == 'AUC-0-PT-INT':
             #if self.tabs[k]['col'][i]=='BaBaR': pT = self.tabs[k]['pT'][i]
@@ -74,14 +73,14 @@ class RESIDUALS(_RESIDUALS):
             pT = None
             h1 = self.tabs[k]['hadron1'][i]
             h2 = self.tabs[k]['hadron2'][i]
-            ZUuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLuu = self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
-            ZUcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
-            ZLcol = self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
-                self.stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLuu = stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(1, z1, z2, Q2, pT, h1 + '-', h2 + '-')
+            ZUcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '-') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '+')
+            ZLcol = stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '+', h2 + '+') + \
+                stfuncs.ZX(2, z1, z2, Q2, pT, h1 + '-', h2 + '-')
             ZCuu = ZUuu + ZLuu
             ZCcol = ZUcol + ZLcol
             thy = factor * (ZUcol / ZUuu - ZCcol / ZCuu)
@@ -100,7 +99,7 @@ class RESIDUALS(_RESIDUALS):
         verb = 0: Do not print on screen. Only return list of strings
         verv = 1: print on screen the report
         level= 0: only the total chi2s
-        level= 1: include point by point 
+        level= 1: include point by point
         """
 
         L = []
@@ -177,7 +176,7 @@ if __name__ == '__main__':
     conf['cKpff']  = INTERPOLATOR('dssKpNLO_0000')
     conf['cKmff']  = INTERPOLATOR('dssKmNLO_0000')
 
-    conf['lam2'] = 0.4 
+    conf['lam2'] = 0.4
     conf['Q02']  = 1.0
     conf['ff']      = FF()
     conf['collins'] = COLLINS()
@@ -204,9 +203,3 @@ if __name__ == '__main__':
     conf['residuals']= RESIDUALS()
     conf['residuals'].get_residuals()
     conf['residuals'].gen_report(verb=1, level=1)
-
-
-
-
-
-
