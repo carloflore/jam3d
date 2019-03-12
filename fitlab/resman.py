@@ -11,7 +11,7 @@ import qcdlib.alphaS
 import qcdlib.interpolator
 import obslib.sidis.residuals
 import obslib.sidis.reader
-import obslib.sia.stfuncs0
+import obslib.sia.collins0
 import obslib.sia.residuals
 import obslib.sia.reader
 import obslib.moments.reader

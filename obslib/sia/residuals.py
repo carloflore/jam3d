@@ -5,7 +5,7 @@ import numpy as np
 from scipy.integrate import quad
 from tools.residuals import _RESIDUALS
 from reader import READER
-from obslib.sia import stfuncs0 as stfuncs
+from obslib.sia import collins0 as stfuncs
 from tools.config import conf
 
 class RESIDUALS(_RESIDUALS):
