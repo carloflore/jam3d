@@ -21,20 +21,19 @@ e2.append(ed2)   # b
 e2.append(ed2)   # bb
 e2 = np.array(e2)
 
-#Think this is unnecessary now
-def get_cc(A):
-    Acc = np.zeros(A.size)
-    Acc[1] = A[2]
-    Acc[2] = A[1]
-    Acc[3] = A[4]
-    Acc[4] = A[3]
-    Acc[5] = A[6]
-    Acc[6] = A[5]
-    Acc[7] = A[8]
-    Acc[8] = A[7]
-    Acc[9] = A[10]
-    Acc[10] = A[9]
-    return Acc
+#def get_cc(A):
+#    Acc = np.zeros(A.size)
+#    Acc[1] = A[2]
+#    Acc[2] = A[1]
+#    Acc[3] = A[4]
+#    Acc[4] = A[3]
+#    Acc[5] = A[6]
+#    Acc[6] = A[5]
+#    Acc[7] = A[8]
+#    Acc[8] = A[7]
+#    Acc[9] = A[10]
+#    Acc[10] = A[9]
+#    return Acc
 
 def get_K(i, z1, z2, pT, wq, k1, k2, hadron1, hadron2):
 
@@ -60,16 +59,18 @@ def get_Wq(z1, z2, k1, k2, Q2, hadron1, hadron2):
     had1 = hadron1[:-1]
     had2 = hadron2[:-1]
 
-    W2 = z2**2 * conf[k2+had1].get_widths(Q2)
-    W1 = z1**2 * conf['aux'].charge_conj(conf[k1+had2].get_widths(Q2))
+    W1 = conf[k2+had1].get_widths(Q2)
+    W2 = conf['aux'].charge_conj(conf[k1+had2].get_widths(Q2))
 
     if hadron1.endswith('-'):
-        W2 = conf['aux'].charge_conj(W2)
-
-    if hadron2.endswith('-'):
         W1 = conf['aux'].charge_conj(W1)
 
-    return (W1+W2)/(z2**2)
+    if hadron2.endswith('-'):
+        W2 = conf['aux'].charge_conj(W2)
+
+    #print k2,conf[k2+had1].get_widths(Q2), k1,conf['aux'].charge_conj(conf[k1+had2].get_widths(Q2))
+
+    return (z1**2*W2 + z2**2*W1)/(z2**2)
 
 def get_gauss(z1, z2, pT, k1, k2, wq):
     if pT != None:
